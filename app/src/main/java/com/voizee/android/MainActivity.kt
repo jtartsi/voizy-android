@@ -1,11 +1,8 @@
 package com.voizee.android
 
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.fragment.app.FragmentActivity
 import com.voizee.android.ui.MainFragment
 
@@ -36,7 +33,4 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    override fun onCreateView(parent: View?, name: String?, context: Context?, attrs: AttributeSet?): View {
-        return super.onCreateView(parent, name, context, attrs)
-    }
 }

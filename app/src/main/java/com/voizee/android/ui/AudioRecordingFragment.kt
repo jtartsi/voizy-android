@@ -3,6 +3,7 @@ package com.voizee.android.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -23,8 +24,7 @@ class AudioRecordingFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ActivityCompat.requestPermissions(
-            activity!!,
+        requestPermissions(
             arrayOf(Manifest.permission.RECORD_AUDIO),
             REQUEST_RECORD_AUDIO_PERMISSION)
     }
@@ -33,7 +33,10 @@ class AudioRecordingFragment: Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION &&
             grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "onRequestPermissionsResult() NO permission")
             fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        } else {
+            Log.d(TAG, "onRequestPermissionsResult() permission")
         }
     }
 
