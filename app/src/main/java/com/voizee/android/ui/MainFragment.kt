@@ -8,9 +8,8 @@ import androidx.fragment.app.Fragment
 import com.voizee.android.R
 import kotlinx.android.synthetic.main.main_fragment.*
 
-class MainFragment: Fragment() {
-
-
+class MainFragment : Fragment() {
+    //testk
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -29,5 +28,4 @@ class MainFragment: Fragment() {
                 .commit()
         }
     }
-
 }
