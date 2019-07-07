@@ -10,13 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.github.piasy.audio_mixer.AudioBuffer
-import com.github.piasy.audio_mixer.AudioMixer
-import com.github.piasy.audio_mixer.MixerConfig
-import com.github.piasy.audio_mixer.MixerSource
 import com.voizee.android.R
 import kotlinx.android.synthetic.main.audio_recording_fragment.*
-import java.util.*
 
 class AudioRecordingFragment: Fragment() {
 
