@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentManager
 import com.voizee.android.R
 import kotlinx.android.synthetic.main.audio_recording_fragment.*
 
-class AudioRecordingFragment: Fragment() {
+class AudioRecordingFragment : Fragment() {
 
     companion object {
         private const val REQUEST_RECORD_AUDIO_PERMISSION = 100
@@ -25,13 +25,15 @@ class AudioRecordingFragment: Fragment() {
 
         requestPermissions(
             arrayOf(Manifest.permission.RECORD_AUDIO),
-            REQUEST_RECORD_AUDIO_PERMISSION)
+            REQUEST_RECORD_AUDIO_PERMISSION
+        )
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION &&
-            grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            grantResults[0] != PackageManager.PERMISSION_GRANTED
+        ) {
             Log.d(TAG, "onRequestPermissionsResult() NO permission")
             fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         } else {
@@ -60,21 +62,5 @@ class AudioRecordingFragment: Fragment() {
                 }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    private fun startRecording() {
-
-    }
-
-    private fun stopRecording() {
-
     }
 }

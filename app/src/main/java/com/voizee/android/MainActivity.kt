@@ -32,5 +32,4 @@ class MainActivity : FragmentActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 }
