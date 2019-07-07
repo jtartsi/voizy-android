@@ -20,6 +20,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    ktlint {
+        ignoreFailures = false
+    }
+    tasks.whenTaskAdded { task ->
+        task.dependsOn lint
+        task.mustRunAfter lint
+    }
+//    tasks.whenTaskAdded { task ->
+//        task.dependsOn ktlintCheck
+//        task.mustRunAfter ktlintCheck
+//    }
 }
 
 dependencies {
