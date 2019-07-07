@@ -23,10 +23,10 @@ android {
     ktlint {
         ignoreFailures = false
     }
-    tasks.whenTaskAdded { task ->
-        task.dependsOn lint
-        task.mustRunAfter lint
-    }
+//    tasks.whenTaskAdded { task ->
+//        task.dependsOn lint
+//        task.mustRunAfter lint
+//    }
 //    tasks.whenTaskAdded { task ->
 //        task.dependsOn ktlintCheck
 //        task.mustRunAfter ktlintCheck

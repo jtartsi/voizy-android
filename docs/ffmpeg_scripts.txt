@@ -1,1 +1,83 @@
-ffmpeg scripts:
+// From day project
+String cmdConvert = "-i " + scriptPath + " -i " + audioPath + " -i " + audioPath +
+                " -filter_complex [1:0][2:0]concat=n=2:v=0:a=1[out] " +
+                " -map 0:v -map [out] -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest "
+                + fileName;
+
+
+/Internal storage/Download/chewy_roar.mp3
+/Internal storage/Download/imperial_march.mp3
+
+ffmpeg -i /Internal storage/Download/imperial_march.mp3 -i /Internal storage/Download/chewy_roar.mp3 -filter_complex amix=inputs2:duration=00:00:10 /Internal storage/Download/output.mp3
+
+ffmpeg%-i%/Internal%storage/Download/imperial_march.mp3%-i%/Internal storage/Download/chewy_roar.mp3%-filter_complex%amix=inputs2:duration=00:00:10%s/Internal%storage/Download/output.mp3
+
+-i%s/mnt/sdcard/Download/imperial_march.mp3%s-i%s/mnt/sdcard/Download/chewy_roar.mp3%s-filter_complex duration=00:00:10%s/mnt/sdcard/Download/output.mp3
+
+ffmpeg -i /mnt/sdcard/Download/imperial_march.mp3 -i /mnt/sdcard/Download/chewy_roar.mp3 -filter_complex '[1:a] adelay=2500|2500 [delayed]; [0:a] [delayed] amix [out]' out.mp3
+
+ffmpeg%s-i%s/mnt/sdcard/Download/imperial_march.mp3%s-i%s/mnt/sdcard/Download/chewy_roar.mp3%s-filter_complex%s'[1:a]%sadelay=2500|2500%s[delayed];%s[0:a]%s[delayed]%samix%s[out]'%sout.mp3
+
+//https://superuser.com/questions/1092291/merge-many-audio-files-with-specific-positions
+ffmpeg -i first.mka -i second.mka -i third.mka -i fourth.mka
+       -filter_complex
+         "[1]adelay=184000|184000[b];
+          [2]adelay=360000|360000[c];
+          [3]adelay=962000|962000[d];
+          [0][b][c][d]amix=4"
+merged.mka
+
+ffmpeg%s-i/mnt/sdcard/Download/imperial_march.mp3%s-i%s/mnt/sdcard/Download/chewy_roar.mp3%s-fiter_complex%s"[1]adelay=2500|2500[b];%s[0]%s[b]amix=2"
+
+======
+
+FFMPEG scripts:
+
+
+
+AMIX
+https://stackoverflow.com/questions/14498539/how-to-overlay-downmix-two-audio-files-using-ffmpeg
+// Simple merge, tested and works
+ffmpeg -i sw_imperial_march.mp3 -i sw_chewy_roar.mp3 -filter_complex amix=inputs=2:duration=longest out.mp3
+
+https://superuser.com/questions/1004164/how-do-i-use-ffmpeg-to-mix-an-audio-video-file-with-an-audio-file-with-an-offset
+// Simple merge with time stamp
+ffmpeg \
+    -i sw_imperial_march.mp3 \
+    -i sw_chewy_roar.mp3 \
+    -filter_complex '[1:a] adelay=2500|2500 [delayed]; [0:a] [delayed] amix' \
+    out.mp3
+
+// Works -t before the input file customizes the amount of duration taken from the input file
+ffmpeg \
+	-t 00:00:05 \
+ 	-i sw_imperial_march.mp3 \
+    -i sw_chewy_roar.mp3 \
+    -filter_complex '[1:a] adelay=2500|2500 [delayed]; [0:a] [delayed] amix=inputs=2:duration=longest:dropout_transition=3' \
+    out.mp3
+
+ffmpeg \
+	-t 00:00:10 \
+ 	-i sw_imperial_march.mp3 \
+    -i sw_chewy_roar.mp3 \
+    -i sw_chewy_roar.mp3 \
+    -i sw_chewy_roar.mp3 \
+    -i sw_chewy_roar.mp3 \
+    -filter_complex \
+    	"[1:a] adelay=2500|2500 [delayed]; [0:a] [delayed] amix=inputs=4:duration=longest:dropout_transition=3' \
+    out.mp3
+
+
+    ===
+ffmpeg \
+	-t 00:00:10 \
+    -i sw_imperial_march.mp3 \
+	-i sw_chewy_roar.mp3 \
+	-i sw_chewy_roar.mp3 \
+	-i sw_chewy_roar.mp3 \
+   -filter_complex \
+     "[1]adelay=2500|2500[b]; \
+      [2]adelay=3000|3000[c]; \
+      [3]adelay=3500|3500[d]; \
+      [0][b][c][d]amix=4" \
+      out.mp3
