@@ -1,4 +1,4 @@
-package com.voizee.android
+package com.voizy.android
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

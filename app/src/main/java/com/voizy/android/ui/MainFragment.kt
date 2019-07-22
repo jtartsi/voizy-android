@@ -1,11 +1,11 @@
-package com.voizee.android.ui
+package com.voizy.android.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.voizee.android.R
+import com.voizy.android.R
 import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {

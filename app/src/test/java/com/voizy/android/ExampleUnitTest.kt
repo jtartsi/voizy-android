@@ -1,4 +1,4 @@
-package com.voizee.android
+package com.voizy.android
 
 import junit.framework.Assert.assertEquals
 import org.junit.Test

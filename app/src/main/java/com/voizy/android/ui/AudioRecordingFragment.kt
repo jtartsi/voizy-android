@@ -1,4 +1,4 @@
-package com.voizee.android.ui
+package com.voizy.android.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.voizee.android.R
+import com.voizy.android.R
 import kotlinx.android.synthetic.main.audio_recording_fragment.*
 
 class AudioRecordingFragment : Fragment() {

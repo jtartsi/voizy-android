@@ -1,3 +1,3 @@
-package com.voizee.android.audio
+package com.voizy.android.audio
 
 class VoizyAudioEditor

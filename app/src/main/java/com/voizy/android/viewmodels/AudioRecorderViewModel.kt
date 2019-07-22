@@ -1,4 +1,4 @@
-package com.voizee.android.viewmodels
+package com.voizy.android.viewmodels
 
 import androidx.lifecycle.ViewModel
 

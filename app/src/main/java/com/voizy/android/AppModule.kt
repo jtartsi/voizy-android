@@ -1,6 +1,6 @@
-package com.voizee.android
+package com.voizy.android
 
-import com.voizee.android.viewmodels.AudioRecorderViewModel
+import com.voizy.android.viewmodels.AudioRecorderViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

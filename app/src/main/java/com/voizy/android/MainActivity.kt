@@ -1,10 +1,10 @@
-package com.voizee.android
+package com.voizy.android
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.FragmentActivity
-import com.voizee.android.ui.MainFragment
+import com.voizy.android.ui.MainFragment
 
 class MainActivity : FragmentActivity() {
 

@@ -1,4 +1,4 @@
-package com.voizee.android
+package com.voizy.android
 
 import android.app.Application
 import android.os.StrictMode
