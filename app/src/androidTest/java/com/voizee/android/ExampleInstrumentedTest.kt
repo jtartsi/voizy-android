@@ -18,6 +18,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.voizee.android", appContext.packageName)
+        assertEquals("com.voizy.android", appContext.packageName)
     }
 }
