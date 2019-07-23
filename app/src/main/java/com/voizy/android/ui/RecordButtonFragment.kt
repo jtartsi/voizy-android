@@ -19,5 +19,12 @@ class RecordButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // record_button.setOnClickListener {
+        //     fragmentManager!!.beginTransaction()
+        //         .replace(R.id.fragment_container, AudioRecordingFragment(), AudioRecordingFragment.TAG)
+        //         .addToBackStack(AudioRecordingFragment.TAG)
+        //         .commit()
+        // }
     }
 }

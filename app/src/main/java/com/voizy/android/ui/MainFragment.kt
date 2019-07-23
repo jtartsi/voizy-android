@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.voizy.android.R
-import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
 
@@ -20,12 +19,5 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        button_new.setOnClickListener {
-            fragmentManager!!.beginTransaction()
-                .replace(R.id.fragment_container, AudioRecordingFragment(), AudioRecordingFragment.TAG)
-                .addToBackStack(AudioRecordingFragment.TAG)
-                .commit()
-        }
     }
 }
