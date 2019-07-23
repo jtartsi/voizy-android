@@ -11,6 +11,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setActionBar(findViewById(R.id.toolbar))
+        actionBar.setTitle(R.string.app_name)
 
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, MainFragment())
