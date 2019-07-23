@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/round_orange_background"
+        android:height="60dp"
+        android:width="60dp"/>
+    <item
+        android:drawable="@drawable/microphone_white"
+        android:gravity="center"
+        android:height="30dp"
+        android:width="30dp"/>
+</layer-list>
