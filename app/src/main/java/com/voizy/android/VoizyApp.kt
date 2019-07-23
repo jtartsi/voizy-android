@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.StrictMode
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import timber.log.Timber
 
 class VoizyApp : Application() {
 
@@ -28,5 +29,6 @@ class VoizyApp : Application() {
                     .build()
             )
         }
+        Timber.plant(Timber.DebugTree())
     }
 }
