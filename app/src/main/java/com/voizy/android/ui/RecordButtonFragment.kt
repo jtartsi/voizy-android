@@ -27,7 +27,6 @@ class RecordButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
         val recordButton = view.findViewById<ImageButton>(R.id.button_record)
         recordButton.setOnTouchListener { view, event ->
             when (event.action) {

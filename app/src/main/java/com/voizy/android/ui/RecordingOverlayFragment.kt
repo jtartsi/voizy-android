@@ -5,15 +5,13 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.voizy.android.R
-import kotlinx.android.synthetic.main.audio_recording_fragment.*
 
-class AudioRecordingFragment : Fragment() {
+class RecordingOverlayFragment : Fragment() {
 
     companion object {
         private const val REQUEST_RECORD_AUDIO_PERMISSION = 100
@@ -42,25 +40,6 @@ class AudioRecordingFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.audio_recording_fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        record_button.setOnTouchListener { view, event ->
-            when (event.action) {
-                MotionEvent.ACTION_BUTTON_PRESS -> {
-                    // Start recording
-                    true
-                }
-                MotionEvent.ACTION_BUTTON_RELEASE -> {
-                    // Stop recording
-                    true
-                }
-                else -> {
-                    false
-                }
-            }
-        }
+        return inflater.inflate(R.layout.recording_overlay_fragment, container, false)
     }
 }
