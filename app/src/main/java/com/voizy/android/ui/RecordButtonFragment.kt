@@ -30,23 +30,11 @@ class RecordButtonFragment : Fragment() {
         recordButton.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    delayedVibrate(view)
-
-                    fragmentManager!!.beginTransaction()
-                        .add(R.id.fragment_container, RecordingOverlayFragment())
-                        .addToBackStack(RecordingOverlayFragment.TAG)
-                        .commit()
-
+                    startRecording(view)
                     false
                 }
                 MotionEvent.ACTION_UP -> {
-                    delayedVibrate(view)
-                    // TODO recording change to remove this and add the save fragment
-                    fragmentManager!!.popBackStack(
-                        RecordingOverlayFragment.TAG,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
-
+                    stopRecording(view)
                     false
                 }
                 else -> {
@@ -54,6 +42,38 @@ class RecordButtonFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun startRecording(view: View) {
+        delayedVibrate(view)
+
+        view.animate()
+            .scaleY(2f)
+            .scaleX(2f)
+            .duration = 200
+
+        Handler().postDelayed({
+            fragmentManager!!.beginTransaction()
+                .add(R.id.fragment_container, RecordingOverlayFragment())
+                .addToBackStack(RecordingOverlayFragment.TAG)
+                .commit()
+        }, 200)
+    }
+
+    private fun stopRecording(view: View) {
+        delayedVibrate(view)
+
+        view.animate()
+            .scaleY(1f)
+            .scaleX(1f)
+            .duration = 200
+
+        Handler().postDelayed({
+            fragmentManager!!.popBackStack(
+                RecordingOverlayFragment.TAG,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+        }, 200)
     }
 
     private fun delayedVibrate(view: View) {

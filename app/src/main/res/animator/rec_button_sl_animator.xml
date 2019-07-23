@@ -24,7 +24,7 @@
         </set>
     </item>
 
-    <item android:state_pressed="false">
+    <item>
         <set>
             <objectAnimator
                 android:duration="200"
