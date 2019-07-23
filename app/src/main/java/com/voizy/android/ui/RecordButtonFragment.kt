@@ -27,34 +27,37 @@ class RecordButtonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Timber.d("long-click")
         button_record.setOnTouchListener { view, event ->
+
             when (event.action) {
                 MotionEvent.ACTION_BUTTON_PRESS -> {
-                    Timber.d("Press down")
+                    Timber.d("long-click Press down")
                     view.animate()
                         .scaleX(2f)
                         .scaleY(2f).duration = 200
                     true
                 }
                 MotionEvent.ACTION_BUTTON_RELEASE -> {
-                    Timber.d("Press up")
+                    Timber.d("long-click Press up")
                     view.animate()
                         .scaleX(0.5f)
                         .scaleY(0.5f).duration = 200
                     true
                 }
                 else -> {
-                    false
+                    Timber.d(TAG, "long-click else")
+                    true
                 }
             }
         }
-        Timber.d("onViewCreated()")
-        button_record.setOnLongClickListener {
-            it.animate()
-                .scaleX(2f)
-                .scaleY(2f).duration = 200
-            Timber.d("Long press")
-            true
-        }
+        // Timber.d("onViewCreated()")
+        // button_record.setOnLongClickListener {
+        //     it.animate()
+        //         .scaleX(2f)
+        //         .scaleY(2f).duration = 200
+        //     Timber.d("Long press")
+        //     true
+        // }
     }
 }
