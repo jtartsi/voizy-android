@@ -1,13 +1,15 @@
 package com.voizy.android.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import com.voizy.android.R
-import timber.log.Timber
 
 class RecordButtonFragment : Fragment() {
 
@@ -25,40 +27,28 @@ class RecordButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Timber.d("long-click")
+        
         val recordButton = view.findViewById<ImageButton>(R.id.button_record)
+        recordButton.setOnTouchListener { view, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    delayedVibrate(view)
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    delayedVibrate(view)
+                    false
+                }
+                else -> {
+                    false
+                }
+            }
+        }
+    }
 
-        // recordButton.setOnGenericMotionListener { view, event ->
-        //     when (event.action) {
-        //         MotionEvent.ACTION_BUTTON_PRESS -> {
-        //             Timber.d("long-click Press down")
-        //             view.animate()
-        //                 .scaleX(2f)
-        //                 .scaleY(2f).duration = 200
-        //             true
-        //         }
-        //         MotionEvent.ACTION_BUTTON_RELEASE -> {
-        //             Timber.d("long-click Press up")
-        //             view.animate()
-        //                 .scaleX(0.5f)
-        //                 .scaleY(0.5f).duration = 200
-        //             true
-        //         }
-        //         else -> {
-        //             Timber.d(TAG, "long-click else")
-        //             true
-        //         }
-        //     }
-        // }
-
-        // Timber.d("onViewCreated()")
-        // button_record.setOnLongClickListener {
-        //     it.animate()
-        //         .scaleX(2f)
-        //         .scaleY(2f).duration = 200
-        //     Timber.d("Long press")
-        //     true
-        // }
+    private fun delayedVibrate(view: View) {
+        Handler().postDelayed(
+            { view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY) }, 200
+        )
     }
 }
