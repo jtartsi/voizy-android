@@ -15,7 +15,7 @@ class RecordingOverlayFragment : Fragment() {
 
     companion object {
         private const val REQUEST_RECORD_AUDIO_PERMISSION = 100
-        public val TAG = "AudioRecordingFragment"
+        public val TAG = RecordingOverlayFragment::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
