@@ -10,7 +10,7 @@ val factoryModules = module {
 }
 
 val viewModels = module {
-    viewModel { RecordingOverlayViewModel(get()) }
+    viewModel { RecordingOverlayViewModel(get(), get()) }
 }
 
 val allModules = listOf(viewModels, factoryModules)

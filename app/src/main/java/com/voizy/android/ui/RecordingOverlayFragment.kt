@@ -13,6 +13,7 @@ import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.viewmodels.RecordingOverlayViewModel
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
@@ -37,7 +38,7 @@ class RecordingOverlayFragment : Fragment() {
             fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         } else {
             Log.d(TAG, "onRequestPermissionsResult() permission")
-            viewModel.startRecording(context!!)
+            viewModel.startRecording()
         }
     }
 
@@ -49,17 +50,24 @@ class RecordingOverlayFragment : Fragment() {
         super.onStart()
 
         viewModel.recordingEvents()
-            .subscribeOn(Schedulers.io())
+            // .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(scopeProvider)
             .subscribe {
                 Timber.d("recording event $it")
             }
 
-        requestPermissions(
-            arrayOf(Manifest.permission.RECORD_AUDIO),
-            REQUEST_RECORD_AUDIO_PERMISSION
-        )
+        Completable
+            .fromAction {
+                requestPermissions(
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    REQUEST_RECORD_AUDIO_PERMISSION
+                )
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(scopeProvider)
+            .subscribe()
     }
 
     override fun onStop() {
