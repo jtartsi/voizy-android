@@ -1,6 +1,6 @@
 package com.voizy.android.audio
 
-class VoizyRecorder() {
+class VoizyRecorder {
 
     private fun startRecording() {
         // TODO to implement
