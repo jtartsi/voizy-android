@@ -9,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.cleveroad.audiovisualization.AudioVisualization
+import com.cleveroad.audiovisualization.DbmHandler
+import com.cleveroad.audiovisualization.GLAudioVisualizationView
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
@@ -23,6 +26,7 @@ class RecordingOverlayFragment : Fragment() {
 
     private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
     private val scopeProvider by lazy { AndroidLifecycleScopeProvider.from(viewLifecycleOwner) }
+    private lateinit var voizyVisualizer: AudioVisualization
 
     companion object {
         private const val REQUEST_RECORD_AUDIO_PERMISSION = 100
@@ -46,16 +50,40 @@ class RecordingOverlayFragment : Fragment() {
         return inflater.inflate(R.layout.recording_overlay_fragment, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        voizyVisualizer = view.findViewById<GLAudioVisualizationView>(R.id.voizy_vizualizer)
+        val speechRecHandler = DbmHandler.Factory.newSpeechRecognizerHandler(context!!)
+        speechRecHandler.innerRecognitionListener()
+        voizyVisualizer.linkTo(speechRecHandler)
+
+        val vizualizerHandler = DbmHandler.Factory.newVisualizerHandler(context!!, 0)
+        voizyVisualizer.linkTo(vizualizerHandler)
+
+        voizyVisualizer.onResume()
+    }
+
     override fun onStart() {
         super.onStart()
-
         viewModel.recordingEvents()
-            // .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(scopeProvider)
             .subscribe {
                 Timber.d("recording event $it")
             }
+
+        Completable
+            .fromAction {
+                requestPermissions(
+                    arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS),
+                    REQUEST_RECORD_AUDIO_PERMISSION
+                )
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(scopeProvider)
+            .subscribe()
 
         Completable
             .fromAction {
@@ -73,5 +101,11 @@ class RecordingOverlayFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.stopRecording()
+        voizyVisualizer.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        voizyVisualizer.release()
     }
 }
