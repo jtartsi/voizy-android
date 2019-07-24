@@ -18,18 +18,21 @@ class RecordingOverlayViewModel(
         START_FAILED, STARTED, FINISHED, CLOSE_FAILED
     }
 
-    private val startRecordingQueue: PublishSubject<String> = PublishSubject.create()
+    private val startRecordingQueue: PublishSubject<Long> = PublishSubject.create()
     private val stopRecordingQueue: PublishSubject<Boolean> = PublishSubject.create()
 
     private val startRecordingEvents = startRecordingQueue.share()
         .observeOn(Schedulers.io())
-        .map { buildString { context.filesDir }.plus(it) }
+        .map { "${context.filesDir}/voizy_$it" }
         .map {
-            Timber.d("starting recording file to store $it")
+            Timber.d("recording voizy $it")
             voizyRecorder.startRecording(it)
             RecordingEvents.STARTED
         }
-        .onErrorReturn { RecordingEvents.START_FAILED }
+        .onErrorReturn {
+            Timber.e(it, "Starting recording failed")
+            RecordingEvents.START_FAILED
+        }
 
     private val stopRecordingEvents = stopRecordingQueue.share()
         .observeOn(Schedulers.io())
@@ -46,8 +49,7 @@ class RecordingOverlayViewModel(
     }
 
     public fun startRecording() {
-        val fileName = "/voizy_${Date().time}"
-        startRecordingQueue.onNext(fileName)
+        startRecordingQueue.onNext(Date().time)
     }
 
     public fun stopRecording() {
