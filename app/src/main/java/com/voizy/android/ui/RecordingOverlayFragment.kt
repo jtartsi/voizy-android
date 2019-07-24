@@ -10,21 +10,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.voizy.android.R
+import com.voizy.android.viewmodels.RecordingOverlayViewModel
+import org.koin.android.ext.android.inject
 
 class RecordingOverlayFragment : Fragment() {
+
+    private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
 
     companion object {
         private const val REQUEST_RECORD_AUDIO_PERMISSION = 100
         public val TAG = RecordingOverlayFragment::class.java.simpleName
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requestPermissions(
-            arrayOf(Manifest.permission.RECORD_AUDIO),
-            REQUEST_RECORD_AUDIO_PERMISSION
-        )
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -41,5 +36,18 @@ class RecordingOverlayFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.recording_overlay_fragment, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        requestPermissions(
+            arrayOf(Manifest.permission.RECORD_AUDIO),
+            REQUEST_RECORD_AUDIO_PERMISSION
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 }
