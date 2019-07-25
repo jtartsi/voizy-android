@@ -11,12 +11,17 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.voizy.android.R
+import com.voizy.android.viewmodels.RecordButtonViewModel
+import org.koin.android.ext.android.inject
 
 @SuppressWarnings("ClickableViewAccessibility")
 class RecordButtonFragment : Fragment() {
 
+    private val viewModel: RecordButtonViewModel by inject<RecordButtonViewModel>()
+
     companion object {
         public val TAG = RecordButtonFragment::class.java.simpleName
+        private const val ANIMATION_DELAY = 200L
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,40 +50,44 @@ class RecordButtonFragment : Fragment() {
     }
 
     private fun startRecording(view: View) {
+        viewModel.startRecording()
+
         delayedVibrate(view)
 
         view.animate()
             .scaleY(2f)
             .scaleX(2f)
-            .duration = 200
+            .duration = ANIMATION_DELAY
 
         Handler().postDelayed({
             fragmentManager!!.beginTransaction()
                 .add(R.id.fragment_container, RecordingOverlayFragment())
                 .addToBackStack(RecordingOverlayFragment.TAG)
                 .commit()
-        }, 200)
+        }, ANIMATION_DELAY)
     }
 
     private fun stopRecording(view: View) {
+        viewModel.stopRecording()
+
         delayedVibrate(view)
 
         view.animate()
             .scaleY(1f)
             .scaleX(1f)
-            .duration = 200
+            .duration = ANIMATION_DELAY
 
         Handler().postDelayed({
             fragmentManager!!.popBackStack(
                 RecordingOverlayFragment.TAG,
                 FragmentManager.POP_BACK_STACK_INCLUSIVE
             )
-        }, 200)
+        }, ANIMATION_DELAY)
     }
 
     private fun delayedVibrate(view: View) {
         Handler().postDelayed(
-            { view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY) }, 200
+            { view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY) }, ANIMATION_DELAY
         )
     }
 }
