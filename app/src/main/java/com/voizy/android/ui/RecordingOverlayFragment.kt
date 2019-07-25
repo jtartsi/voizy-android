@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.koin.android.ext.android.inject
@@ -16,7 +16,6 @@ import timber.log.Timber
 class RecordingOverlayFragment : Fragment() {
 
     private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
-    private val scopeProvider by lazy { AndroidLifecycleScopeProvider.from(viewLifecycleOwner) }
 
     companion object {
 
@@ -35,7 +34,7 @@ class RecordingOverlayFragment : Fragment() {
         super.onStart()
         viewModel.recordingEvents()
             .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(scopeProvider)
+            .autoDisposable(getScopeProvider())
             .subscribe {
                 Timber.d("recording event $it")
             }
