@@ -5,12 +5,12 @@ import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val factoryModules = module {
-    factory { VoizyRecorder() }
+val singletonModule = module {
+    single { VoizyRecorder() }
 }
 
 val viewModels = module {
     viewModel { RecordingOverlayViewModel(get(), get()) }
 }
 
-val allModules = listOf(viewModels, factoryModules)
+val allModules = listOf(viewModels, singletonModule)

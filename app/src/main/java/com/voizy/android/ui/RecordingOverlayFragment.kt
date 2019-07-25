@@ -70,16 +70,5 @@ class RecordingOverlayFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(scopeProvider)
             .subscribe()
-
-        viewModel.startRecording()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.stopRecording()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }
