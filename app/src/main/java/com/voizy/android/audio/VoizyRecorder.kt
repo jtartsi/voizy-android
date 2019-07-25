@@ -3,7 +3,7 @@ package com.voizy.android.audio
 import android.media.MediaRecorder
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 
 class VoizyRecorder {
@@ -14,8 +14,8 @@ class VoizyRecorder {
         START_FAILED, STARTED, FINISHED, CLOSE_FAILED
     }
 
-    private val startRecordingQueue: PublishSubject<String> = PublishSubject.create()
-    private val stopRecordingQueue: PublishSubject<Boolean> = PublishSubject.create()
+    private val startRecordingQueue: BehaviorSubject<String> = BehaviorSubject.create()
+    private val stopRecordingQueue: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     private val startRecordingEvents = startRecordingQueue.share()
         .observeOn(Schedulers.io())
