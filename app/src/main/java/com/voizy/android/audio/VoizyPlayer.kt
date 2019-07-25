@@ -8,20 +8,16 @@ class VoizyPlayer {
 
     private val player = MediaPlayer()
 
-    public fun prepare(filepath: String) {
+    public fun play(filepath: String) {
         try {
             player.setDataSource(filepath)
             player.prepare()
+            player.start()
         } catch (e: IOException) {
             Timber.e(e, "prepare() failed")
         }
-    }
-
-    public fun play() {
-        player.start()
-    }
-
-    public fun release() {
-        player.release()
+        player.setOnCompletionListener {
+            player.release()
+        }
     }
 }

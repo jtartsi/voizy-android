@@ -33,6 +33,10 @@ class RecordingOverlayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        play_button.setOnClickListener {
+            viewModel.playAudio(context!!)
+        }
     }
 
     override fun onStart() {

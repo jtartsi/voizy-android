@@ -6,7 +6,6 @@ import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyRecorder
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
-import java.util.Date
 
 class RecordButtonViewModel(
     private val context: Context,
@@ -16,7 +15,7 @@ class RecordButtonViewModel(
     public fun startRecording() {
 
         val completable = Completable.fromAction {
-            val filename = "${context.filesDir}/voizy_${Date().time}"
+            val filename = "${context.filesDir}/voizy_tmp"
             voizyRecorder.startRecording(filename)
         }.subscribeOn(Schedulers.io())
 
