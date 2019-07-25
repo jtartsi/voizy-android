@@ -11,11 +11,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordButtonViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,7 +27,6 @@ import org.koin.android.ext.android.inject
 class RecordButtonFragment : Fragment() {
 
     private val viewModel: RecordButtonViewModel by inject<RecordButtonViewModel>()
-    private val scopeProvider by lazy { AndroidLifecycleScopeProvider.from(viewLifecycleOwner) }
 
     companion object {
         public val TAG = RecordButtonFragment::class.java.simpleName
@@ -57,18 +57,6 @@ class RecordButtonFragment : Fragment() {
                 }
             }
         }
-
-        Completable
-            .fromAction {
-                requestPermissions(
-                    arrayOf(Manifest.permission.RECORD_AUDIO),
-                    REQUEST_RECORD_AUDIO_PERMISSION
-                )
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(scopeProvider)
-            .subscribe()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -77,28 +65,44 @@ class RecordButtonFragment : Fragment() {
             grantResults[0] != PackageManager.PERMISSION_GRANTED
         ) {
             Log.d(RecordingOverlayFragment.TAG, "onRequestPermissionsResult() NO permission")
-            fragmentManager!!.popBackStack(RecordingOverlayFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            // fragmentManager!!.popBackStack(RecordingOverlayFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            // arguments!!.putBoolean(ARGS_AUDIO_RECORD_PERMISSION, true)
         } else {
             Log.d(RecordingOverlayFragment.TAG, "onRequestPermissionsResult() permission")
+            // arguments!!.putBoolean(ARGS_AUDIO_RECORD_PERMISSION, false)
         }
     }
 
     private fun startRecording(view: View) {
-        viewModel.startRecording()
+        if (hasAudioRecordPermission()) {
+            viewModel.startRecording()
 
-        delayedVibrate(view)
+            delayedVibrate(view)
 
-        view.animate()
-            .scaleY(2f)
-            .scaleX(2f)
-            .duration = ANIMATION_DELAY
+            view.animate()
+                .scaleY(2f)
+                .scaleX(2f)
+                .duration = ANIMATION_DELAY
 
-        Handler().postDelayed({
-            fragmentManager!!.beginTransaction()
-                .add(R.id.fragment_container, RecordingOverlayFragment())
-                .addToBackStack(RecordingOverlayFragment.TAG)
-                .commit()
-        }, ANIMATION_DELAY)
+            Handler().postDelayed({
+                fragmentManager!!.beginTransaction()
+                    .add(R.id.fragment_container, RecordingOverlayFragment())
+                    .addToBackStack(RecordingOverlayFragment.TAG)
+                    .commit()
+            }, ANIMATION_DELAY)
+        } else {
+            Completable
+                .fromAction {
+                    requestPermissions(
+                        arrayOf(Manifest.permission.RECORD_AUDIO),
+                        REQUEST_RECORD_AUDIO_PERMISSION
+                    )
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .autoDisposable(getScopeProvider())
+                .subscribe()
+        }
     }
 
     private fun stopRecording(view: View) {
@@ -123,5 +127,12 @@ class RecordButtonFragment : Fragment() {
         Handler().postDelayed(
             { view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY) }, ANIMATION_DELAY
         )
+    }
+
+    private fun hasAudioRecordPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context!!,
+            Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
     }
 }
