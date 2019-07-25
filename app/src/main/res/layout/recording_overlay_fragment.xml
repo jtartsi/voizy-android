@@ -25,19 +25,4 @@
         app:layout_constraintVertical_bias="0.25"
         android:text="00:00 / 00:15"/>
 
-    <com.cleveroad.audiovisualization.GLAudioVisualizationView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/voizy_vizualizer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:av_bubblesSize="40dp"
-        app:av_bubblesRandomizeSizes="true"
-        app:av_wavesHeight="40dp"
-        app:av_wavesFooterHeight="40dp"
-        app:av_wavesCount="7"
-        app:av_layersCount="4"
-        app:av_backgroundColor="@color/av_color_bg"
-        app:av_bubblesPerLayer="16"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
