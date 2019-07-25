@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -31,7 +30,6 @@ class RecordButtonFragment : Fragment() {
     companion object {
         public val TAG = RecordButtonFragment::class.java.simpleName
         private const val ANIMATION_DELAY = 200L
-        private const val REQUEST_RECORD_AUDIO_PERMISSION = 100
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,20 +57,6 @@ class RecordButtonFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION &&
-            grantResults[0] != PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.d(RecordingOverlayFragment.TAG, "onRequestPermissionsResult() NO permission")
-            // fragmentManager!!.popBackStack(RecordingOverlayFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            // arguments!!.putBoolean(ARGS_AUDIO_RECORD_PERMISSION, true)
-        } else {
-            Log.d(RecordingOverlayFragment.TAG, "onRequestPermissionsResult() permission")
-            // arguments!!.putBoolean(ARGS_AUDIO_RECORD_PERMISSION, false)
-        }
-    }
-
     private fun startRecording(view: View) {
         if (hasAudioRecordPermission()) {
             viewModel.startRecording()
@@ -95,7 +79,7 @@ class RecordButtonFragment : Fragment() {
                 .fromAction {
                     requestPermissions(
                         arrayOf(Manifest.permission.RECORD_AUDIO),
-                        REQUEST_RECORD_AUDIO_PERMISSION
+                        100
                     )
                 }
                 .subscribeOn(Schedulers.io())
