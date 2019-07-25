@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.utils.getScopeProvider
@@ -26,6 +25,8 @@ import org.koin.android.ext.android.inject
 class RecordButtonFragment : Fragment() {
 
     private val viewModel: RecordButtonViewModel by inject<RecordButtonViewModel>()
+    private lateinit var recordButton: ImageButton
+    private val stopTimer = Handler()
 
     companion object {
         public val TAG = RecordButtonFragment::class.java.simpleName
@@ -38,16 +39,16 @@ class RecordButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recordButton = view.findViewById<ImageButton>(R.id.button_record)
 
+        recordButton = view.findViewById<ImageButton>(R.id.button_record)
         recordButton.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    startRecording(view)
+                    startRecording()
                     false
                 }
                 MotionEvent.ACTION_UP -> {
-                    stopRecording(view)
+                    stopRecording()
                     false
                 }
                 else -> {
@@ -57,13 +58,17 @@ class RecordButtonFragment : Fragment() {
         }
     }
 
-    private fun startRecording(view: View) {
+    private fun startRecording() {
         if (hasAudioRecordPermission()) {
             viewModel.startRecording()
 
-            delayedVibrate(view)
+            stopTimer.postDelayed({
+                stopRecording()
+            }, 15500)
 
-            view.animate()
+            delayedVibrate(recordButton)
+
+            recordButton.animate()
                 .scaleY(2f)
                 .scaleX(2f)
                 .duration = ANIMATION_DELAY
@@ -89,22 +94,22 @@ class RecordButtonFragment : Fragment() {
         }
     }
 
-    private fun stopRecording(view: View) {
+    private fun stopRecording() {
         viewModel.stopRecording()
 
-        delayedVibrate(view)
+        delayedVibrate(recordButton)
 
-        view.animate()
+        recordButton.animate()
             .scaleY(1f)
             .scaleX(1f)
             .duration = ANIMATION_DELAY
 
-        Handler().postDelayed({
-            fragmentManager!!.popBackStack(
-                RecordingOverlayFragment.TAG,
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
-        }, ANIMATION_DELAY)
+        // Handler().postDelayed({
+        //     fragmentManager!!.popBackStack(
+        //         RecordingOverlayFragment.TAG,
+        //         FragmentManager.POP_BACK_STACK_INCLUSIVE
+        //     )
+        // }, ANIMATION_DELAY)
     }
 
     private fun delayedVibrate(view: View) {

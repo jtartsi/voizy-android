@@ -7,18 +7,23 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingOverlayViewModel
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class RecordingOverlayFragment : Fragment() {
 
     private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
+    private var timer: Disposable? = null
 
     companion object {
-
         public val TAG = RecordingOverlayFragment::class.java.simpleName
     }
 
@@ -37,6 +42,45 @@ class RecordingOverlayFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 Timber.d("recording event $it")
+                when (it) {
+                    VoizyRecorder.RecordingEvents.STARTED -> {
+                        startTimer()
+                    }
+                    VoizyRecorder.RecordingEvents.FINISHED -> {
+                        stopTimer()
+                    }
+                    VoizyRecorder.RecordingEvents.START_FAILED -> {
+                        Timber.e("Failed to start recording")
+                    }
+                    VoizyRecorder.RecordingEvents.CLOSE_FAILED -> {
+                        Timber.e("Failed to close recording")
+                    }
+                }
             }
+    }
+
+    private fun startTimer() {
+        timer = Observable.intervalRange(
+            1L, 15, 1L, 1L,
+            TimeUnit.SECONDS, AndroidSchedulers.mainThread()
+        )
+            .map {
+                lateinit var value: String
+                if (it < 10) {
+                    value = "0$it"
+                } else {
+                    value = it.toString()
+                }
+                value
+            }
+            .map { "00:$it / 00:15" }
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                recording_time.text = it
+            }
+    }
+
+    private fun stopTimer() {
+        timer?.let { it.dispose() }
     }
 }
