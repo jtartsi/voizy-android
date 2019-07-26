@@ -10,7 +10,7 @@ class FileRepository(private val context: Context) {
         private const val TMP_FILE_NAME = "Voizy_tmp"
     }
 
-    public fun getTemporaryPath(): String {
+    public fun getTempFilePath(): String {
         return "${context.filesDir}/$TMP_FILE_NAME"
     }
 
@@ -19,7 +19,7 @@ class FileRepository(private val context: Context) {
      */
     public fun renameFile(newFileName: String): Boolean {
         try {
-            val tmpPath = getTemporaryPath()
+            val tmpPath = getTempFilePath()
             val newPath = tmpPath.replace("_tmp", newFileName)
             File(tmpPath).renameTo(File(newPath))
             return true

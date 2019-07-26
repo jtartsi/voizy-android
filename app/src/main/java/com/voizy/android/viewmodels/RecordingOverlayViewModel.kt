@@ -1,12 +1,10 @@
 package com.voizy.android.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.repositories.FileRepository
-import com.voizy.android.utils.FileUtil
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -31,9 +29,9 @@ class RecordingOverlayViewModel(
         return saveNameEvents
     }
 
-    public fun playAudio(context: Context) {
+    public fun playAudio() {
         val completable = Completable.fromAction {
-            voizyPlayer.play(FileUtil.getDefaultFileName(context))
+            voizyPlayer.play(fileRepository.getTempFilePath())
         }.subscribeOn(Schedulers.io())
 
         completable.apply {
