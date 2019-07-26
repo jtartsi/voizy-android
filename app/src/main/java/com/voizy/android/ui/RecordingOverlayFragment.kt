@@ -95,13 +95,11 @@ class RecordingOverlayFragment : Fragment() {
             TimeUnit.SECONDS, AndroidSchedulers.mainThread()
         )
             .map {
-                lateinit var value: String
                 if (it < 10) {
-                    value = "0$it"
+                    "0$it"
                 } else {
-                    value = it.toString()
+                    it.toString()
                 }
-                value
             }
             .map { "00:$it / 00:15" }
             .autoDisposable(getScopeProvider())
