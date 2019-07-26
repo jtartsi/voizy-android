@@ -50,6 +50,7 @@
         android:inputType="textCapSentences"
         android:ellipsize="start"
         android:gravity="center"
+        android:visibility="gone"
         android:hint="@string/name_your_voizy"/>
 
     <Button
@@ -64,6 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@android:color/holo_orange_light"
         android:textColor="@android:color/white"
+        android:visibility="gone"
         android:text="@string/finish"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
