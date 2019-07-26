@@ -38,7 +38,8 @@ class MainFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 200 && permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE) {
             Timber.d("file-iss read permission given")
-            viewModel.searchAllVoizys()
+            viewModel.getOwnVoizys()
+            viewModel.getReceivedVoizys()
         } else {
             Timber.d("file-iss read permission NOT given")
         }

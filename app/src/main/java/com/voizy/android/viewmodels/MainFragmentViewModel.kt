@@ -13,16 +13,27 @@ class MainFragmentViewModel(
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
 
-    private val voizySearchRequest = BehaviorSubject.create<Boolean>()
+    private enum class VoizyLocation { PRIVATE, PUBLIC }
+
+    private val voizySearchRequest = BehaviorSubject.create<VoizyLocation>()
     private val voizysStream = voizySearchRequest
         .observeOn(Schedulers.io())
-        .map { fileRepository.getAllPublicVoizys() }
+        .map {
+            when (it) {
+                VoizyLocation.PUBLIC -> fileRepository.getReceivedVoizys()
+                VoizyLocation.PRIVATE -> fileRepository.getAllOwnVoizys()
+            }
+        }
 
     public fun getVoizyStream(): Observable<List<Voizy>> {
         return voizysStream
     }
 
-    public fun searchAllVoizys() {
-        voizySearchRequest.onNext(true)
+    public fun getReceivedVoizys() {
+        voizySearchRequest.onNext(VoizyLocation.PUBLIC)
+    }
+
+    public fun getOwnVoizys() {
+        voizySearchRequest.onNext(VoizyLocation.PRIVATE)
     }
 }

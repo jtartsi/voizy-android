@@ -103,13 +103,6 @@ class RecordButtonFragment : Fragment() {
             .scaleY(1f)
             .scaleX(1f)
             .duration = ANIMATION_DELAY
-
-        // Handler().postDelayed({
-        //     fragmentManager!!.popBackStack(
-        //         RecordingOverlayFragment.TAG,
-        //         FragmentManager.POP_BACK_STACK_INCLUSIVE
-        //     )
-        // }, ANIMATION_DELAY)
     }
 
     private fun delayedVibrate(view: View) {

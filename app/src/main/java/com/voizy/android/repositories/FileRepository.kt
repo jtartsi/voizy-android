@@ -30,27 +30,46 @@ class FileRepository(private val context: Context) {
         }
     }
 
-    fun getAllPublicVoizys(): List<Voizy> {
-        val allVoizyFiles = getAllFilesInFolder(File("/sdcard/"), "Voizy")
-        val allVoizys = allVoizyFiles.map {
-            Voizy(it.absolutePath)
+    fun getAllOwnVoizys(): List<Voizy> {
+        Timber.d("file-iss getAllOwnVoizys")
+
+        val fileList = context.fileList()
+        Timber.d("file-iss getAllOwnVoizys size-test ${fileList.size}")
+        val privateFolder = File("${context.filesDir}/")
+
+        val voizyFiles = getAllFilesInFolderTree(privateFolder, "Voizy")
+        val voizys = voizyFiles.map {
+            Voizy(it.path)
         }
-        return allVoizys
+
+        Timber.d("file-iss getAllOwnVoizys size ${voizys.size}")
+        return voizys
     }
 
-    private fun getAllFilesInFolder(parentDir: File, criteria: String): List<File> {
+    fun getReceivedVoizys(): List<Voizy> {
+        Timber.d("file-iss getReceivedVoizys")
+        val voizyFiles = getAllFilesInFolderTree(File("/sdcard/"), "Voizy")
+        val voizys = voizyFiles.map {
+            Voizy(it.absolutePath)
+        }
+        Timber.d("file-iss getReceivedVoizys size ${voizys.size}")
+        return voizys
+    }
+
+    private fun getAllFilesInFolderTree(parentDir: File, criteria: String): List<File> {
         val inFiles = mutableListOf<File>()
         val files = parentDir.listFiles()
 
         for (file in files) {
             if (file.isDirectory) {
-                inFiles.addAll(getAllFilesInFolder(file, criteria))
+                inFiles.addAll(getAllFilesInFolderTree(file, criteria))
             } else {
                 if (file.name.contains(criteria)) {
                     inFiles.add(file)
                 }
             }
         }
-        return inFiles.filter { it.extension === ".3gpp" }
+        return inFiles
+        // return inFiles.filter { it.extension === ".3gpp" }
     }
 }
