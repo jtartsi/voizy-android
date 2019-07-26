@@ -7,7 +7,6 @@ import java.io.File
 class FileUtil {
 
     companion object {
-
         public fun getDefaultFileName(context: Context): String {
             return "${context.filesDir}/voizy_tmp"
         }
