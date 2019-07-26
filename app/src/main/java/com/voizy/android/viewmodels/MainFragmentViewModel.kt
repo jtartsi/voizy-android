@@ -16,7 +16,7 @@ class MainFragmentViewModel(
     private val voizySearchRequest = BehaviorSubject.create<Boolean>()
     private val voizysStream = voizySearchRequest
         .observeOn(Schedulers.io())
-        .map { fileRepository.getAllVoizys() }
+        .map { fileRepository.getAllPublicVoizys() }
 
     public fun getVoizyStream(): Observable<List<Voizy>> {
         return voizysStream

@@ -11,14 +11,14 @@ class FileRepository(private val context: Context) {
         private const val TMP_FILE_NAME = "Voizy_tmp"
     }
 
-    public fun getTempFilePath(): String {
+    fun getTempFilePath(): String {
         return "${context.filesDir}/$TMP_FILE_NAME"
     }
 
     /**
      * @newFileName does not include the path, only the file name
      */
-    public fun renameFile(newFileName: String): Boolean {
+    fun renameFile(newFileName: String): Boolean {
         try {
             val tmpPath = getTempFilePath()
             val newPath = tmpPath.replace("_tmp", newFileName)
@@ -30,8 +30,8 @@ class FileRepository(private val context: Context) {
         }
     }
 
-    public fun getAllVoizys(): List<Voizy> {
-        val allVoizyFiles = getAllFilesInFolder(File("/"), "Voizy")
+    fun getAllPublicVoizys(): List<Voizy> {
+        val allVoizyFiles = getAllFilesInFolder(File("/sdcard/"), "Voizy")
         val allVoizys = allVoizyFiles.map {
             Voizy(it.absolutePath)
         }
@@ -41,6 +41,7 @@ class FileRepository(private val context: Context) {
     private fun getAllFilesInFolder(parentDir: File, criteria: String): List<File> {
         val inFiles = mutableListOf<File>()
         val files = parentDir.listFiles()
+
         for (file in files) {
             if (file.isDirectory) {
                 inFiles.addAll(getAllFilesInFolder(file, criteria))
@@ -50,21 +51,6 @@ class FileRepository(private val context: Context) {
                 }
             }
         }
-        return inFiles
+        return inFiles.filter { it.extension === ".3gpp" }
     }
-
-    // private fun getListFiles(parentDir: File): List<File> {
-    //     val inFiles = ArrayList<File>()
-    //     val files = parentDir.listFiles()
-    //     for (file in files) {
-    //         if (file.isDirectory) {
-    //             inFiles.addAll(getListFiles(file))
-    //         } else {
-    //             if (file.name.endsWith(".csv")) {
-    //                 inFiles.add(file)
-    //             }
-    //         }
-    //     }
-    //     return inFiles
-    // }
 }
