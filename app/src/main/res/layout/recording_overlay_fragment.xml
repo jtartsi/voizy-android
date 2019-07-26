@@ -47,6 +47,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginBottom="8dp"
         android:background="@android:color/white"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btn_save_voizy"/>
 
     <Button
@@ -61,6 +62,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@android:color/holo_orange_light"
         android:textColor="@android:color/white"
+        android:visibility="gone"
         android:text="Finish"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
