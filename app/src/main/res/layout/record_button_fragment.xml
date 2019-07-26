@@ -16,7 +16,5 @@
         android:layout_margin="@dimen/fab_margin"
         android:longClickable="true"
         android:src="@drawable/microphone_drawable"
-        android:background="@android:color/transparent"
-    />
-    <!--android:stateListAnimator="@animator/rec_button_sl_animator"-->
+        android:background="@android:color/transparent"/>
 </LinearLayout>
