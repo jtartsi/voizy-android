@@ -13,7 +13,6 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
 class RecordingOverlayViewModel(
-    private val context: Context,
     private val fileRepository: FileRepository,
     private val voizyRecorder: VoizyRecorder,
     private val voizyPlayer: VoizyPlayer

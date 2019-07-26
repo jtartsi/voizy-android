@@ -28,4 +28,7 @@ class FileRepository(private val context: Context) {
             return false
         }
     }
+
+    public fun getAllVoizys() {
+    }
 }
