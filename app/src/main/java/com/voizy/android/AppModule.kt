@@ -16,7 +16,7 @@ val singletonModule = module {
 }
 
 val viewModels = module {
-    viewModel { RecordingOverlayViewModel(get(), get()) }
+    viewModel { RecordingOverlayViewModel(get(), get(), get()) }
     viewModel { RecordButtonViewModel(get(), get()) }
 }
 

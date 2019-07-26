@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
@@ -39,6 +41,10 @@ class RecordingOverlayFragment : Fragment() {
         playButton.setOnClickListener {
             viewModel.playAudio(context!!)
         }
+
+        btn_save_voizy.setOnClickListener {
+            viewModel.renameVoizy(et_voizy_name.text.toString())
+        }
     }
 
     override fun onStart() {
@@ -52,10 +58,14 @@ class RecordingOverlayFragment : Fragment() {
                     VoizyRecorder.RecordingEvents.STARTED -> {
                         startTimer()
                         playButton.visibility = View.GONE
+                        et_voizy_name.visibility = View.GONE
+                        btn_save_voizy.visibility = View.GONE
                     }
                     VoizyRecorder.RecordingEvents.FINISHED -> {
                         stopTimer()
                         playButton.visibility = View.VISIBLE
+                        et_voizy_name.visibility = View.VISIBLE
+                        btn_save_voizy.visibility = View.VISIBLE
                     }
                     VoizyRecorder.RecordingEvents.START_FAILED -> {
                         Timber.e("Failed to start recording")
@@ -63,6 +73,18 @@ class RecordingOverlayFragment : Fragment() {
                     VoizyRecorder.RecordingEvents.CLOSE_FAILED -> {
                         Timber.e("Failed to close recording")
                     }
+                }
+            }
+
+        viewModel.saveNameEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                if (it) {
+                    fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG)
+                } else {
+                    Snackbar.make(view!!, "Saving Voizy failed", Snackbar.LENGTH_SHORT)
                 }
             }
     }

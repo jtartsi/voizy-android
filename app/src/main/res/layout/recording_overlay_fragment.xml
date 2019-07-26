@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/overlay_fragment_root"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textStyle="bold"
         android:textSize="35sp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,20 +35,22 @@
         android:visibility="gone"
         android:src="@android:drawable/ic_media_play"/>
 
-    <Button
+    <EditText
         android:id="@+id/et_voizy_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save_voizy"
         android:layout_marginEnd="25dp"
         android:layout_marginStart="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:hint="Voizy name"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/white"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/btn_save_voizy"/>
+        android:inputType="textCapSentences"
+        android:ellipsize="start"
+        android:gravity="center"
+        android:hint="@string/name_your_voizy"/>
 
     <Button
         android:id="@+id/btn_save_voizy"
@@ -62,7 +64,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@android:color/holo_orange_light"
         android:textColor="@android:color/white"
-        android:visibility="gone"
-        android:text="Finish"/>
+        android:text="@string/finish"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
