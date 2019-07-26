@@ -7,28 +7,31 @@
         <item name="colorPrimaryDark">@android:color/holo_orange_dark</item>
         <item name="colorAccent">@android:color/holo_orange_light</item>
         <item name="actionBarStyle">@style/VoizyTheme.ActionBarStyle</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
     <style name="VoizyTheme.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
-        <item name="titleTextStyle">@style/VoizyTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:titleTextColor">@android:color/white</item>
     </style>
 
-    <style name="VoizyTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
+    <!--<style name="VoizyTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">-->
+    <!--<item name="android:titleTextColor">@android:color/white</item>-->
+    <!--<item name="android:textColor">@android:color/white</item>-->
+    <!--<item name="android:textColorPrimary">@android:color/white</item>-->
+    <!--</style>-->
 
-    <style name="VoizyTheme.ThemeOverlay.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!-- title text color -->
-        <item name="android:textColorPrimary">@android:color/white</item>
-    </style>
+    <!--<style name="VoizyTheme.ThemeOverlay.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">-->
+    <!--&lt;!&ndash; title text color &ndash;&gt;-->
+    <!--<item name="android:textColorPrimary">@android:color/white</item>-->
+    <!--<item name="android:titleTextColor">@android:color/white</item>-->
+    <!--</style>-->
 
-    <style name="ThemeOverlay.AppTheme.PopupMenu" parent="ThemeOverlay.AppCompat.Dark">
-        <!-- popup menu background - NEVER "android:background" !!! in themes -->
-        <!--<item name="android:colorBackground">...</item>-->
-        <!-- popup menu item text color -->
-        <item name="android:textColorPrimary">@android:color/white</item>
-    </style>
+    <!--<style name="ThemeOverlay.AppTheme.PopupMenu" parent="ThemeOverlay.AppCompat.Dark">-->
+    <!--&lt;!&ndash; popup menu background - NEVER "android:background" !!! in themes &ndash;&gt;-->
+    <!--&lt;!&ndash;<item name="android:colorBackground">...</item>&ndash;&gt;-->
+    <!--&lt;!&ndash; popup menu item text color &ndash;&gt;-->
+    <!--<item name="android:textColorPrimary">@android:color/white</item>-->
+    <!--<item name="android:titleTextColor">@android:color/white</item>-->
+    <!--</style>-->
 
     <!--<style name="VoizyTheme.NoActionBar">-->
     <!--<item name="windowActionBar">false</item>-->
