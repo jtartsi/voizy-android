@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.model.Voizy
 import com.voizy.android.repositories.FileRepository
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import java.util.Observable
 
 class MainFragmentViewModel(
     private val fileRepository: FileRepository,
@@ -18,11 +18,11 @@ class MainFragmentViewModel(
         .observeOn(Schedulers.io())
         .map { fileRepository.getAllVoizys() }
 
-    public fun getVoizyStream(): Observable<Voizy> {
-        return return voizysStream
+    public fun getVoizyStream(): Observable<List<Voizy>> {
+        return voizysStream
     }
 
     public fun searchAllVoizys() {
-        voizySearchRequest.onNext()
+        voizySearchRequest.onNext(true)
     }
 }
