@@ -30,9 +30,19 @@ class FileRepository(private val context: Context) {
         }
     }
 
+    // TODO
+    /*
+     1. check if file save (rename) works
+     2. fix so that the file save is not allowed to finish until
+     3. fix playback
+
+     /data/user/0/com.voizy.android/files/Voizy_tmp
+     */
+
     fun getAllOwnVoizys(): List<Voizy> {
         Timber.d("file-iss getAllOwnVoizys")
 
+        // This returns one file, maybe we need to check if the file save really works
         val fileList = context.fileList()
         Timber.d("file-iss getAllOwnVoizys size-test ${fileList.size}")
         val privateFolder = File("${context.filesDir}/")
