@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
 class RecordingOverlayFragment : Fragment() {
 
     private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
+    private lateinit var playButton: View
     private var timer: Disposable? = null
 
     companion object {
@@ -34,7 +35,8 @@ class RecordingOverlayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        play_button.setOnClickListener {
+        playButton = view.findViewById<View>(R.id.btn_play_preview)
+        playButton.setOnClickListener {
             viewModel.playAudio(context!!)
         }
     }
@@ -49,9 +51,11 @@ class RecordingOverlayFragment : Fragment() {
                 when (it) {
                     VoizyRecorder.RecordingEvents.STARTED -> {
                         startTimer()
+                        playButton.visibility = View.GONE
                     }
                     VoizyRecorder.RecordingEvents.FINISHED -> {
                         stopTimer()
+                        playButton.visibility = View.VISIBLE
                     }
                     VoizyRecorder.RecordingEvents.START_FAILED -> {
                         Timber.e("Failed to start recording")
@@ -80,7 +84,7 @@ class RecordingOverlayFragment : Fragment() {
             .map { "00:$it / 00:15" }
             .autoDisposable(getScopeProvider())
             .subscribe {
-                recording_time.text = it
+                tv_recording_time.text = it
             }
     }
 

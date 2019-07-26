@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/dark_transparent_overlay">
+    android:layout_height="match_parent">
+    <!--android:background="@color/dark_transparent_overlay"-->
 
     <TextView
-        android:id="@+id/recording_time"
+        android:id="@+id/tv_recording_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
@@ -26,13 +26,41 @@
         android:text="00:00 / 00:15"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/play_button"
+        android:id="@+id/btn_play_preview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_media_play"
-        android:background="@drawable/round_orange_background"/>
+        android:visibility="gone"
+        android:src="@android:drawable/ic_media_play"/>
+
+    <Button
+        android:id="@+id/et_voizy_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:hint="Voizy name"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save_voizy"/>
+
+    <Button
+        android:id="@+id/btn_save_voizy"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@android:color/holo_orange_light"
+        android:textColor="@android:color/white"
+        android:text="Finish"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
