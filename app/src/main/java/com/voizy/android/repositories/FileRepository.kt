@@ -7,12 +7,8 @@ import java.io.File
 
 class FileRepository(private val context: Context) {
 
-    companion object {
-        private const val TMP_FILE_NAME = "Voizy_tmp"
-    }
-
     fun getTempFilePath(): String {
-        return "${context.filesDir}/$TMP_FILE_NAME"
+        return "${context.filesDir}/voizy_tmp"
     }
 
     /**
