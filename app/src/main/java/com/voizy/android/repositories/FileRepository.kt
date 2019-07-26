@@ -17,11 +17,11 @@ class FileRepository(private val context: Context) {
     fun renameFile(newFileName: String): Boolean {
         try {
             val tmpPath = getTempFilePath()
-            val newPath = tmpPath.replace("_tmp", newFileName)
+            val newPath = tmpPath.replace("_tmp", "_${newFileName.toLowerCase()}")
             File(tmpPath).renameTo(File(newPath))
             return true
         } catch (e: Exception) {
-            Timber.e(e, "Failed to renamge the file")
+            Timber.e(e, "Failed to rename the file")
             return false
         }
     }
@@ -41,23 +41,20 @@ class FileRepository(private val context: Context) {
         // This returns one file, maybe we need to check if the file save really works
         val fileList = context.fileList()
         Timber.d("file-iss getAllOwnVoizys size-test ${fileList.size}")
-        val privateFolder = File("${context.filesDir}/")
-
-        val voizyFiles = getAllFilesInFolderTree(privateFolder, "Voizy")
-        val voizys = voizyFiles.map {
-            Voizy(it.path)
-        }
-
-        Timber.d("file-iss getAllOwnVoizys size ${voizys.size}")
-        return voizys
+        return fileList.map { Voizy(it) }
+        // val privateFolder = File("${context.filesDir}/")
+        //
+        // val voizyFiles = getAllFilesInFolderTree(privateFolder, "Voizy")
+        // val voizys = voizyFiles.map { Voizy(it.path) }
+        //
+        // Timber.d("file-iss getAllOwnVoizys size ${voizys.size}")
+        // return voizys
     }
 
     fun getReceivedVoizys(): List<Voizy> {
         Timber.d("file-iss getReceivedVoizys")
         val voizyFiles = getAllFilesInFolderTree(File("/sdcard/"), "Voizy")
-        val voizys = voizyFiles.map {
-            Voizy(it.absolutePath)
-        }
+        val voizys = voizyFiles.map { Voizy(it.absolutePath) }
         Timber.d("file-iss getReceivedVoizys size ${voizys.size}")
         return voizys
     }

@@ -1,12 +1,10 @@
 package com.voizy.android.ui
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
@@ -68,12 +66,5 @@ class MainFragment : Fragment() {
                     Timber.d("vzy-list ${it.name} ${it.filePath}")
                 }
             }
-    }
-
-    private fun hasReadFileSystemPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            context!!,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
     }
 }
