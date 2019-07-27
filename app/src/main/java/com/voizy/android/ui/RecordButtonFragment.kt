@@ -60,37 +60,46 @@ class RecordButtonFragment : Fragment() {
 
     private fun startRecording() {
         if (hasAudioRecordPermission()) {
+            stopTimer.postDelayed({ stopRecording() }, 15500)
             viewModel.startRecording()
 
-            stopTimer.postDelayed({
-                stopRecording()
-            }, 15500)
-
             delayedVibrate(recordButton)
+            animateButtonOnStart()
 
-            recordButton.animate()
-                .scaleY(2f)
-                .scaleX(2f)
-                .duration = ANIMATION_DELAY
-
-            Handler().postDelayed({
-                fragmentManager!!.beginTransaction()
-                    .replace(R.id.fragment_container, RecordingOverlayFragment())
-                    .addToBackStack(RecordingOverlayFragment.TAG)
-                    .commit()
-            }, ANIMATION_DELAY)
+            var recFragment = fragmentManager!!.findFragmentByTag(RecordingOverlayFragment.TAG)
+            if (recFragment == null) {
+                addRecordingFragment()
+            }
         } else {
             requestAudioRecordingPermission()
         }
     }
 
+    private fun addRecordingFragment() {
+        Handler().postDelayed({
+            fragmentManager!!.beginTransaction()
+                .add(R.id.fragment_container, RecordingOverlayFragment(), RecordingOverlayFragment.TAG)
+                .addToBackStack(RecordingOverlayFragment.TAG)
+                .commit()
+        }, ANIMATION_DELAY)
+    }
+
     private fun stopRecording() {
         stopTimer.removeCallbacksAndMessages(null)
-
         viewModel.stopRecording()
 
         delayedVibrate(recordButton)
+        animateButtonOnStop()
+    }
 
+    private fun animateButtonOnStart() {
+        recordButton.animate()
+            .scaleY(2f)
+            .scaleX(2f)
+            .duration = ANIMATION_DELAY
+    }
+
+    private fun animateButtonOnStop() {
         recordButton.animate()
             .scaleY(1f)
             .scaleX(1f)
