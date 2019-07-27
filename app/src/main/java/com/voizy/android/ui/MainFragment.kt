@@ -34,9 +34,10 @@ class MainFragment : Fragment() {
     -done- 9. Recording fragment reset
     10. Change the color of permission request windows
     11. Show recorded Voizys in MainFragment
-    12. Play Voizys in MainFragment
-    13. Delete Voizy
-    14. Share Voizy
+    12. Update voizy listing after
+    13. Play Voizys in MainFragment
+    14. Delete Voizy
+    15. Share Voizy
 
 
      /data/user/0/com.voizy.android/files/Voizy_tmp
