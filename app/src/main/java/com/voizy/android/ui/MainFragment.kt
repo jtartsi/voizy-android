@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.utils.getScopeProvider
@@ -44,6 +45,7 @@ class MainFragment : Fragment() {
      */
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
+    private lateinit var voizyList: RecyclerView
 
     companion object {
         private const val REQUEST_READ_EXTERNAL_PERMISSIONS = 200
@@ -59,6 +61,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        voizyList = view.findViewById(R.id.rv_voizy_list)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
