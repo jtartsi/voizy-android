@@ -6,5 +6,8 @@ class Voizy(private val path: String) {
         get() = path
 
     val name: String
-        get() = filePath.replaceBefore("_", "")
+        get() = filePath
+            .replaceBefore("voizy_", "")
+            .removePrefix("voizy_")
+            .removeSuffix(".3gpp")
 }

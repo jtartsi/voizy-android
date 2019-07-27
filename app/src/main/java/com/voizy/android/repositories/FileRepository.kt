@@ -17,7 +17,10 @@ class FileRepository(private val context: Context) {
     fun renameFile(newFileName: String): Boolean {
         try {
             val tmpPath = getTempFilePath()
-            val newPath = tmpPath.replace("_tmp", "_${newFileName.toLowerCase()}")
+            Timber.d("renameFile before $tmpPath")
+            val newPath = tmpPath.replace("_tmp", "_")
+                .plus(newFileName.toLowerCase())
+            Timber.d("renameFile after $newPath")
             File(tmpPath).renameTo(File(newPath))
             return true
         } catch (e: Exception) {
@@ -27,8 +30,7 @@ class FileRepository(private val context: Context) {
     }
 
     fun getAllOwnVoizys(): List<Voizy> {
-        val fileList = context.fileList()
-        return fileList.map { Voizy(it) }
+        context.filesDir.listFiles().map { Voizy(it.path) }
     }
 
     fun getReceivedVoizys(): List<Voizy> {
@@ -51,6 +53,5 @@ class FileRepository(private val context: Context) {
             }
         }
         return inFiles
-        // return inFiles.filter { it.extension === ".3gpp" }
     }
 }

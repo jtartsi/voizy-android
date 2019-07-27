@@ -28,6 +28,7 @@ class MainFragment : Fragment() {
      5. FileName issues
         5.1. Voizys doesn't have full path
         5.2. Check FileExtension sitation
+    6. Haptic feedback happens sometime after the recording (maybe 15s timer is not reseted?)
 
 
      /data/user/0/com.voizy.android/files/Voizy_tmp
