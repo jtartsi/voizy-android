@@ -27,26 +27,13 @@ class FileRepository(private val context: Context) {
     }
 
     fun getAllOwnVoizys(): List<Voizy> {
-        Timber.d("file-iss getAllOwnVoizys")
-
-        // This returns one file, maybe we need to check if the file save really works
         val fileList = context.fileList()
-        Timber.d("file-iss getAllOwnVoizys size-test ${fileList.size}")
         return fileList.map { Voizy(it) }
-        // val privateFolder = File("${context.filesDir}/")
-        //
-        // val voizyFiles = getAllFilesInFolderTree(privateFolder, "Voizy")
-        // val voizys = voizyFiles.map { Voizy(it.path) }
-        //
-        // Timber.d("file-iss getAllOwnVoizys size ${voizys.size}")
-        // return voizys
     }
 
     fun getReceivedVoizys(): List<Voizy> {
-        Timber.d("file-iss getReceivedVoizys")
-        val voizyFiles = getAllFilesInFolderTree(File("/sdcard/"), "Voizy")
+        val voizyFiles = getAllFilesInFolderTree(File("/sdcard/"), "voizy")
         val voizys = voizyFiles.map { Voizy(it.absolutePath) }
-        Timber.d("file-iss getReceivedVoizys size ${voizys.size}")
         return voizys
     }
 
