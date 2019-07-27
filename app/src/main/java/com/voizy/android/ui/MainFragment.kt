@@ -28,10 +28,15 @@ class MainFragment : Fragment() {
      -done- 5. FileName issues
         -done- 5.1. Voizys doesn't have full path
         -done- 5.2. Check FileExtension sitation
-    6. Haptic feedback happens sometime after the recording (maybe 15s timer is not reseted?)
+    -done- 6. Haptic feedback happens sometime after the recording (maybe 15s timer is not reseted?)
     7. Snackbar for sharing is never shown
-    8. VoizyRecorder crashes after multiple recording attempts
-    9. Recording fragment reset
+    -done- 8. VoizyRecorder crashes after multiple recording attempts
+    -done- 9. Recording fragment reset
+    10. Change the color of permission request windows
+    11. Show recorded Voizys in MainFragment
+    12. Play Voizys in MainFragment
+    13. Delete Voizy
+    14. Share Voizy
 
 
      /data/user/0/com.voizy.android/files/Voizy_tmp
