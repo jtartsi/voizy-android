@@ -1,6 +1,7 @@
 package com.voizy.android.ui
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,25 @@ import timber.log.Timber
 
 class MainFragment : Fragment() {
 
+    // TODO
+    /*
+     -done- 1. check if file save (rename) works
+     2. fix so that the file save is not allowed to finish until
+     -done- 3. fix playback
+     4. Showing buttons and edit text in preview quickly, fix this. Could the issue come from BehaviorSubject
+     5. FileName issues
+        5.1. Voizys doesn't have full path
+        5.2. Check FileExtension sitation
+
+
+     /data/user/0/com.voizy.android/files/Voizy_tmp
+     */
+
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
+
+    companion object {
+        private const val REQUEST_READ_EXTERNAL_PERMISSIONS = 200
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,23 +53,27 @@ class MainFragment : Fragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 200 && permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE) {
-            Timber.d("file-iss read permission given")
-            viewModel.getOwnVoizys()
+        if (requestCode == REQUEST_READ_EXTERNAL_PERMISSIONS &&
+            permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            Timber.d("READ_EXTERNAL_PERMISSION YES")
             viewModel.getReceivedVoizys()
         } else {
-            Timber.d("file-iss read permission NOT given")
+            Timber.d("READ_EXTERNAL_PERMISSION NO")
         }
     }
 
     override fun onStart() {
         super.onStart()
 
+        viewModel.getOwnVoizys()
+
         Completable
             .fromAction {
                 requestPermissions(
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    200
+                    REQUEST_READ_EXTERNAL_PERMISSIONS
                 )
             }
             .subscribeOn(Schedulers.io())

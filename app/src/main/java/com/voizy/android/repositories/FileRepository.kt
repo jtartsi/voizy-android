@@ -26,15 +26,6 @@ class FileRepository(private val context: Context) {
         }
     }
 
-    // TODO
-    /*
-     -done- 1. check if file save (rename) works
-     2n. fix so that the file save is not allowed to finish until
-     3. fix playback
-
-     /data/user/0/com.voizy.android/files/Voizy_tmp
-     */
-
     fun getAllOwnVoizys(): List<Voizy> {
         Timber.d("file-iss getAllOwnVoizys")
 
