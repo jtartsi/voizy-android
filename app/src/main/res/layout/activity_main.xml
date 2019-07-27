@@ -27,7 +27,7 @@
         android:layout_height="match_parent"/>
 
     <fragment
-        android:name="com.voizy.android.ui.RecordButtonFragment"
+        android:name="com.voizy.android.ui.fragment.RecordButtonFragment"
         android:id="@+id/record_button_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

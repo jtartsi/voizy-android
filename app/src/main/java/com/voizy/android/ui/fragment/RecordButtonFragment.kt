@@ -1,4 +1,4 @@
-package com.voizy.android.ui
+package com.voizy.android.ui.fragment
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -78,7 +78,11 @@ class RecordButtonFragment : Fragment() {
     private fun addRecordingFragment() {
         Handler().postDelayed({
             fragmentManager!!.beginTransaction()
-                .add(R.id.fragment_container, RecordingOverlayFragment(), RecordingOverlayFragment.TAG)
+                .add(
+                    R.id.fragment_container,
+                    RecordingOverlayFragment(),
+                    RecordingOverlayFragment.TAG
+                )
                 .addToBackStack(RecordingOverlayFragment.TAG)
                 .commit()
         }, ANIMATION_DELAY)
@@ -108,7 +112,8 @@ class RecordButtonFragment : Fragment() {
 
     private fun delayedVibrate(view: View) {
         Handler().postDelayed(
-            { view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY) }, ANIMATION_DELAY
+            { view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY) },
+            ANIMATION_DELAY
         )
     }
 

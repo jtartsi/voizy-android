@@ -1,4 +1,4 @@
-package com.voizy.android.ui
+package com.voizy.android.ui.fragment
 
 import android.Manifest
 import android.content.pm.PackageManager

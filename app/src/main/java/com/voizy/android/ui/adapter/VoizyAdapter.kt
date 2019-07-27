@@ -1,4 +1,4 @@
-package com.voizy.android.ui
+package com.voizy.android.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -19,7 +19,7 @@ class VoizyAdapter(private val myDataset: Array<String>) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): VoizyAdapter.VoizyViewHolder {
+    ): VoizyViewHolder {
         // create a new view
         val textView = LayoutInflater.from(parent.context)
             .inflate(R.layout.my_text_view, parent, false) as TextView

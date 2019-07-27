@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.FragmentActivity
 import com.voizy.android.R
+import com.voizy.android.ui.fragment.MainFragment
 
 class MainActivity : FragmentActivity() {
 

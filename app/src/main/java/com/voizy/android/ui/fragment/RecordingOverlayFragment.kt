@@ -1,4 +1,4 @@
-package com.voizy.android.ui
+package com.voizy.android.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
