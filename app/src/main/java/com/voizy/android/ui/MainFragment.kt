@@ -25,10 +25,13 @@ class MainFragment : Fragment() {
      2. fix so that the file save is not allowed to finish until
      -done- 3. fix playback
      4. Showing buttons and edit text in preview quickly, fix this. Could the issue come from BehaviorSubject
-     5. FileName issues
-        5.1. Voizys doesn't have full path
-        5.2. Check FileExtension sitation
+     -done- 5. FileName issues
+        -done- 5.1. Voizys doesn't have full path
+        -done- 5.2. Check FileExtension sitation
     6. Haptic feedback happens sometime after the recording (maybe 15s timer is not reseted?)
+    7. Snackbar for sharing is never shown
+    8. VoizyRecorder crashes after multiple recording attempts
+    9. Recording fragment reset
 
 
      /data/user/0/com.voizy.android/files/Voizy_tmp

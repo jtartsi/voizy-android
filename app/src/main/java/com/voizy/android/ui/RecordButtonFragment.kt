@@ -75,26 +75,18 @@ class RecordButtonFragment : Fragment() {
 
             Handler().postDelayed({
                 fragmentManager!!.beginTransaction()
-                    .add(R.id.fragment_container, RecordingOverlayFragment())
+                    .replace(R.id.fragment_container, RecordingOverlayFragment())
                     .addToBackStack(RecordingOverlayFragment.TAG)
                     .commit()
             }, ANIMATION_DELAY)
         } else {
-            Completable
-                .fromAction {
-                    requestPermissions(
-                        arrayOf(Manifest.permission.RECORD_AUDIO),
-                        100
-                    )
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .autoDisposable(getScopeProvider())
-                .subscribe()
+            requestAudioRecordingPermission()
         }
     }
 
     private fun stopRecording() {
+        stopTimer.removeCallbacksAndMessages(null)
+
         viewModel.stopRecording()
 
         delayedVibrate(recordButton)
@@ -116,5 +108,19 @@ class RecordButtonFragment : Fragment() {
             context!!,
             Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestAudioRecordingPermission() {
+        Completable
+            .fromAction {
+                requestPermissions(
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    100
+                )
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe()
     }
 }

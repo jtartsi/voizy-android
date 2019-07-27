@@ -90,6 +90,7 @@ class RecordingOverlayFragment : Fragment() {
     }
 
     private fun startTimer() {
+        tv_recording_time.text = "00:00 / 00:15"
         timer = Observable.intervalRange(
             1L, 15, 1L, 1L,
             TimeUnit.SECONDS, AndroidSchedulers.mainThread()
