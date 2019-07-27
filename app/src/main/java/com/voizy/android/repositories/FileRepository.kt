@@ -30,7 +30,7 @@ class FileRepository(private val context: Context) {
     }
 
     fun getAllOwnVoizys(): List<Voizy> {
-        context.filesDir.listFiles().map { Voizy(it.path) }
+        return context.filesDir.listFiles().map { Voizy(it.path) }
     }
 
     fun getReceivedVoizys(): List<Voizy> {

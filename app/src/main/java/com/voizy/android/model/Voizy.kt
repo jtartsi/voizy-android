@@ -9,5 +9,4 @@ class Voizy(private val path: String) {
         get() = filePath
             .replaceBefore("voizy_", "")
             .removePrefix("voizy_")
-            .removeSuffix(".3gpp")
 }
