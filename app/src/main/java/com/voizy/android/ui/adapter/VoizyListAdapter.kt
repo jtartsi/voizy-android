@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.voizy.android.R
+import com.voizy.android.model.Voizy
+import timber.log.Timber
 
-class VoizyAdapter(private val myDataset: Array<String>) :
-    RecyclerView.Adapter<VoizyAdapter.VoizyViewHolder>() {
+class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>() {
+
+    private val dataset = mutableListOf<Voizy>()
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -21,8 +23,9 @@ class VoizyAdapter(private val myDataset: Array<String>) :
         viewType: Int
     ): VoizyViewHolder {
         // create a new view
+        // TODO provide custom row layout
         val textView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.my_text_view, parent, false) as TextView
+            .inflate(android.R.layout.simple_list_item_1, parent, false) as TextView
         // set the view's size, margins, paddings and layout parameters
         return VoizyViewHolder(textView)
     }
@@ -31,9 +34,16 @@ class VoizyAdapter(private val myDataset: Array<String>) :
     override fun onBindViewHolder(holder: VoizyViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.text = myDataset[position]
+        Timber.d("vzy-list ${dataset[position].name}")
+        holder.textView.text = dataset[position].name
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = myDataset.size
+    override fun getItemCount(): Int = dataset.size
+
+    public fun refresh(voizys: List<Voizy>) {
+        dataset.clear()
+        dataset.addAll(voizys)
+        notifyDataSetChanged()
+    }
 }

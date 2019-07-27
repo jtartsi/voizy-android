@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.Completable
@@ -46,6 +48,7 @@ class MainFragment : Fragment() {
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
+    private lateinit var voizyListAdapter: VoizyListAdapter
 
     companion object {
         private const val REQUEST_READ_EXTERNAL_PERMISSIONS = 200
@@ -61,7 +64,13 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        voizyList = view.findViewById(R.id.rv_voizy_list)
+        voizyListAdapter = VoizyListAdapter()
+        voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
+            setHasFixedSize(true)
+            // use a linear layout manager
+            layoutManager = LinearLayoutManager(context!!)
+            adapter = voizyListAdapter
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -79,7 +88,6 @@ class MainFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
         viewModel.getOwnVoizys()
 
         Completable
@@ -98,6 +106,7 @@ class MainFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                voizyListAdapter.refresh(it)
                 it.forEach {
                     Timber.d("vzy-list ${it.name} ${it.filePath}")
                 }
