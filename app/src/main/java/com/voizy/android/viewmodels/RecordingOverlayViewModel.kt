@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.model.Voizy
 import com.voizy.android.repositories.FileRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 
 class RecordingOverlayViewModel(
     private val fileRepository: FileRepository,
@@ -16,17 +16,12 @@ class RecordingOverlayViewModel(
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
 
-    private val renameSubject = PublishSubject.create<String>()
-    private val saveNameEvents = renameSubject
-        .observeOn(Schedulers.io())
-        .map { fileRepository.renameFile(it) }
-
     public fun recordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
         return voizyRecorder.recordingEvents()
     }
 
-    public fun saveNameEvents(): Observable<Boolean> {
-        return saveNameEvents
+    public fun saveVoizyEvents(): Observable<Voizy> {
+        return fileRepository.getSaveVoizyEvents()
     }
 
     public fun playAudio() {
@@ -40,8 +35,8 @@ class RecordingOverlayViewModel(
         }
     }
 
-    public fun renameVoizy(newFileName: String) {
-        renameSubject.onNext(newFileName)
+    public fun saveVoizy(newFileName: String) {
+        fileRepository.renameVoizy(newFileName)
     }
 
     // /**

@@ -2,10 +2,27 @@ package com.voizy.android.repositories
 
 import android.content.Context
 import com.voizy.android.model.Voizy
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 
 class FileRepository(private val context: Context) {
+
+    private val renameSubject = PublishSubject.create<String>()
+    private val saveNameEvents = renameSubject
+        .observeOn(Schedulers.io())
+        .map { renameFile(it) }
+        .map { Voizy(it) }
+
+    fun renameVoizy(newFileName: String) {
+        renameSubject.onNext(newFileName)
+    }
+
+    fun getSaveVoizyEvents(): Observable<Voizy> {
+        return saveNameEvents
+    }
 
     fun getTempFilePath(): String {
         return "${context.filesDir}/voizy_tmp"
@@ -14,18 +31,22 @@ class FileRepository(private val context: Context) {
     /**
      * @newFileName does not include the path, only the file name
      */
-    fun renameFile(newFileName: String): Boolean {
+    private fun renameFile(newFileName: String): String {
         try {
             val tmpPath = getTempFilePath()
             Timber.d("renameFile before $tmpPath")
             val newPath = tmpPath.replace("_tmp", "_")
                 .plus(newFileName.toLowerCase())
             Timber.d("renameFile after $newPath")
-            File(tmpPath).renameTo(File(newPath))
-            return true
+
+            return if (File(tmpPath).renameTo(File(newPath))) {
+                newPath
+            } else {
+                ""
+            }
         } catch (e: Exception) {
             Timber.e(e, "Failed to rename the file")
-            return false
+            return ""
         }
     }
 

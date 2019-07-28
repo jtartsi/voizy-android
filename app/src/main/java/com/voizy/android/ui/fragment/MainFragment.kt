@@ -106,10 +106,19 @@ class MainFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                voizyListAdapter.refresh(it)
+                Timber.d("voizysStream received $it")
+                voizyListAdapter.addAll(it)
                 it.forEach {
-                    Timber.d("vzy-list ${it.name} ${it.filePath}")
+                    Timber.d("voizysStream received ${it.name} ${it.filePath}")
                 }
+            }
+
+        viewModel.getSaveVoizyEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                voizyListAdapter.addAll(listOf(it))
+                Timber.d("voizy save received it")
             }
     }
 }

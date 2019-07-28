@@ -43,7 +43,7 @@ class RecordingOverlayFragment : Fragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            viewModel.renameVoizy(et_voizy_name.text.toString())
+            viewModel.saveVoizy(et_voizy_name.text.toString())
         }
     }
 
@@ -76,14 +76,17 @@ class RecordingOverlayFragment : Fragment() {
                 }
             }
 
-        viewModel.saveNameEvents()
+        viewModel.saveVoizyEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                if (it) {
+                Timber.d("save-voizy-iss save event received $it")
+                if (it.filePath.isNotEmpty()) {
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    Timber.d("save-voizy-iss not empty")
                     Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG)
                 } else {
+                    Timber.d("save-voizy-iss empty")
                     Snackbar.make(view!!, "Saving Voizy failed", Snackbar.LENGTH_SHORT)
                 }
             }

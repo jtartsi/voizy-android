@@ -41,8 +41,7 @@ class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>(
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int = dataset.size
 
-    public fun refresh(voizys: List<Voizy>) {
-        dataset.clear()
+    public fun addAll(voizys: List<Voizy>) {
         dataset.addAll(voizys)
         notifyDataSetChanged()
     }
