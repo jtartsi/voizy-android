@@ -32,7 +32,7 @@ class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>(
     override fun onBindViewHolder(holder: VoizyViewHolder, position: Int) {
         holder.tvTitle.text = dataset[position].name
         val randomShareCount = Random(Date().time).nextInt(1700)
-        holder.tvShareCount.text = "$randomShareCount shares"
+        holder.tvShareCount.text = "$randomShareCount"
     }
 
     override fun getItemCount(): Int = dataset.size
