@@ -21,6 +21,7 @@ class VoizySwipeCallback(
     private lateinit var background: ColorDrawable
 
     init {
+        deleteDrawable = context.getDrawable(R.drawable.ic_delete_white_sweep)
         shareDrawable = context.getDrawable(R.drawable.ic_send_white)
         background = ColorDrawable(context.getColor(android.R.color.holo_orange_dark))
     }
@@ -66,30 +67,35 @@ class VoizySwipeCallback(
         val iconTop = itemView.top + (itemView.height - shareDrawable.intrinsicHeight) / 2
         val iconBottom = iconTop + shareDrawable.intrinsicHeight
 
-        // TODO replace with when ->
-        if (dX > 0) { // Swiping to right
-            val iconLeft = itemView.left + iconMargin + shareDrawable.getIntrinsicWidth()
-            val iconRight = itemView.left + iconMargin
-            shareDrawable.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+        when {
+            dX > 0 -> { // Swiping to right
+                val iconLeft = itemView.left + iconMargin
+                val iconRight = itemView.left + shareDrawable.intrinsicWidth
+                shareDrawable.setBounds(iconLeft, iconTop, iconRight, iconBottom)
 
-            background.setBounds(
-                itemView.left, itemView.top,
-                itemView.left + dX.toInt() + backgoundCornerOffset,
-                itemView.bottom
-            )
-        } else if (dX < 0) { // Swiping to left
-            val iconLeft = itemView.right - iconMargin - shareDrawable.getIntrinsicWidth()
-            val iconRight = itemView.right - iconMargin
-            shareDrawable.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                background.setBounds(
+                    itemView.left, itemView.top,
+                    itemView.left + dX.toInt() + backgoundCornerOffset,
+                    itemView.bottom
+                )
+            }
+            dX < 0 -> { // Swiping to left
+                val iconLeft = itemView.right - iconMargin - deleteDrawable.intrinsicWidth
+                val iconRight = itemView.right - iconMargin
+                deleteDrawable.setBounds(iconLeft, iconTop, iconRight, iconBottom)
 
-            background.setBounds(
-                itemView.right + dX.toInt() - backgoundCornerOffset,
-                itemView.top, itemView.right, itemView.bottom
-            )
-        } else { // View is unSwiped
-            background.setBounds(0, 0, 0, 0)
+                background.setBounds(
+                    itemView.right + dX.toInt() - backgoundCornerOffset,
+                    itemView.top, itemView.right, itemView.bottom
+                )
+            }
+            else -> {
+                // View is unSwiped
+                background.setBounds(0, 0, 0, 0)
+            }
         }
         background.draw(c)
         shareDrawable.draw(c)
+        // deleteDrawable.draw(c)
     }
 }
