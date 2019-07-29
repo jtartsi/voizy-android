@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import com.voizy.android.model.Voizy
+import java.util.Date
+import kotlin.random.Random
 
 class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>() {
 
@@ -14,6 +16,7 @@ class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>(
 
     class VoizyViewHolder(root: View) : RecyclerView.ViewHolder(root) {
         var tvTitle: TextView = root.findViewById(R.id.tv_voizy_row_title)
+        var tvShareCount: TextView = root.findViewById(R.id.tv_voizy_row_shares)
     }
 
     // Create new views (invoked by the layout manager)
@@ -28,6 +31,8 @@ class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>(
 
     override fun onBindViewHolder(holder: VoizyViewHolder, position: Int) {
         holder.tvTitle.text = dataset[position].name
+        val randomShareCount = Random(Date().time).nextInt(1700)
+        holder.tvShareCount.text = "$randomShareCount shares"
     }
 
     override fun getItemCount(): Int = dataset.size
