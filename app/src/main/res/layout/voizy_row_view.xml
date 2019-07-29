@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="80dp">
 
@@ -19,7 +20,7 @@
         android:ellipsize="end"
         android:textSize="18sp"
         android:textColor="@android:color/primary_text_light"
-        android:text="Go Real Madrid F.C."
+        tools:text="Go Real Madrid F.C."
         android:singleLine="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,21 +33,21 @@
         android:layout_height="0dp"
         app:layout_constraintWidth_percent="0.7"
         app:layout_constraintHeight_percent="0.3"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="34dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_voizy_row_title"
         android:singleLine="true"
         android:textSize="14sp"
         android:ellipsize="marquee"
         android:textColor="@android:color/holo_orange_dark"
-        android:text="#football #barcelona #realmadrid #goal"/>
+        tools:text="#football #barcelona #realmadrid #goal"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_voizy_row_shares"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:textColor="@android:color/holo_orange_light"
-        android:text="150"
+        tools:text="150"
         android:textSize="16sp"
         android:gravity="center_vertical|end"
         android:inputType="textCapSentences"
