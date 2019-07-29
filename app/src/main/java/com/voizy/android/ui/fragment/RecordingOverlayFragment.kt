@@ -83,15 +83,11 @@ class RecordingOverlayFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("save-voizy-iss save event received ${it.filePath}")
                 if (it.filePath.isNotEmpty()) {
                     hideSoftKeyboard(playButton)
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    Timber.d("save-voizy-iss not empty")
-                    Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG)
                 } else {
-                    Timber.d("save-voizy-iss empty")
-                    Snackbar.make(view!!, "Saving Voizy failed", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(view!!, "Saving Voizy failed", Snackbar.LENGTH_SHORT).show()
                 }
             }
     }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.ui.adapter.VoizyListAdapter
@@ -105,7 +106,7 @@ class MainFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 voizyListAdapter.addAll(listOf(it))
-                Timber.d("voizy save received it")
+                Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG).show()
             }
     }
 
