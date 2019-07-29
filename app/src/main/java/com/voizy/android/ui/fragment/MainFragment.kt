@@ -56,6 +56,7 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.d("onCreate()")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,6 +65,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("onViewCreated()")
+
         voizyListAdapter = VoizyListAdapter()
         voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
             setHasFixedSize(true)
@@ -71,23 +74,7 @@ class MainFragment : Fragment() {
             layoutManager = LinearLayoutManager(context!!)
             adapter = voizyListAdapter
         }
-    }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_READ_EXTERNAL_PERMISSIONS &&
-            permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE &&
-            grantResults[0] == PackageManager.PERMISSION_GRANTED
-        ) {
-            Timber.d("READ_EXTERNAL_PERMISSION YES")
-            viewModel.getReceivedVoizys()
-        } else {
-            Timber.d("READ_EXTERNAL_PERMISSION NO")
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
         viewModel.getOwnVoizys()
 
         Completable
@@ -120,5 +107,18 @@ class MainFragment : Fragment() {
                 voizyListAdapter.addAll(listOf(it))
                 Timber.d("voizy save received it")
             }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_READ_EXTERNAL_PERMISSIONS &&
+            permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            Timber.d("READ_EXTERNAL_PERMISSION YES")
+            viewModel.getReceivedVoizys()
+        } else {
+            Timber.d("READ_EXTERNAL_PERMISSION NO")
+        }
     }
 }
