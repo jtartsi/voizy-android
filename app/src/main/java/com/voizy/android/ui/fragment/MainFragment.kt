@@ -23,30 +23,6 @@ import timber.log.Timber
 
 class MainFragment : Fragment() {
 
-    // TODO
-    /*
-     -done- 1. check if file save (rename) works
-     2. fix so that the file save is not allowed to finish until
-     -done- 3. fix playback
-     4. Showing buttons and edit text in preview quickly, fix this. Could the issue come from BehaviorSubject
-     -done- 5. FileName issues
-        -done- 5.1. Voizys doesn't have full path
-        -done- 5.2. Check FileExtension sitation
-    -done- 6. Haptic feedback happens sometime after the recording (maybe 15s timer is not reseted?)
-    7. Snackbar for sharing is never shown
-    -done- 8. VoizyRecorder crashes after multiple recording attempts
-    -done- 9. Recording fragment reset
-    10. Change the color of permission request windows
-    11. Show recorded Voizys in MainFragment
-    12. Update voizy listing after
-    13. Play Voizys in MainFragment
-    14. Delete Voizy
-    15. Share Voizy
-
-
-     /data/user/0/com.voizy.android/files/Voizy_tmp
-     */
-
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyListAdapter
