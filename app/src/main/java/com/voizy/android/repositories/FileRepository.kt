@@ -37,8 +37,7 @@ class FileRepository(private val context: Context) {
         try {
             val tmpPath = getTempFilePath()
             Timber.d("save-voizy-iss renameFile before $tmpPath")
-            val newPath = tmpPath.replace("_tmp", "_")
-                .plus(newFileName.toLowerCase())
+            val newPath = tmpPath.replace("_tmp", "_").plus(newFileName)
             Timber.d("save-voizy-iss renameFile after $newPath")
 
             return if (File(tmpPath).renameTo(File(newPath))) {
