@@ -115,6 +115,10 @@ class VoizySwipeCallback(
         intrinsicHeight = deleteDrawable.intrinsicHeight
     }
 
+    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+        return ItemTouchHelper.Callback.makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+    }
+
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
@@ -130,7 +134,6 @@ class VoizySwipeCallback(
         val itemHeight = itemView.height
 
         val isCancelled = dX == 0f && !isCurrentlyActive
-
         if (isCancelled) {
             clearCanvas(
                 c,
@@ -143,17 +146,32 @@ class VoizySwipeCallback(
             return
         }
 
-        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-        background.draw(c)
+        when {
+            dX > 0 -> { // Swiping to right
+                val shareIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                val shareIconMargin = (itemHeight - intrinsicHeight) / 2
+                val shareIconLeft = itemView.left + shareIconMargin
+                val shareIconRight = itemView.left + shareIconMargin + intrinsicWidth
+                val shareIconBottom = shareIconTop + intrinsicHeight
 
-        val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-        val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
-        val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
-        val deleteIconRight = itemView.right - deleteIconMargin
-        val deleteIconBottom = deleteIconTop + intrinsicHeight
+                background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                background.draw(c)
+                shareDrawable.setBounds(shareIconLeft, shareIconTop, shareIconRight, shareIconBottom)
+                shareDrawable.draw(c)
+            }
+            dX < 0 -> { // Swiping to left
+                val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
+                val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
+                val deleteIconRight = itemView.right - deleteIconMargin
+                val deleteIconBottom = deleteIconTop + intrinsicHeight
 
-        deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-        deleteDrawable.draw(c)
+                background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                background.draw(c)
+                deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                deleteDrawable.draw(c)
+            }
+        }
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
