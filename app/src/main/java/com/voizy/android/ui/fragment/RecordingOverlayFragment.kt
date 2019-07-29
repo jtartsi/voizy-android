@@ -84,11 +84,12 @@ class RecordingOverlayFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 Timber.d("voizy save event ${it.name} ${it.filePath}")
-                if (it.filePath.isNotEmpty()) {
+                if (it.name.isNotEmpty()) {
                     hideSoftKeyboard(playButton)
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 } else {
-                    Snackbar.make(view!!, "Saving Voizy failed", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view!!, "Saving Voizy failed. Make sure you input name.", Snackbar.LENGTH_SHORT)
+                        .show()
                 }
             }
     }

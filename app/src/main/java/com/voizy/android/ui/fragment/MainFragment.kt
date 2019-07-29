@@ -105,8 +105,10 @@ class MainFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                voizyListAdapter.addAll(listOf(it))
-                Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG).show()
+                if (it.name.isNotEmpty()) {
+                    voizyListAdapter.addAll(listOf(it))
+                    Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG).show()
+                }
             }
     }
 

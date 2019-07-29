@@ -35,16 +35,15 @@ class FileRepository(private val context: Context) {
      */
     private fun renameFile(newFileName: String): String {
         try {
+            if (newFileName.isEmpty()) {
+                throw IllegalArgumentException("Empty file name")
+            }
             val tmpPath = getTempFilePath()
-            Timber.d("save-voizy-iss renameFile before $tmpPath")
             val newPath = tmpPath.replace("_tmp", "_").plus(newFileName)
-            Timber.d("save-voizy-iss renameFile after $newPath")
 
             return if (File(tmpPath).renameTo(File(newPath))) {
-                Timber.d("save-voizy-iss return $newPath")
                 newPath
             } else {
-                Timber.d("save-voizy-iss return empty")
                 ""
             }
         } catch (e: Exception) {
