@@ -5,8 +5,8 @@
     android:id="@+id/overlay_fragment_root"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!--android:background="@color/dark_transparent_overlay"-->
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/tv_recording_time"
