@@ -3,6 +3,7 @@ package com.voizy.android.ui.fragment
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,22 +29,7 @@ class MainFragment : Fragment() {
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
-
-    private val swipeCallback = object : VoizySwipeCallback(context!!) {
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val position = viewHolder.adapterPosition
-            when (direction) {
-                ItemTouchHelper.LEFT -> {
-                    // voizyListAdapter.items[position]
-                    voizyListAdapter.delete(position)
-                }
-                ItemTouchHelper.RIGHT -> {
-                    voizyListAdapter.items[position]
-                }
-            }
-        }
-    }
+    private val deleteHandler = Handler()
 
     companion object {
         private const val REQUEST_READ_EXTERNAL_PERMISSIONS = 200
@@ -69,6 +55,34 @@ class MainFragment : Fragment() {
             layoutManager = LinearLayoutManager(context!!)
             adapter = voizyListAdapter
         }
+
+        val swipeCallback = object : VoizySwipeCallback(context!!) {
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+
+                        Snackbar.make(
+                            view!!,
+                            getString(R.string.voizy_deleted, voizyListAdapter.items[position].name),
+                            Snackbar.LENGTH_LONG
+                        ).setAction(R.string.undo) {
+                            voizyListAdapter.cancelDelete()
+                        }.show()
+
+                        voizyListAdapter.cancellableDelete(position)
+                        deleteHandler.postDelayed({
+                            // TODO implement actual delete
+                        }, 3500)
+                    }
+                    ItemTouchHelper.RIGHT -> {
+                        voizyListAdapter.items[position]
+                    }
+                }
+            }
+        }
+
         ItemTouchHelper(swipeCallback).attachToRecyclerView(voizyList)
 
         viewModel.getOwnVoizys()

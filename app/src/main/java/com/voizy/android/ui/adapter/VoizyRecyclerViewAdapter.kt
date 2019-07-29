@@ -13,6 +13,7 @@ import kotlin.random.Random
 class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.VoizyViewHolder>() {
 
     private val dataset = mutableListOf<Voizy>()
+    private var cancellableDeletedItem: Pair<Int, Voizy>? = null
 
     companion object {
         private val sports = listOf<String>("#football ", "#icehockey ", "#soccer ", "#rugby ")
@@ -54,19 +55,29 @@ class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.V
 
     override fun getItemCount(): Int = dataset.size
 
-    public fun addAll(voizys: List<Voizy>) {
+    fun addAll(voizys: List<Voizy>) {
         dataset.addAll(voizys)
         notifyDataSetChanged()
     }
 
-    public fun clear() {
+    fun clear() {
         dataset.clear()
         notifyDataSetChanged()
     }
 
-    public fun delete(position: Int) {
+    /**
+     * Remove, but do not delete from dataset
+     */
+    fun cancellableDelete(position: Int) {
+        cancellableDeletedItem = Pair(position, items[position])
+        dataset.removeAt(position)
+        notifyItemRemoved(position)
     }
 
-    public fun add(position: Int) {
+    fun cancelDelete() {
+        cancellableDeletedItem?.let {
+            dataset.add(it.first, it.second)
+            notifyItemInserted(it.first)
+        }
     }
 }
