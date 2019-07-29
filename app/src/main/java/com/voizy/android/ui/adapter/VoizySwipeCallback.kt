@@ -55,11 +55,36 @@ class VoizySwipeCallback(private val context: Context) : ItemTouchHelper.SimpleC
     ) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
 
-        if (dX > 0) { // Swiping to right
-        } else if (dX < 0) { // Swiping to left
-        } else { // View is unSwiped
-        }
         val itemView = viewHolder.itemView
         val backgoundCornerOffset = 20
+
+        val iconMargin = (itemView.height - shareDrawable.intrinsicHeight) / 2
+        val iconTop = itemView.top + (itemView.height - shareDrawable.intrinsicHeight) / 2
+        val iconBottom = iconTop + shareDrawable.intrinsicHeight
+
+        if (dX > 0) { // Swiping to right
+            val iconLeft = itemView.left + iconMargin + shareDrawable.getIntrinsicWidth()
+            val iconRight = itemView.left + iconMargin
+            shareDrawable.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+
+            background.setBounds(
+                itemView.left, itemView.top,
+                itemView.left + dX.toInt() + backgoundCornerOffset,
+                itemView.bottom
+            )
+        } else if (dX < 0) { // Swiping to left
+            val iconLeft = itemView.right - iconMargin - shareDrawable.getIntrinsicWidth()
+            val iconRight = itemView.right - iconMargin
+            shareDrawable.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+
+            background.setBounds(
+                itemView.right + dX.toInt() - backgoundCornerOffset,
+                itemView.top, itemView.right, itemView.bottom
+            )
+        } else { // View is unSwiped
+            background.setBounds(0, 0, 0, 0)
+        }
+        background.draw(c)
+        shareDrawable.draw(c)
     }
 }
