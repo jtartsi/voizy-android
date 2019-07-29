@@ -30,7 +30,7 @@ class VoizySwipeCallback(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return false
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -42,9 +42,10 @@ class VoizySwipeCallback(
             ItemTouchHelper.RIGHT -> {
                 Snackbar.make(viewHolder.itemView, "Sharing $position", Snackbar.LENGTH_SHORT).show()
             }
+            else -> {
+                Snackbar.make(viewHolder.itemView, "else $position", Snackbar.LENGTH_SHORT).show()
+            }
         }
-
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onChildDraw(
@@ -65,6 +66,7 @@ class VoizySwipeCallback(
         val iconTop = itemView.top + (itemView.height - shareDrawable.intrinsicHeight) / 2
         val iconBottom = iconTop + shareDrawable.intrinsicHeight
 
+        // TODO replace with when ->
         if (dX > 0) { // Swiping to right
             val iconLeft = itemView.left + iconMargin + shareDrawable.getIntrinsicWidth()
             val iconRight = itemView.left + iconMargin
