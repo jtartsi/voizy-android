@@ -98,8 +98,8 @@ class RecordButtonFragment : Fragment() {
 
     private fun animateButtonOnStart() {
         recordButton.animate()
-            .scaleY(2f)
-            .scaleX(2f)
+            .scaleY(1.75f)
+            .scaleX(1.75f)
             .duration = ANIMATION_DELAY
     }
 
