@@ -10,7 +10,7 @@ import com.voizy.android.model.Voizy
 import java.util.Date
 import kotlin.random.Random
 
-class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>() {
+class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.VoizyViewHolder>() {
 
     private val dataset = mutableListOf<Voizy>()
 

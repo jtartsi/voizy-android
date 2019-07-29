@@ -9,8 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.voizy.android.R
 
-class VoizySwipeCallback(private val context: Context) : ItemTouchHelper.SimpleCallback(
-    0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+class VoizySwipeCallback(
+    private val context: Context
+) : ItemTouchHelper.SimpleCallback(
+    0,
+    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {
 
     private lateinit var deleteDrawable: Drawable
@@ -27,7 +30,7 @@ class VoizySwipeCallback(private val context: Context) : ItemTouchHelper.SimpleC
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -41,7 +44,7 @@ class VoizySwipeCallback(private val context: Context) : ItemTouchHelper.SimpleC
             }
         }
 
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onChildDraw(

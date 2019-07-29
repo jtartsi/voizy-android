@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
-import com.voizy.android.ui.adapter.VoizyListAdapter
+import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
+import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.Completable
@@ -25,7 +27,7 @@ class MainFragment : Fragment() {
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
-    private lateinit var voizyListAdapter: VoizyListAdapter
+    private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
 
     companion object {
         private const val REQUEST_READ_EXTERNAL_PERMISSIONS = 200
@@ -44,13 +46,14 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated()")
 
-        voizyListAdapter = VoizyListAdapter()
+        voizyListAdapter = VoizyRecyclerViewAdapter()
         voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
             setHasFixedSize(true)
             // use a linear layout manager
             layoutManager = LinearLayoutManager(context!!)
             adapter = voizyListAdapter
         }
+        ItemTouchHelper(VoizySwipeCallback(context!!)).attachToRecyclerView(voizyList)
 
         viewModel.getOwnVoizys()
 
