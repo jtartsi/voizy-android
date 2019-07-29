@@ -43,6 +43,7 @@ class RecordingOverlayFragment : Fragment() {
         }
 
         btn_save_voizy.setOnClickListener {
+            Timber.d("save-voizy-iss onClick()")
             viewModel.saveVoizy(et_voizy_name.text.toString())
         }
     }
@@ -80,7 +81,7 @@ class RecordingOverlayFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("save-voizy-iss save event received $it")
+                Timber.d("save-voizy-iss save event received ${it.filePath}")
                 if (it.filePath.isNotEmpty()) {
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     Timber.d("save-voizy-iss not empty")

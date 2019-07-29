@@ -9,6 +9,7 @@ import com.voizy.android.repositories.FileRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class RecordingOverlayViewModel(
     private val fileRepository: FileRepository,
@@ -36,6 +37,7 @@ class RecordingOverlayViewModel(
     }
 
     public fun saveVoizy(newFileName: String) {
+        Timber.d("save-voizy-iss saveVoizy() $newFileName")
         fileRepository.renameVoizy(newFileName)
     }
 

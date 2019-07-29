@@ -15,8 +15,10 @@ class FileRepository(private val context: Context) {
         .observeOn(Schedulers.io())
         .map { renameFile(it) }
         .map { Voizy(it) }
+        .share()
 
     fun renameVoizy(newFileName: String) {
+        Timber.d("save-voizy-iss renameVoizy.onNext() $newFileName")
         renameSubject.onNext(newFileName)
     }
 
@@ -34,18 +36,20 @@ class FileRepository(private val context: Context) {
     private fun renameFile(newFileName: String): String {
         try {
             val tmpPath = getTempFilePath()
-            Timber.d("renameFile before $tmpPath")
+            Timber.d("save-voizy-iss renameFile before $tmpPath")
             val newPath = tmpPath.replace("_tmp", "_")
                 .plus(newFileName.toLowerCase())
-            Timber.d("renameFile after $newPath")
+            Timber.d("save-voizy-iss renameFile after $newPath")
 
             return if (File(tmpPath).renameTo(File(newPath))) {
+                Timber.d("save-voizy-iss return $newPath")
                 newPath
             } else {
+                Timber.d("save-voizy-iss return empty")
                 ""
             }
         } catch (e: Exception) {
-            Timber.e(e, "Failed to rename the file")
+            Timber.e(e, "Failed to rename the file return empty")
             return ""
         }
     }
