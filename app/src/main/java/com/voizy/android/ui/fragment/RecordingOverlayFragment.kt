@@ -1,9 +1,11 @@
 package com.voizy.android.ui.fragment
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
@@ -83,6 +85,7 @@ class RecordingOverlayFragment : Fragment() {
             .subscribe {
                 Timber.d("save-voizy-iss save event received ${it.filePath}")
                 if (it.filePath.isNotEmpty()) {
+                    hideSoftKeyboard(playButton)
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     Timber.d("save-voizy-iss not empty")
                     Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG)
@@ -115,5 +118,11 @@ class RecordingOverlayFragment : Fragment() {
 
     private fun stopTimer() {
         timer?.let { it.dispose() }
+    }
+
+    private fun hideSoftKeyboard(view: View) {
+        val inputMethodManager: InputMethodManager = context!!
+            .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.rootView.windowToken, 0, null)
     }
 }
