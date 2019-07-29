@@ -9,10 +9,9 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.voizy.android.R
 
-class VoizySwipeCallback(
+abstract class VoizySwipeCallback(
     private val context: Context
 ) : ItemTouchHelper.SimpleCallback(
     0,
@@ -20,9 +19,9 @@ class VoizySwipeCallback(
 ) {
 
     private val clearPaint = Paint()
-    private val deleteDrawable: Drawable
-    private val shareDrawable: Drawable
-    private val background: ColorDrawable
+    private val deleteDrawable: Drawable = context.getDrawable(R.drawable.ic_delete_white_sweep)
+    private val shareDrawable: Drawable = context.getDrawable(R.drawable.ic_send_white)
+    private val background: ColorDrawable = ColorDrawable(context.getColor(android.R.color.holo_orange_dark))
     private val intrinsicWidth: Int
     private val intrinsicHeight: Int
 
@@ -38,21 +37,6 @@ class VoizySwipeCallback(
         target: RecyclerView.ViewHolder
     ): Boolean {
         return false
-    }
-
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        when (direction) {
-            ItemTouchHelper.LEFT -> {
-                Snackbar.make(viewHolder.itemView, "Deleting $position", Snackbar.LENGTH_SHORT).show()
-            }
-            ItemTouchHelper.RIGHT -> {
-                Snackbar.make(viewHolder.itemView, "Sharing $position", Snackbar.LENGTH_SHORT).show()
-            }
-            else -> {
-                Snackbar.make(viewHolder.itemView, "else $position", Snackbar.LENGTH_SHORT).show()
-            }
-        }
     }
 
     // override fun onChildDraw(
@@ -106,17 +90,10 @@ class VoizySwipeCallback(
     // }
 
     init {
-        deleteDrawable = context.getDrawable(R.drawable.ic_delete_white_sweep)
-        shareDrawable = context.getDrawable(R.drawable.ic_send_white)
-        background = ColorDrawable(context.getColor(android.R.color.holo_orange_dark))
         clearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
 
         intrinsicWidth = deleteDrawable.intrinsicWidth
         intrinsicHeight = deleteDrawable.intrinsicHeight
-    }
-
-    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-        return ItemTouchHelper.Callback.makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
     }
 
     override fun onChildDraw(

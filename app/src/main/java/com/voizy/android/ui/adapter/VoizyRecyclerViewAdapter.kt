@@ -26,6 +26,9 @@ class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.V
         }
     }
 
+    val items: List<Voizy>
+        get() = dataset
+
     class VoizyViewHolder(root: View) : RecyclerView.ViewHolder(root) {
         var tvTitle: TextView = root.findViewById(R.id.tv_voizy_row_title)
         var tvTags: TextView = root.findViewById(R.id.tv_voizy_row_tags)
@@ -54,5 +57,16 @@ class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.V
     public fun addAll(voizys: List<Voizy>) {
         dataset.addAll(voizys)
         notifyDataSetChanged()
+    }
+
+    public fun clear() {
+        dataset.clear()
+        notifyDataSetChanged()
+    }
+
+    public fun delete(position: Int) {
+    }
+
+    public fun add(position: Int) {
     }
 }

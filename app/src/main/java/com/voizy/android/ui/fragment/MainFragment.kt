@@ -29,6 +29,22 @@ class MainFragment : Fragment() {
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
 
+    private val swipeCallback = object : VoizySwipeCallback(context!!) {
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            when (direction) {
+                ItemTouchHelper.LEFT -> {
+                    // voizyListAdapter.items[position]
+                    voizyListAdapter.delete(position)
+                }
+                ItemTouchHelper.RIGHT -> {
+                    voizyListAdapter.items[position]
+                }
+            }
+        }
+    }
+
     companion object {
         private const val REQUEST_READ_EXTERNAL_PERMISSIONS = 200
     }
@@ -53,7 +69,7 @@ class MainFragment : Fragment() {
             layoutManager = LinearLayoutManager(context!!)
             adapter = voizyListAdapter
         }
-        ItemTouchHelper(VoizySwipeCallback(context!!)).attachToRecyclerView(voizyList)
+        ItemTouchHelper(swipeCallback).attachToRecyclerView(voizyList)
 
         viewModel.getOwnVoizys()
 
