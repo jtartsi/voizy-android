@@ -14,8 +14,21 @@ class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>(
 
     private val dataset = mutableListOf<Voizy>()
 
+    companion object {
+        private val sports = listOf<String>("#football ", "#icehockey ", "#soccer ", "#rugby ")
+        private val adjectives = listOf<String>("#best ", "#awesome ", "#superb ")
+        private val actions = listOf<String>("#goal ", "#win ", "#champions ")
+
+        private fun getRandomTags(): String {
+            return sports.shuffled().take(1)[0]
+                .plus(adjectives.shuffled().take(1)[0])
+                .plus(actions.shuffled().take(1)[0])
+        }
+    }
+
     class VoizyViewHolder(root: View) : RecyclerView.ViewHolder(root) {
         var tvTitle: TextView = root.findViewById(R.id.tv_voizy_row_title)
+        var tvTags: TextView = root.findViewById(R.id.tv_voizy_row_tags)
         var tvShareCount: TextView = root.findViewById(R.id.tv_voizy_row_shares)
     }
 
@@ -33,6 +46,7 @@ class VoizyListAdapter : RecyclerView.Adapter<VoizyListAdapter.VoizyViewHolder>(
         holder.tvTitle.text = dataset[position].name
         val randomShareCount = Random(Date().time).nextInt(1700)
         holder.tvShareCount.text = "$randomShareCount"
+        holder.tvTags.text = getRandomTags()
     }
 
     override fun getItemCount(): Int = dataset.size
