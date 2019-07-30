@@ -36,7 +36,6 @@ class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.V
         var tvShareCount: TextView = root.findViewById(R.id.tv_voizy_row_shares)
     }
 
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

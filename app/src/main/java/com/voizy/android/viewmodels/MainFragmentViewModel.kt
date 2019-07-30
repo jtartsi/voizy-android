@@ -7,7 +7,6 @@ import com.voizy.android.repositories.FileRepository
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.ReplaySubject
-import timber.log.Timber
 
 class MainFragmentViewModel(
     private val fileRepository: FileRepository,
@@ -20,7 +19,6 @@ class MainFragmentViewModel(
     private val voizysStream = voizySearchRequest
         .observeOn(Schedulers.io())
         .map {
-            Timber.d("voizysStream fetch voizys from location $it")
             when (it) {
                 VoizyLocation.PUBLIC -> fileRepository.getReceivedVoizys()
                 VoizyLocation.PRIVATE -> fileRepository.getAllOwnVoizys()
