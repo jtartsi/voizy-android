@@ -27,6 +27,14 @@ import timber.log.Timber
 
 class MainFragment : Fragment() {
 
+    /*
+     * Todos:
+     * 1. Delete function
+     * 2. Share function
+     * 3. Play function for MainFragment
+     * 4. Decide how to trigger share function (swipe vs. click?)
+     * 5. Shadow for rec button
+     */
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
