@@ -34,10 +34,13 @@ class MainFragment : Fragment() {
     /*
      * Todos:
      * -done- 1. Delete function
-     * 2. Share function
-     * 3. Play function for MainFragment
-     * 4. Decide how to trigger share function (swipe vs. click?)
-     * 5. Shadow for rec button
+     * -done- 2. Share function
+     * - Play function for MainFragment
+     * - .mp3 compression
+     * - Decide how to trigger share function (swipe vs. click?)
+     * - Swipe to return the row original looking
+     * - Shadow for rec button
+     *
      */
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
