@@ -7,7 +7,6 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,18 +70,20 @@ class MainFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
+                        val voizyToDelete = voizyListAdapter.items[position]
 
                         Snackbar.make(
                             view!!,
-                            getString(R.string.voizy_deleted, voizyListAdapter.items[position].name),
+                            getString(R.string.voizy_deleted, voizyToDelete.name),
                             Snackbar.LENGTH_LONG
                         ).setAction(R.string.undo) {
                             voizyListAdapter.cancelDelete()
+                            deleteHandler.removeCallbacksAndMessages(null)
                         }.show()
 
                         voizyListAdapter.cancellableDelete(position)
                         deleteHandler.postDelayed({
-                            Toast.makeText(context!!, "delete final", Toast.LENGTH_SHORT).show()
+                            viewModel.deleteVoizy(voizyToDelete)
                         }, 3500)
                     }
                     ItemTouchHelper.RIGHT -> {

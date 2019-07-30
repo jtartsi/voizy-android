@@ -62,6 +62,13 @@ class FileRepository(private val context: Context) {
         return voizys
     }
 
+    fun deleteFile(filePath: String) {
+        val file = File(filePath)
+        if (file.exists()) {
+            file.delete()
+        }
+    }
+
     private fun getAllFilesInFolderTree(parentDir: File, criteria: String): List<File> {
         val inFiles = mutableListOf<File>()
         val files = parentDir.listFiles()

@@ -1,9 +1,11 @@
 package com.voizy.android.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.model.Voizy
 import com.voizy.android.repositories.FileRepository
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.ReplaySubject
@@ -39,5 +41,16 @@ class MainFragmentViewModel(
 
     fun getOwnVoizys() {
         voizySearchRequest.onNext(VoizyLocation.PRIVATE)
+    }
+
+    fun deleteVoizy(voizy: Voizy) {
+        val completable = Completable.fromAction {
+            fileRepository.deleteFile(voizy.filePath)
+        }.subscribeOn(Schedulers.io())
+
+        completable.apply {
+            autoDisposable(this)
+            subscribe()
+        }
     }
 }
