@@ -9,6 +9,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -157,9 +158,23 @@ class MainFragment : Fragment() {
     }
 
     private fun shareVoizy(voizy: Voizy) {
+        val fileUri: Uri? = try {
+            FileProvider.getUriForFile(
+                context!!,
+                "com.voizy.android.fileprovider",
+                File(voizy.filePath)
+            )
+        } catch (e: IllegalArgumentException) {
+            Timber.e(
+                e, "File Selector",
+                "The selected file can't be shared: ${voizy.filePath}"
+            )
+            null
+        }
+
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(voizy.filePath)))
+            putExtra(Intent.EXTRA_STREAM, fileUri)
             type = "audio/3gpp"
         }
         startActivity(Intent.createChooser(sendIntent, "Share voizy"))

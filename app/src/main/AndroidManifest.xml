@@ -25,7 +25,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.myapp.fileprovider"
+            android:authorities="com.voizy.android.fileprovider"
             android:grantUriPermissions="true"
             android:exported="false">
             <meta-data
