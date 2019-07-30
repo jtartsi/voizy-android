@@ -1,6 +1,7 @@
 package com.voizy.android.ui.fragment
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.model.Voizy
 import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
 import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.utils.getScopeProvider
@@ -28,7 +30,7 @@ class MainFragment : Fragment() {
 
     /*
      * Todos:
-     * 1. Delete function
+     * -done- 1. Delete function
      * 2. Share function
      * 3. Play function for MainFragment
      * 4. Decide how to trigger share function (swipe vs. click?)
@@ -149,4 +151,14 @@ class MainFragment : Fragment() {
             Timber.d("READ_EXTERNAL_PERMISSION NO")
         }
     }
+
+    private fun shareVoizy(voizy: Voizy) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, voizy.filePath)
+            type = "audio/*"
+        }
+        startActivity(Intent.createChooser(sendIntent, "Share voizy"))
+    }
 }
+
