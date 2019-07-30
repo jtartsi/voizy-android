@@ -31,15 +31,15 @@ class MainFragmentViewModel(
         return fileRepository.getSaveVoizyEvents()
     }
 
-    public fun getVoizyStream(): Observable<List<Voizy>> {
+    fun getVoizyStream(): Observable<List<Voizy>> {
         return voizysStream
     }
 
-    public fun getReceivedVoizys() {
+    fun getReceivedVoizys() {
         voizySearchRequest.onNext(VoizyLocation.PUBLIC)
     }
 
-    public fun getOwnVoizys() {
+    fun getOwnVoizys() {
         voizySearchRequest.onNext(VoizyLocation.PRIVATE)
     }
 }

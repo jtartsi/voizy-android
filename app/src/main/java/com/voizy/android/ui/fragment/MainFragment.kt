@@ -73,7 +73,7 @@ class MainFragment : Fragment() {
 
                         voizyListAdapter.cancellableDelete(position)
                         deleteHandler.postDelayed({
-                            // TODO implement actual delete
+
                         }, 3500)
                     }
                     ItemTouchHelper.RIGHT -> {
