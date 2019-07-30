@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -73,11 +74,17 @@ class MainFragment : Fragment() {
 
                         voizyListAdapter.cancellableDelete(position)
                         deleteHandler.postDelayed({
-
+                            Toast.makeText(context!!, "delete final", Toast.LENGTH_SHORT).show()
                         }, 3500)
                     }
                     ItemTouchHelper.RIGHT -> {
                         voizyListAdapter.items[position]
+
+                        Snackbar.make(
+                            view!!,
+                            "Sharing",
+                            Snackbar.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
