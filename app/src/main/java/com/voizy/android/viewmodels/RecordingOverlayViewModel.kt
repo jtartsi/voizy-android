@@ -9,7 +9,6 @@ import com.voizy.android.repositories.FileRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
 class RecordingOverlayViewModel(
     private val fileRepository: FileRepository,
@@ -17,15 +16,15 @@ class RecordingOverlayViewModel(
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
 
-    public fun recordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
+    fun recordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
         return voizyRecorder.recordingEvents()
     }
 
-    public fun saveVoizyEvents(): Observable<Voizy> {
+    fun saveVoizyEvents(): Observable<Voizy> {
         return fileRepository.getSaveVoizyEvents()
     }
 
-    public fun playAudio() {
+    fun playAudio() {
         val completable = Completable.fromAction {
             voizyPlayer.play(fileRepository.getTempFilePath())
         }.subscribeOn(Schedulers.io())
@@ -36,16 +35,7 @@ class RecordingOverlayViewModel(
         }
     }
 
-    public fun saveVoizy(newFileName: String) {
-        Timber.d("save-voizy-iss saveVoizy() $newFileName")
+    fun saveVoizy(newFileName: String) {
         fileRepository.renameVoizy(newFileName)
     }
-
-    // /**
-    //  * @newFileName only the name, no path
-    //  */
-    // public fun renameCurrentVoizy(context: Context, newFileName: String): Observable<Boolean> {
-    //     return Observable.just(newFileName)
-    //         .map { FileUtil.renameFile(FileUtil.getDefaultFileName(context), it) }
-    // }
 }

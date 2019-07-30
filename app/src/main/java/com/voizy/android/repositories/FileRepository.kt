@@ -11,7 +11,9 @@ import java.io.File
 class FileRepository(private val context: Context) {
 
     companion object {
-        const val TMP_FILE_NAME = "voizy_tmp.mp3"
+        const val TMP_VOIZY_FILE_NAME = "voizy_tmp.mp3"
+        const val VOIZY_FILE_PREFIX = "voizy_"
+        const val MP3_FILE_EXT = ".mp3"
     }
 
     private val renameSubject = PublishSubject.create<String>()
@@ -22,7 +24,6 @@ class FileRepository(private val context: Context) {
         .share()
 
     fun renameVoizy(newFileName: String) {
-        Timber.d("save-voizy-iss renameVoizy.onNext() $newFileName")
         renameSubject.onNext(newFileName)
     }
 
@@ -31,7 +32,7 @@ class FileRepository(private val context: Context) {
     }
 
     fun getTempFilePath(): String {
-        return "${context.filesDir}/voizy_tmp.mp3"
+        return "${context.filesDir}/".plus(TMP_VOIZY_FILE_NAME)
     }
 
     /**
@@ -43,8 +44,9 @@ class FileRepository(private val context: Context) {
                 throw IllegalArgumentException("Empty file name")
             }
             val tmpPath = getTempFilePath()
-            val newPath = tmpPath.replace("_tmp.mp3", "_")
-                .plus(newFileName).plus(".mp3")
+            val newPath = tmpPath.replace(TMP_VOIZY_FILE_NAME, VOIZY_FILE_PREFIX)
+                .plus(newFileName)
+                .plus(MP3_FILE_EXT)
 
             return if (File(tmpPath).renameTo(File(newPath))) {
                 newPath
