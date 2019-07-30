@@ -3,6 +3,7 @@ package com.voizy.android.ui.fragment
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.io.File
 
 class MainFragment : Fragment() {
 
@@ -70,13 +72,14 @@ class MainFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
+                val voizy = voizyListAdapter.items[position]
+
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        val voizyToDelete = voizyListAdapter.items[position]
 
                         Snackbar.make(
                             view!!,
-                            getString(R.string.voizy_deleted, voizyToDelete.name),
+                            getString(R.string.voizy_deleted, voizy.name),
                             Snackbar.LENGTH_LONG
                         ).setAction(R.string.undo) {
                             voizyListAdapter.cancelDelete()
@@ -85,11 +88,12 @@ class MainFragment : Fragment() {
 
                         voizyListAdapter.cancellableDelete(position)
                         deleteHandler.postDelayed({
-                            viewModel.deleteVoizy(voizyToDelete)
+                            viewModel.deleteVoizy(voizy)
                         }, 3500)
                     }
                     ItemTouchHelper.RIGHT -> {
-                        voizyListAdapter.items[position]
+
+                        shareVoizy(voizy)
 
                         Snackbar.make(
                             view!!,
@@ -155,10 +159,9 @@ class MainFragment : Fragment() {
     private fun shareVoizy(voizy: Voizy) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, voizy.filePath)
-            type = "audio/*"
+            putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(voizy.filePath)))
+            type = "audio/3gpp"
         }
         startActivity(Intent.createChooser(sendIntent, "Share voizy"))
     }
 }
-
