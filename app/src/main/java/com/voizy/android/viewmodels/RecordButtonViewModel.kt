@@ -15,7 +15,7 @@ class RecordButtonViewModel(
     public fun startRecording() {
 
         val completable = Completable.fromAction {
-            val filename = "${context.filesDir}/voizy_tmp"
+            val filename = "${context.filesDir}/voizy_tmp.mp3"
             voizyRecorder.startRecording(filename)
         }.subscribeOn(Schedulers.io())
 

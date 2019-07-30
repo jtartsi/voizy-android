@@ -10,6 +10,10 @@ import java.io.File
 
 class FileRepository(private val context: Context) {
 
+    companion object {
+        const val TMP_FILE_NAME = "voizy_tmp.mp3"
+    }
+
     private val renameSubject = PublishSubject.create<String>()
     private val saveNameEvents = renameSubject
         .observeOn(Schedulers.io())
@@ -27,7 +31,7 @@ class FileRepository(private val context: Context) {
     }
 
     fun getTempFilePath(): String {
-        return "${context.filesDir}/voizy_tmp"
+        return "${context.filesDir}/voizy_tmp.mp3"
     }
 
     /**
@@ -39,7 +43,8 @@ class FileRepository(private val context: Context) {
                 throw IllegalArgumentException("Empty file name")
             }
             val tmpPath = getTempFilePath()
-            val newPath = tmpPath.replace("_tmp", "_").plus(newFileName)
+            val newPath = tmpPath.replace("_tmp.mp3", "_")
+                .plus(newFileName).plus(".mp3")
 
             return if (File(tmpPath).renameTo(File(newPath))) {
                 newPath
