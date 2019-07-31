@@ -7,7 +7,8 @@
     <string name="finish">Finish</string>
     <string name="name_your_voizy">Name your Voizy</string>
     <string name="voizy_deleted">Deleted %s</string>
-    <string name="voizy_share">Sharing %s</string>
+    <string name="voizy_sharing">Sharing %s</string>
     <string name="undo">Undo</string>
-
+    <string name="voizy_created_share">Voizy created! Let others enjoy it as well!</string>
+    <string name="share">Share</string>
 </resources>

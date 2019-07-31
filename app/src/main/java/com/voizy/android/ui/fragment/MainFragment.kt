@@ -72,7 +72,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemCl
 
                 Snackbar.make(
                     view!!,
-                    getString(R.string.voizy_share, voizy.name),
+                    getString(R.string.voizy_sharing, voizy.name),
                     Snackbar.LENGTH_LONG
                 ).show()
             }
@@ -139,13 +139,16 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemCl
             }
 
         viewModel.getSaveVoizyEvents()
+            .filter { it.name.isNotEmpty() }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                if (it.name.isNotEmpty()) {
-                    voizyListAdapter.addAll(listOf(it))
-                    Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG).show()
-                }
+            .subscribe { voizy ->
+                voizyListAdapter.addAll(listOf(voizy))
+                Snackbar.make(
+                    view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
+                ).setAction(R.string.share) { view ->
+                    shareVoizy(voizy)
+                }.show()
             }
 
         viewModel.getOwnVoizys()
