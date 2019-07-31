@@ -68,15 +68,4 @@ class MainFragmentViewModel(
         return Observable.just(filePath)
             .map { voizyPlayer.play(it) }
     }
-
-    // fun playVoizy(filePath: String) {
-    //     val completable = Completable.fromAction {
-    //         voizyPlayer.play(filePath)
-    //     }.subscribeOn(Schedulers.io())
-    //
-    //     completable.apply {
-    //         autoDisposable(this)
-    //         subscribe()
-    //     }
-    // }
 }

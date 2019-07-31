@@ -1,7 +1,6 @@
 package com.voizy.android.ui.adapter
 
 import android.animation.ObjectAnimator
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ class VoizyRecyclerViewAdapter(
     private val onItemClickListener: OnItemClickListener<VoizyViewHolder, Voizy>
 ) : RecyclerView.Adapter<VoizyRecyclerViewAdapter.VoizyViewHolder>() {
 
-    private val progressHandler = Handler()
     private val dataset = mutableListOf<Voizy>()
     private var cancellableDeletedItem: Pair<Int, Voizy>? = null
 

@@ -33,19 +33,6 @@ import java.io.File
 class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy> {
 
-    /*
-     * Todos:
-     * -done- 1. Delete function
-     * -done- 2. Share function
-     * -done- Play voizys in MainFragment
-     * -done- Responsive click for play
-     * -done- Decide how to trigger share function (swipe vs. click?)
-     * -done- Swipe to return the row original looking
-     * -done- Shadow for rec button
-     * -done Share file from snackbar
-     * - Progress bar for play length
-     */
-
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
         val voizy = voizyListAdapter.items[position]
@@ -150,7 +137,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
                 voizyListAdapter.addAll(listOf(voizy))
                 Snackbar.make(
                     view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
-                ).setAction(R.string.share) { view ->
+                ).setAction(R.string.share) {
                     shareVoizy(voizy)
                 }.show()
             }

@@ -11,4 +11,5 @@
     <string name="undo">Undo</string>
     <string name="voizy_created_share">Voizy created! Let others enjoy it as well!</string>
     <string name="share">Share</string>
+    <string name="voizy_save_failed">"Saving Voizy failed, make sure you input name."</string>
 </resources>

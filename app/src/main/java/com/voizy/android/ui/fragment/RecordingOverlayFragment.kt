@@ -45,7 +45,6 @@ class RecordingOverlayFragment : Fragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            Timber.d("save-voizy-iss onClick()")
             viewModel.saveVoizy(et_voizy_name.text.toString())
         }
     }
@@ -88,7 +87,7 @@ class RecordingOverlayFragment : Fragment() {
                     hideSoftKeyboard(playButton)
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 } else {
-                    Snackbar.make(view!!, "Saving Voizy failed. Make sure you input name.", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT)
                         .show()
                 }
             }
