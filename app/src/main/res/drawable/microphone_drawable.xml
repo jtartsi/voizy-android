@@ -5,7 +5,7 @@
         android:height="90dp"
         android:width="90dp"/>
     <item
-        android:drawable="@drawable/microphone_white_128"
+        android:drawable="@drawable/ic_mic_white_48dp"
         android:gravity="center"
         android:height="45dp"
         android:width="45dp"/>

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.utils.getScopeProvider
@@ -40,7 +41,7 @@ class RecordButtonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recordButton = view.findViewById<ImageButton>(R.id.button_record)
+        recordButton = view.findViewById<FloatingActionButton>(R.id.button_record)
         recordButton.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
