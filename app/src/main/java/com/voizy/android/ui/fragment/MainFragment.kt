@@ -35,11 +35,13 @@ class MainFragment : Fragment() {
      * Todos:
      * -done- 1. Delete function
      * -done- 2. Share function
-     * - Play function for MainFragment
+     * - Play voizys in MainFragment
+     * - Responsive click for play
      * - .mp3 compression
      * -done- Decide how to trigger share function (swipe vs. click?)
      * -done- Swipe to return the row original looking
      * - Shadow for rec button
+     * - Share file from snackbar
      */
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
@@ -78,8 +80,6 @@ class MainFragment : Fragment() {
         }
         ItemTouchHelper(swipeCallback).attachToRecyclerView(voizyList)
 
-        viewModel.getOwnVoizys()
-
         Completable
             .fromAction {
                 requestPermissions(
@@ -112,6 +112,8 @@ class MainFragment : Fragment() {
                     Snackbar.make(view!!, "Voizy saved. Share and let others enjoy!", Snackbar.LENGTH_LONG).show()
                 }
             }
+
+        viewModel.getOwnVoizys()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
