@@ -9,4 +9,5 @@ class Voizy(private val path: String) {
         get() = filePath
             .replaceBefore("voizy_", "")
             .removePrefix("voizy_")
+            .removeSuffix(".mp3")
 }
