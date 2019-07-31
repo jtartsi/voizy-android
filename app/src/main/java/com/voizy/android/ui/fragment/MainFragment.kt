@@ -85,9 +85,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                voizyListAdapter.animatePlaybackProgress(viewHolder, it)
-            }
+            .subscribe { viewHolder.animateProgress(it) }
     }
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()

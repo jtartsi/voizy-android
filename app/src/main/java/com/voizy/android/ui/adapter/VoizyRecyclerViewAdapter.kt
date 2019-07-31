@@ -1,15 +1,19 @@
 package com.voizy.android.ui.adapter
 
+import android.animation.ObjectAnimator
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import com.voizy.android.model.Voizy
 import com.voizy.android.ui.listener.OnItemClickListener
+import timber.log.Timber
 import java.util.Date
 import kotlin.random.Random
 
@@ -41,6 +45,26 @@ class VoizyRecyclerViewAdapter(
         var tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
         var tvShareCount: TextView = view.findViewById(R.id.tv_voizy_row_shares)
         var progressBar: ProgressBar = view.findViewById(R.id.pb_voizy_row_progress)
+
+        fun animateProgress(durationInMillis: Int) {
+            Timber.d("animateProgress duration $durationInMillis")
+            progressBar.max = durationInMillis
+            val progressAnimator = ObjectAnimator.ofInt(
+                progressBar,
+                "progress",
+                0,
+                durationInMillis
+            )
+            progressAnimator.duration = durationInMillis.toLong()
+            progressAnimator.interpolator = LinearInterpolator()
+            progressAnimator.start()
+            progressAnimator.addListener(
+                onEnd = {
+                    progressBar.progress = 0
+                    progressBar.max = 0
+                }
+            )
+        }
     }
 
     override fun onCreateViewHolder(
@@ -90,20 +114,20 @@ class VoizyRecyclerViewAdapter(
         }
     }
 
-    fun animatePlaybackProgress(viewHolder: VoizyViewHolder, duration: Int) {
-        viewHolder.progressBar.max = duration
-        updateProgress(viewHolder.progressBar)
-    }
-
-    private fun updateProgress(progressBar: ProgressBar) {
-        if (progressBar.progress < progressBar.max) {
-            progressBar.progress = progressBar.progress + 10
-            progressHandler.postDelayed({
-                updateProgress(progressBar)
-            }, 10)
-        } else {
-            progressHandler.removeCallbacksAndMessages(null)
-            progressBar.progress = 0
-        }
-    }
+    // fun animatePlaybackProgress(viewHolder: VoizyViewHolder, duration: Int) {
+    //     viewHolder.progressBar.max = duration
+    //     updateProgress(viewHolder.progressBar)
+    // }
+    //
+    // private fun updateProgress(progressBar: ProgressBar) {
+    //     if (progressBar.progress < progressBar.max) {
+    //         progressBar.progress = progressBar.progress + 10
+    //         progressHandler.postDelayed({
+    //             updateProgress(progressBar)
+    //         }, 10)
+    //     } else {
+    //         progressHandler.removeCallbacksAndMessages(null)
+    //         progressBar.progress = 0
+    //     }
+    // }
 }
