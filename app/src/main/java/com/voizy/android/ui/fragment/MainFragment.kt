@@ -160,16 +160,6 @@ class MainFragment : Fragment() {
     }
 
     private fun shareVoizy(voizy: Voizy) {
-        // var imperialMarch: File? = null
-        // for (file in Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles()) {
-        //     Timber.d("shareVoizy ${file.path} ${file.absolutePath}")
-        //     if (file.name.contains("imperial")) {
-        //         Timber.d("Imperial march FOUND")
-        //         imperialMarch = file
-        //     }
-        // }
-
-        // val filePath = "/Internal Storage/Download/imperial_march.mp3"
         val fileUri: Uri? = try {
             FileProvider.getUriForFile(
                 context!!,

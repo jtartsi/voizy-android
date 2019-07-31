@@ -35,7 +35,6 @@ abstract class VoizySwipeCallback(
 
     init {
         clearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-
         intrinsicWidth = deleteDrawable.intrinsicWidth
         intrinsicHeight = deleteDrawable.intrinsicHeight
     }
