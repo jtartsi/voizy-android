@@ -20,6 +20,7 @@ import com.voizy.android.R
 import com.voizy.android.model.Voizy
 import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
 import com.voizy.android.ui.adapter.VoizySwipeCallback
+import com.voizy.android.ui.listener.OnItemClickListener
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.Completable
@@ -29,7 +30,7 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.io.File
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemClickListener<Voizy> {
 
     /*
      * Todos:
@@ -43,6 +44,44 @@ class MainFragment : Fragment() {
      * - Shadow for rec button
      * - Share file from snackbar
      */
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        val position = viewHolder.adapterPosition
+        val voizy = voizyListAdapter.items[position]
+        when (direction) {
+            ItemTouchHelper.LEFT -> {
+
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_deleted, voizy.name),
+                    Snackbar.LENGTH_LONG
+                ).setAction(R.string.undo) {
+                    voizyListAdapter.cancelDelete()
+                    deleteHandler.removeCallbacksAndMessages(null)
+                }.show()
+
+                voizyListAdapter.cancellableDelete(position)
+                deleteHandler.postDelayed({
+                    viewModel.deleteVoizy(voizy)
+                }, 3500)
+            }
+            ItemTouchHelper.RIGHT -> {
+                voizyListAdapter.notifyItemChanged(position)
+                shareVoizy(voizy)
+
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_share, voizy.name),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    override fun onClick(position: Int, item: Voizy) {
+        Timber.d("onClick $position ${item.name}")
+    }
+
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
@@ -65,20 +104,14 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated()")
 
-        voizyListAdapter = VoizyRecyclerViewAdapter()
+        voizyListAdapter = VoizyRecyclerViewAdapter(this)
         voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
             setHasFixedSize(true)
             // use a linear layout manager
             layoutManager = LinearLayoutManager(context!!)
             adapter = voizyListAdapter
         }
-
-        val swipeCallback = object : VoizySwipeCallback(context!!) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                onVoizyItemSwipe(viewHolder.adapterPosition, direction)
-            }
-        }
-        ItemTouchHelper(swipeCallback).attachToRecyclerView(voizyList)
+        ItemTouchHelper(VoizySwipeCallback(context!!, this)).attachToRecyclerView(voizyList)
 
         Completable
             .fromAction {

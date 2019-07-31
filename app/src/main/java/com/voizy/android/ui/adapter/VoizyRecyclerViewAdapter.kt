@@ -7,10 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import com.voizy.android.model.Voizy
+import com.voizy.android.ui.listener.OnItemClickListener
+import timber.log.Timber
 import java.util.Date
 import kotlin.random.Random
 
-class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.VoizyViewHolder>() {
+class VoizyRecyclerViewAdapter(
+    private val onItemClickListener: OnItemClickListener<Voizy>
+) : RecyclerView.Adapter<VoizyRecyclerViewAdapter.VoizyViewHolder>() {
 
     private val dataset = mutableListOf<Voizy>()
     private var cancellableDeletedItem: Pair<Int, Voizy>? = null
@@ -30,10 +34,19 @@ class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.V
     val items: List<Voizy>
         get() = dataset
 
-    class VoizyViewHolder(root: View) : RecyclerView.ViewHolder(root) {
-        var tvTitle: TextView = root.findViewById(R.id.tv_voizy_row_title)
-        var tvTags: TextView = root.findViewById(R.id.tv_voizy_row_tags)
-        var tvShareCount: TextView = root.findViewById(R.id.tv_voizy_row_shares)
+    class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        init {
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            // onItemClickListener.(adapterPosition, items[adapterPosition])
+            Timber.d("onClick $adapterPosition")
+        }
+
+        var tvTitle: TextView = view.findViewById(R.id.tv_voizy_row_title)
+        var tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
+        var tvShareCount: TextView = view.findViewById(R.id.tv_voizy_row_shares)
     }
 
     override fun onCreateViewHolder(
@@ -50,6 +63,7 @@ class VoizyRecyclerViewAdapter : RecyclerView.Adapter<VoizyRecyclerViewAdapter.V
         val randomShareCount = Random(Date().time).nextInt(1700)
         holder.tvShareCount.text = "$randomShareCount"
         holder.tvTags.text = getRandomTags()
+        holder.itemView.setOnClickListener { onItemClickListener.onClick(position, items[position]) }
     }
 
     override fun getItemCount(): Int = dataset.size

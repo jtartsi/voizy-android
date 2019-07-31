@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import kotlin.math.absoluteValue
 
-abstract class VoizySwipeCallback(
-    private val context: Context
+class VoizySwipeCallback(
+    private val context: Context,
+    private val voizySwipeListener: VoizySwipeListener
 ) : ItemTouchHelper.SimpleCallback(
     0,
     ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -26,6 +27,16 @@ abstract class VoizySwipeCallback(
     private val intrinsicWidth: Int
     private val intrinsicHeight: Int
 
+    interface VoizySwipeListener {
+        fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
+    }
+
+    init {
+        clearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        intrinsicWidth = deleteDrawable.intrinsicWidth
+        intrinsicHeight = deleteDrawable.intrinsicHeight
+    }
+
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -34,10 +45,8 @@ abstract class VoizySwipeCallback(
         return false
     }
 
-    init {
-        clearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-        intrinsicWidth = deleteDrawable.intrinsicWidth
-        intrinsicHeight = deleteDrawable.intrinsicHeight
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        voizySwipeListener.onSwiped(viewHolder, direction)
     }
 
     override fun onChildDraw(
