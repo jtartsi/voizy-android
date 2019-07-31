@@ -41,7 +41,7 @@ class RecordingOverlayFragment : Fragment() {
 
         playButton = view.findViewById<View>(R.id.btn_play_preview)
         playButton.setOnClickListener {
-            viewModel.playAudio()
+            viewModel.playVoizy()
         }
 
         btn_save_voizy.setOnClickListener {

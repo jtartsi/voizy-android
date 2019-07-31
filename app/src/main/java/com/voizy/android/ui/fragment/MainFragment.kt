@@ -78,8 +78,9 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemCl
         }
     }
 
-    override fun onClick(position: Int, item: Voizy) {
-        Timber.d("onClick $position ${item.name}")
+    override fun onClick(position: Int, voizy: Voizy) {
+        Timber.d("onClick $position ${voizy.name} ${voizy.filePath}")
+        viewModel.playVoizy(voizy.filePath)
     }
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
