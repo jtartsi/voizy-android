@@ -164,38 +164,6 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemCl
         }
     }
 
-    private fun onVoizyItemSwipe(position: Int, direction: Int) {
-        val voizy = voizyListAdapter.items[position]
-        when (direction) {
-            ItemTouchHelper.LEFT -> {
-
-                Snackbar.make(
-                    view!!,
-                    getString(R.string.voizy_deleted, voizy.name),
-                    Snackbar.LENGTH_LONG
-                ).setAction(R.string.undo) {
-                    voizyListAdapter.cancelDelete()
-                    deleteHandler.removeCallbacksAndMessages(null)
-                }.show()
-
-                voizyListAdapter.cancellableDelete(position)
-                deleteHandler.postDelayed({
-                    viewModel.deleteVoizy(voizy)
-                }, 3500)
-            }
-            ItemTouchHelper.RIGHT -> {
-                voizyListAdapter.notifyItemChanged(position)
-                shareVoizy(voizy)
-
-                Snackbar.make(
-                    view!!,
-                    getString(R.string.voizy_share, voizy.name),
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
     private fun shareVoizy(voizy: Voizy) {
         val fileUri: Uri? = try {
             FileProvider.getUriForFile(
