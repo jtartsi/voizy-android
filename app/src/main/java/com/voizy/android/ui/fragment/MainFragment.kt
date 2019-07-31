@@ -36,13 +36,14 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemCl
      * Todos:
      * -done- 1. Delete function
      * -done- 2. Share function
-     * - Play voizys in MainFragment
+     * -done- Play voizys in MainFragment
      * - Responsive click for play
      * - .mp3 compression
      * -done- Decide how to trigger share function (swipe vs. click?)
      * -done- Swipe to return the row original looking
      * - Shadow for rec button
      * - Share file from snackbar
+     * - Progress bar for play length
      */
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
