@@ -30,7 +30,8 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.io.File
 
-class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemClickListener<Voizy> {
+class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
+    OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy> {
 
     /*
      * Todos:
@@ -78,9 +79,15 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemCl
         }
     }
 
-    override fun onClick(position: Int, voizy: Voizy) {
+    override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
         Timber.d("onClick $position ${voizy.name} ${voizy.filePath}")
         viewModel.playVoizy(voizy.filePath)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                voizyListAdapter.animatePlaybackProgress(viewHolder, it)
+            }
     }
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()

@@ -1,8 +1,10 @@
 package com.voizy.android.ui.adapter
 
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
@@ -12,9 +14,10 @@ import java.util.Date
 import kotlin.random.Random
 
 class VoizyRecyclerViewAdapter(
-    private val onItemClickListener: OnItemClickListener<Voizy>
+    private val onItemClickListener: OnItemClickListener<VoizyViewHolder, Voizy>
 ) : RecyclerView.Adapter<VoizyRecyclerViewAdapter.VoizyViewHolder>() {
 
+    private val progressHandler = Handler()
     private val dataset = mutableListOf<Voizy>()
     private var cancellableDeletedItem: Pair<Int, Voizy>? = null
 
@@ -37,6 +40,7 @@ class VoizyRecyclerViewAdapter(
         var tvTitle: TextView = view.findViewById(R.id.tv_voizy_row_title)
         var tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
         var tvShareCount: TextView = view.findViewById(R.id.tv_voizy_row_shares)
+        var progressBar: ProgressBar = view.findViewById(R.id.pb_voizy_row_progress)
     }
 
     override fun onCreateViewHolder(
@@ -53,7 +57,9 @@ class VoizyRecyclerViewAdapter(
         val randomShareCount = Random(Date().time).nextInt(1700)
         holder.tvShareCount.text = "$randomShareCount"
         holder.tvTags.text = getRandomTags()
-        holder.itemView.setOnClickListener { onItemClickListener.onClick(position, items[position]) }
+        holder.itemView.setOnClickListener {
+            onItemClickListener.onClick(holder, position, items[position])
+        }
     }
 
     override fun getItemCount(): Int = dataset.size
@@ -81,6 +87,23 @@ class VoizyRecyclerViewAdapter(
         cancellableDeletedItem?.let {
             dataset.add(it.first, it.second)
             notifyItemInserted(it.first)
+        }
+    }
+
+    fun animatePlaybackProgress(viewHolder: VoizyViewHolder, duration: Int) {
+        viewHolder.progressBar.max = duration
+        updateProgress(viewHolder.progressBar)
+    }
+
+    private fun updateProgress(progressBar: ProgressBar) {
+        if (progressBar.progress < progressBar.max) {
+            progressBar.progress = progressBar.progress + 10
+            progressHandler.postDelayed({
+                updateProgress(progressBar)
+            }, 10)
+        } else {
+            progressHandler.removeCallbacksAndMessages(null)
+            progressBar.progress = 0
         }
     }
 }

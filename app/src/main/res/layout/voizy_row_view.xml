@@ -70,11 +70,12 @@
         app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/view"/>
 
     <ProgressBar
+        android:id="@+id/pb_voizy_row_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:progress="35"
-        android:max="100"
+        android:layout_height="3dp"
+        android:progress="0"
+        android:max="5000"
         android:progressTint="@android:color/holo_orange_dark"
         android:progressBackgroundTint="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/view"/>
