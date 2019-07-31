@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import com.voizy.android.model.Voizy
 import com.voizy.android.ui.listener.OnItemClickListener
-import timber.log.Timber
 import java.util.Date
 import kotlin.random.Random
 
@@ -34,16 +33,7 @@ class VoizyRecyclerViewAdapter(
     val items: List<Voizy>
         get() = dataset
 
-    class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        init {
-            view.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            // onItemClickListener.(adapterPosition, items[adapterPosition])
-            Timber.d("onClick $adapterPosition")
-        }
-
+    class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tvTitle: TextView = view.findViewById(R.id.tv_voizy_row_title)
         var tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
         var tvShareCount: TextView = view.findViewById(R.id.tv_voizy_row_shares)
