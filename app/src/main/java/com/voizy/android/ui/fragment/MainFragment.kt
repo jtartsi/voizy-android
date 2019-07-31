@@ -38,11 +38,10 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener, OnItemCl
      * -done- 2. Share function
      * -done- Play voizys in MainFragment
      * -done- Responsive click for play
-     * - .mp3 compression
      * -done- Decide how to trigger share function (swipe vs. click?)
      * -done- Swipe to return the row original looking
      * -done- Shadow for rec button
-     * - Share file from snackbar
+     * -done Share file from snackbar
      * - Progress bar for play length
      */
 
