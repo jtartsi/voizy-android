@@ -66,9 +66,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_delete_white_sweep" />
+                                      <entry key="outputName" value="ic_delete_sweep_orange_dark" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ffffff" />
+                                      <entry key="themeColor" value="ff8800" />
                                     </map>
                                   </option>
                                 </PersistentState>

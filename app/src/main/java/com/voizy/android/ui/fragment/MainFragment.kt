@@ -38,7 +38,7 @@ class MainFragment : Fragment() {
      * - Play function for MainFragment
      * - .mp3 compression
      * -done- Decide how to trigger share function (swipe vs. click?)
-     * - Swipe to return the row original looking
+     * -done- Swipe to return the row original looking
      * - Shadow for rec button
      */
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
