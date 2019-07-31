@@ -113,21 +113,4 @@ class VoizyRecyclerViewAdapter(
             notifyItemInserted(it.first)
         }
     }
-
-    // fun animatePlaybackProgress(viewHolder: VoizyViewHolder, duration: Int) {
-    //     viewHolder.progressBar.max = duration
-    //     updateProgress(viewHolder.progressBar)
-    // }
-    //
-    // private fun updateProgress(progressBar: ProgressBar) {
-    //     if (progressBar.progress < progressBar.max) {
-    //         progressBar.progress = progressBar.progress + 10
-    //         progressHandler.postDelayed({
-    //             updateProgress(progressBar)
-    //         }, 10)
-    //     } else {
-    //         progressHandler.removeCallbacksAndMessages(null)
-    //         progressBar.progress = 0
-    //     }
-    // }
 }
