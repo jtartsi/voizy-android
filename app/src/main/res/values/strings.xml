@@ -6,7 +6,8 @@
     <string name="rec_close_failed">Failed to finalize recording</string>
     <string name="finish">Finish</string>
     <string name="name_your_voizy">Name your Voizy</string>
-    <string name="voizy_deleted">Voizy deleted %s</string>
+    <string name="voizy_deleted">Deleted %s</string>
+    <string name="voizy_share">Sharing %s</string>
     <string name="undo">Undo</string>
 
 </resources>

@@ -72,42 +72,10 @@ class MainFragment : Fragment() {
         }
 
         val swipeCallback = object : VoizySwipeCallback(context!!) {
-
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                val voizy = voizyListAdapter.items[position]
-
-                when (direction) {
-                    ItemTouchHelper.LEFT -> {
-
-                        Snackbar.make(
-                            view!!,
-                            getString(R.string.voizy_deleted, voizy.name),
-                            Snackbar.LENGTH_LONG
-                        ).setAction(R.string.undo) {
-                            voizyListAdapter.cancelDelete()
-                            deleteHandler.removeCallbacksAndMessages(null)
-                        }.show()
-
-                        voizyListAdapter.cancellableDelete(position)
-                        deleteHandler.postDelayed({
-                            viewModel.deleteVoizy(voizy)
-                        }, 3500)
-                    }
-                    ItemTouchHelper.RIGHT -> {
-                        voizyListAdapter.notifyItemChanged(position)
-                        shareVoizy(voizy)
-
-                        Snackbar.make(
-                            view!!,
-                            "Sharing",
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                    }
-                }
+                onVoizyItemSwipe(viewHolder.adapterPosition, direction)
             }
         }
-
         ItemTouchHelper(swipeCallback).attachToRecyclerView(voizyList)
 
         viewModel.getOwnVoizys()
@@ -156,6 +124,38 @@ class MainFragment : Fragment() {
             viewModel.getReceivedVoizys()
         } else {
             Timber.d("READ_EXTERNAL_PERMISSION NO")
+        }
+    }
+
+    private fun onVoizyItemSwipe(position: Int, direction: Int) {
+        val voizy = voizyListAdapter.items[position]
+        when (direction) {
+            ItemTouchHelper.LEFT -> {
+
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_deleted, voizy.name),
+                    Snackbar.LENGTH_LONG
+                ).setAction(R.string.undo) {
+                    voizyListAdapter.cancelDelete()
+                    deleteHandler.removeCallbacksAndMessages(null)
+                }.show()
+
+                voizyListAdapter.cancellableDelete(position)
+                deleteHandler.postDelayed({
+                    viewModel.deleteVoizy(voizy)
+                }, 3500)
+            }
+            ItemTouchHelper.RIGHT -> {
+                voizyListAdapter.notifyItemChanged(position)
+                shareVoizy(voizy)
+
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_share, voizy.name),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
