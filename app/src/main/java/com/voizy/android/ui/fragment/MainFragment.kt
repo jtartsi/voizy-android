@@ -95,7 +95,7 @@ class MainFragment : Fragment() {
                         }, 3500)
                     }
                     ItemTouchHelper.RIGHT -> {
-
+                        voizyListAdapter.notifyItemChanged(position)
                         shareVoizy(voizy)
 
                         Snackbar.make(
