@@ -1,5 +1,7 @@
 package com.voizy.android.model
 
+import com.voizy.android.repositories.FileRepository
+
 class Voizy(private val path: String) {
 
     val filePath: String
@@ -9,5 +11,5 @@ class Voizy(private val path: String) {
         get() = filePath
             .replaceBefore("voizy_", "")
             .removePrefix("voizy_")
-            .removeSuffix(".mp3")
+            .removeSuffix(FileRepository.MP3_FILE_EXT)
 }
