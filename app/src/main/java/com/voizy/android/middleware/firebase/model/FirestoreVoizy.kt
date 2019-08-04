@@ -2,7 +2,7 @@ package com.voizy.android.middleware.firebase.model
 
 import com.google.firebase.firestore.DocumentSnapshot
 
-class FirestoreVoizy(name: String, tags: Map<String, Boolean>) {
+class FirestoreVoizy(val name: String, val tags: Map<String, Boolean>) {
 
     companion object {
         private const val NAME_KEY = "name"

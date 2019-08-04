@@ -5,16 +5,18 @@ import com.voizy.android.middleware.local.LocalFileManager
 
 data class Voizy(
     private val localFilePath: String,
-    private val tagsList: List<String> = listOf()
+    private var tagsList: List<String> = listOf()
 ) {
-
     constructor() : this("", listOf())
-
-    val tags: Map<String, Boolean>
-        get() = tagsList.map { Pair(it, true) }.toMap()
 
     val localPath: String
         get() = localFilePath
+
+    var tags: List<String>
+        get() = tagsList
+        set(newTags) {
+            tags = newTags
+        }
 
     val name: String
         get() = localPath
@@ -23,6 +25,6 @@ data class Voizy(
             .removeSuffix(LocalFileManager.MP3_FILE_EXT)
 
     fun toFirestoreData(): FirestoreVoizy {
-        return FirestoreVoizy(name, tags)
+        return FirestoreVoizy(name, tags.map { it to true }.toMap())
     }
 }

@@ -46,7 +46,7 @@ class RecordingOverlayFragment : Fragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            val voizyToSave = Voizy(et_voizy_name.text.toString(), listOf("Sports", "Football", "Goal"))
+            val voizyToSave = Voizy(et_voizy_name.text.toString(), listOf("sports", "football", "goal"))
             viewModel.saveVoizy(voizyToSave)
         }
     }

@@ -26,13 +26,11 @@ class VoizyCollection(private val firestore: FirebaseFirestore) {
 
     fun getVoizys() {
         firestore.collection(VOIZYS_COLLECTION)
-            .whereEqualTo("tags.Football", true)
-            .whereEqualTo("tags.Goal", true)
             .get()
             .addOnSuccessListener {
                 Timber.d("readVoizys success $it")
-                it.documents.forEach {
-                    val voizy = it.toObject(FirestoreVoizy::class.java)
+                it.documents.forEach { documentSnapshot ->
+                    val voizy = FirestoreVoizy.from(documentSnapshot)
                     Timber.d("readVoizys voizy $voizy")
                 }
             }
