@@ -1,20 +1,14 @@
 package com.voizy.android.ui.model
 
-import com.google.firebase.firestore.IgnoreExtraProperties
+import com.voizy.android.middleware.firebase.model.FirestoreVoizy
 import com.voizy.android.middleware.local.LocalFileManager
 
-@IgnoreExtraProperties
 data class Voizy(
     private val localFilePath: String,
     private val tagsList: List<String> = listOf()
 ) {
 
     constructor() : this("", listOf())
-
-    companion object {
-        private const val FIRESTORE_NAME = "name"
-        private const val FIRESTORE_TAGS = "tags"
-    }
 
     val tags: Map<String, Boolean>
         get() = tagsList.map { Pair(it, true) }.toMap()
@@ -28,10 +22,7 @@ data class Voizy(
             .removePrefix(LocalFileManager.VOIZY_FILE_PREFIX)
             .removeSuffix(LocalFileManager.MP3_FILE_EXT)
 
-    fun toFirestoreData(): HashMap<String, Any> {
-        return hashMapOf(
-            FIRESTORE_NAME to name,
-            FIRESTORE_TAGS to tags
-        )
+    fun toFirestoreData(): FirestoreVoizy {
+        return FirestoreVoizy(name, tags)
     }
 }

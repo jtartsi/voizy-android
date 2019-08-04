@@ -1,6 +1,7 @@
 package com.voizy.android.middleware.firebase.collections
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.voizy.android.middleware.firebase.model.FirestoreVoizy
 import com.voizy.android.ui.model.Voizy
 import timber.log.Timber
 
@@ -26,11 +27,12 @@ class VoizyCollection(private val firestore: FirebaseFirestore) {
     fun getVoizys() {
         firestore.collection(VOIZYS_COLLECTION)
             .whereEqualTo("tags.Football", true)
+            .whereEqualTo("tags.Goal", true)
             .get()
             .addOnSuccessListener {
                 Timber.d("readVoizys success $it")
                 it.documents.forEach {
-                    val voizy = it.toObject(Voizy::class.java)
+                    val voizy = it.toObject(FirestoreVoizy::class.java)
                     Timber.d("readVoizys voizy $voizy")
                 }
             }
