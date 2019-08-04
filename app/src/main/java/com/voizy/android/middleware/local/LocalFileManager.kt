@@ -1,7 +1,7 @@
-package com.voizy.android.middleware.repositories
+package com.voizy.android.middleware.local
 
 import android.content.Context
-import com.voizy.android.middleware.model.Voizy
+import com.voizy.android.ui.model.Voizy
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -44,7 +44,10 @@ class LocalFileManager(private val context: Context) {
                 throw IllegalArgumentException("Empty file name")
             }
             val tmpPath = getTempFilePath()
-            val newPath = tmpPath.replace(TMP_VOIZY_FILE_NAME, VOIZY_FILE_PREFIX)
+            val newPath = tmpPath.replace(
+                TMP_VOIZY_FILE_NAME,
+                VOIZY_FILE_PREFIX
+            )
                 .plus(newFileName)
                 .plus(MP3_FILE_EXT)
 

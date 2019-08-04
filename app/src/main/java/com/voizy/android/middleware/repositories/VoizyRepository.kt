@@ -1,11 +1,13 @@
 package com.voizy.android.middleware.repositories
 
-import com.voizy.android.middleware.model.Voizy
+import com.voizy.android.middleware.firebase.collections.VoizyCollection
+import com.voizy.android.middleware.local.LocalFileManager
+import com.voizy.android.ui.model.Voizy
 import io.reactivex.Observable
 import timber.log.Timber
 
 class VoizyRepository(
-    private val voizyFirestore: VoizyFirestore,
+    private val voizyFirestore: VoizyCollection,
     private val localFileManager: LocalFileManager
 ) {
     fun getSaveVoizyEvents(): Observable<Voizy> {
@@ -28,5 +30,9 @@ class VoizyRepository(
 
     fun deleteLocalVoizy(localFilePath: String) {
         localFileManager.deleteFile(localFilePath)
+    }
+
+    fun getVoizys() {
+        voizyFirestore.getVoizys()
     }
 }

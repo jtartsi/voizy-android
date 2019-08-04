@@ -1,10 +1,10 @@
-package com.voizy.android.middleware.viewmodels
+package com.voizy.android.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
-import com.voizy.android.middleware.model.Voizy
 import com.voizy.android.middleware.repositories.VoizyRepository
+import com.voizy.android.ui.model.Voizy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -56,5 +56,9 @@ class MainFragmentViewModel(
     fun playVoizy(filePath: String): Observable<Int> {
         return Observable.just(filePath)
             .map { voizyPlayer.play(it) }
+    }
+
+    fun fetchRemoteVoizys() {
+        voizyRepository.getVoizys()
     }
 }

@@ -1,13 +1,15 @@
-package com.voizy.android.middleware.model
+package com.voizy.android.ui.model
 
 import com.google.firebase.firestore.IgnoreExtraProperties
-import com.voizy.android.middleware.repositories.LocalFileManager
+import com.voizy.android.middleware.local.LocalFileManager
 
 @IgnoreExtraProperties
-class Voizy(
+data class Voizy(
     private val localFilePath: String,
     private val tagsList: List<String> = listOf()
 ) {
+
+    constructor() : this("", listOf())
 
     companion object {
         private const val FIRESTORE_NAME = "name"

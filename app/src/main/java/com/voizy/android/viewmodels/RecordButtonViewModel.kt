@@ -1,10 +1,10 @@
-package com.voizy.android.middleware.viewmodels
+package com.voizy.android.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyRecorder
-import com.voizy.android.middleware.repositories.LocalFileManager
+import com.voizy.android.middleware.local.LocalFileManager
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 

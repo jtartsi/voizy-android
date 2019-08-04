@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
-import com.voizy.android.middleware.viewmodels.RecordButtonViewModel
 import com.voizy.android.utils.getScopeProvider
+import com.voizy.android.viewmodels.RecordButtonViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
