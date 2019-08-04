@@ -44,7 +44,7 @@ class MainFragmentViewModel(
 
     fun deleteVoizy(voizy: Voizy) {
         val completable = Completable.fromAction {
-            voizyRepository.deleteLocalVoizy(voizy.localFilePath)
+            voizyRepository.deleteLocalVoizy(voizy.localPath)
         }.subscribeOn(Schedulers.io())
 
         completable.apply {

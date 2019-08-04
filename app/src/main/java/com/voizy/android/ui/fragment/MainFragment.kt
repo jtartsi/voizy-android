@@ -67,8 +67,8 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     }
 
     override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
-        Timber.d("onClick $position ${voizy.name} ${voizy.localFilePath}")
-        viewModel.playVoizy(voizy.localFilePath)
+        Timber.d("onClick $position ${voizy.name} ${voizy.localPath}")
+        viewModel.playVoizy(voizy.localPath)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -125,7 +125,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
                 Timber.d("voizysStream received $it")
                 voizyListAdapter.addAll(it)
                 it.forEach {
-                    Timber.d("voizysStream received ${it.name} ${it.localFilePath}")
+                    Timber.d("voizysStream received ${it.name} ${it.localPath}")
                 }
             }
 
@@ -162,11 +162,11 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             FileProvider.getUriForFile(
                 context!!,
                 "com.voizy.android.fileprovider",
-                File(voizy.localFilePath)
+                File(voizy.localPath)
             )
         } catch (e: IllegalArgumentException) {
             Timber.e(
-                e, "File Selector. The selected file can't be shared: ${voizy.localFilePath}"
+                e, "File Selector. The selected file can't be shared: ${voizy.localPath}"
             )
             null
         }

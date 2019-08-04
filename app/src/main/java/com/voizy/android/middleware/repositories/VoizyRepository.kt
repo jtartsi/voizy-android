@@ -2,6 +2,7 @@ package com.voizy.android.middleware.repositories
 
 import com.voizy.android.middleware.model.Voizy
 import io.reactivex.Observable
+import timber.log.Timber
 
 class VoizyRepository(
     private val voizyFirestore: VoizyFirestore,
@@ -16,7 +17,9 @@ class VoizyRepository(
     }
 
     fun saveVoizy(voizy: Voizy) {
-        localFileManager.saveVoizy(voizy.localFilePath)
+        Timber.d("saveVoizy()")
+        localFileManager.saveVoizy(voizy.localPath)
+        voizyFirestore.saveVoizy(voizy)
     }
 
     fun getAllOwnVoizys(): List<Voizy> {

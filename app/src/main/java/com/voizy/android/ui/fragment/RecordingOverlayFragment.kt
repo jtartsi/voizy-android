@@ -84,7 +84,7 @@ class RecordingOverlayFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("voizy save event ${it.name} ${it.localFilePath}")
+                Timber.d("voizy save event ${it.name} ${it.localPath}")
                 if (it.name.isNotEmpty()) {
                     hideSoftKeyboard(playButton)
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
