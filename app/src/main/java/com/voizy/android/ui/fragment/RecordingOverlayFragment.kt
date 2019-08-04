@@ -12,8 +12,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.middleware.viewmodels.RecordingOverlayViewModel
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

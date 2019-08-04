@@ -3,24 +3,25 @@ package com.voizy.android
 import com.google.firebase.firestore.FirebaseFirestore
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
-import com.voizy.android.repositories.FileRepository
-import com.voizy.android.viewmodels.MainFragmentViewModel
-import com.voizy.android.viewmodels.RecordButtonViewModel
-import com.voizy.android.viewmodels.RecordingOverlayViewModel
+import com.voizy.android.middleware.repositories.LocalFileManager
+import com.voizy.android.middleware.repositories.VoizyFirestore
+import com.voizy.android.middleware.repositories.VoizyRepository
+import com.voizy.android.middleware.viewmodels.MainFragmentViewModel
+import com.voizy.android.middleware.viewmodels.RecordButtonViewModel
+import com.voizy.android.middleware.viewmodels.RecordingOverlayViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val firebaseModule = module {
-    single { FirebaseFirestore.getInstance() }
-}
-
-val factoryModule = module {
+val appLogicsModule = module {
     factory { VoizyPlayer() }
+    single { VoizyRecorder() }
 }
 
-val singletonModule = module {
-    single { VoizyRecorder() }
-    single { FileRepository(get()) }
+val repositoryModule = module {
+    single { FirebaseFirestore.getInstance() }
+    single { VoizyFirestore(get()) }
+    single { VoizyRepository(get(), get()) }
+    single { LocalFileManager(get()) }
 }
 
 val viewModels = module {
@@ -29,4 +30,4 @@ val viewModels = module {
     viewModel { RecordButtonViewModel(get(), get()) }
 }
 
-val allModules = listOf(factoryModule, singletonModule, viewModels, firebaseModule)
+val allModules = listOf(appLogicsModule, repositoryModule, viewModels)

@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
-import com.voizy.android.model.Voizy
+import com.voizy.android.middleware.model.Voizy
 import com.voizy.android.ui.listener.OnItemClickListener
 import timber.log.Timber
 import java.util.Date

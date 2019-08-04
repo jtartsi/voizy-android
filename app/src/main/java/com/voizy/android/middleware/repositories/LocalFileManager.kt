@@ -1,14 +1,14 @@
-package com.voizy.android.repositories
+package com.voizy.android.middleware.repositories
 
 import android.content.Context
-import com.voizy.android.model.Voizy
+import com.voizy.android.middleware.model.Voizy
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 
-class FileRepository(private val context: Context) {
+class LocalFileManager(private val context: Context) {
 
     companion object {
         const val TMP_VOIZY_FILE_NAME = "voizy_tmp.mp3"

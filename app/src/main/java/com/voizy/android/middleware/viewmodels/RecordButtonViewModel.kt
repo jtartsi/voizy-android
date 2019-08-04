@@ -1,10 +1,10 @@
-package com.voizy.android.viewmodels
+package com.voizy.android.middleware.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyRecorder
-import com.voizy.android.repositories.FileRepository
+import com.voizy.android.middleware.repositories.LocalFileManager
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 
@@ -15,7 +15,7 @@ class RecordButtonViewModel(
 
     fun startRecording() {
         val completable = Completable.fromAction {
-            val filename = "${context.filesDir}/".plus(FileRepository.TMP_VOIZY_FILE_NAME)
+            val filename = "${context.filesDir}/".plus(LocalFileManager.TMP_VOIZY_FILE_NAME)
             voizyRecorder.startRecording(filename)
         }.subscribeOn(Schedulers.io())
 

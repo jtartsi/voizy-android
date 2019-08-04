@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
-import com.voizy.android.model.Voizy
+import com.voizy.android.middleware.model.Voizy
+import com.voizy.android.middleware.viewmodels.MainFragmentViewModel
 import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
 import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.ui.listener.OnItemClickListener
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
