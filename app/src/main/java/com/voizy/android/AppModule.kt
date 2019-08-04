@@ -1,5 +1,6 @@
 package com.voizy.android
 
+import com.google.firebase.firestore.FirebaseFirestore
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.repositories.FileRepository
@@ -8,6 +9,10 @@ import com.voizy.android.viewmodels.RecordButtonViewModel
 import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+
+val firebaseModule = module {
+    single { FirebaseFirestore.getInstance() }
+}
 
 val factoryModule = module {
     factory { VoizyPlayer() }
@@ -24,4 +29,4 @@ val viewModels = module {
     viewModel { RecordButtonViewModel(get(), get()) }
 }
 
-val allModules = listOf(factoryModule, singletonModule, viewModels)
+val allModules = listOf(factoryModule, singletonModule, viewModels, firebaseModule)
