@@ -5,13 +5,13 @@ import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.model.Voizy
-import com.voizy.android.middleware.repositories.LocalFileManager
+import com.voizy.android.middleware.repositories.VoizyRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
 class RecordingOverlayViewModel(
-    private val fileRepository: LocalFileManager,
+    private val voizyRepository: VoizyRepository,
     private val voizyRecorder: VoizyRecorder,
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
@@ -21,12 +21,12 @@ class RecordingOverlayViewModel(
     }
 
     fun saveVoizyEvents(): Observable<Voizy> {
-        return fileRepository.getSaveVoizyEvents()
+        return voizyRepository.getSaveVoizyEvents()
     }
 
     fun playVoizy() {
         val completable = Completable.fromAction {
-            voizyPlayer.play(fileRepository.getTempFilePath())
+            voizyPlayer.play(voizyRepository.getTempFilePath())
         }.subscribeOn(Schedulers.io())
 
         completable.apply {
@@ -35,7 +35,7 @@ class RecordingOverlayViewModel(
         }
     }
 
-    fun saveVoizy(newFileName: String) {
-        fileRepository.renameVoizy(newFileName)
+    fun saveVoizy(voizy: Voizy) {
+        voizyRepository.saveVoizy(voizy)
     }
 }

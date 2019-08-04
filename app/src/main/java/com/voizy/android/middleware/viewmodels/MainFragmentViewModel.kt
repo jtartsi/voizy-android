@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.model.Voizy
-import com.voizy.android.middleware.repositories.LocalFileManager
+import com.voizy.android.middleware.repositories.VoizyRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -12,29 +12,22 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 
 class MainFragmentViewModel(
-    private val fileRepository: LocalFileManager,
+    private val voizyRepository: VoizyRepository,
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
-
-    private enum class VoizyLocation { PRIVATE, PUBLIC }
 
     private val startPlaybackQueue = PublishSubject.create<String>()
     private val startPlaybackEvents = startPlaybackQueue
         .observeOn(Schedulers.io())
         .map { voizyPlayer.play(it) }
 
-    private val voizySearchRequest = ReplaySubject.create<VoizyLocation>()
+    private val voizySearchRequest = ReplaySubject.create<Boolean>()
     private val voizysStream = voizySearchRequest
         .observeOn(Schedulers.io())
-        .map {
-            when (it) {
-                VoizyLocation.PUBLIC -> fileRepository.getReceivedVoizys()
-                VoizyLocation.PRIVATE -> fileRepository.getAllOwnVoizys()
-            }
-        }
+        .map { voizyRepository.getAllOwnVoizys() }
 
     fun getSaveVoizyEvents(): Observable<Voizy> {
-        return fileRepository.getSaveVoizyEvents()
+        return voizyRepository.getSaveVoizyEvents()
     }
 
     fun getVoizyStream(): Observable<List<Voizy>> {
@@ -45,17 +38,13 @@ class MainFragmentViewModel(
         return startPlaybackEvents
     }
 
-    fun getReceivedVoizys() {
-        voizySearchRequest.onNext(VoizyLocation.PUBLIC)
-    }
-
-    fun getOwnVoizys() {
-        voizySearchRequest.onNext(VoizyLocation.PRIVATE)
+    fun getLocalVoizys() {
+        voizySearchRequest.onNext(true)
     }
 
     fun deleteVoizy(voizy: Voizy) {
         val completable = Completable.fromAction {
-            fileRepository.deleteFile(voizy.filePath)
+            voizyRepository.deleteLocalVoizy(voizy.localFilePath)
         }.subscribeOn(Schedulers.io())
 
         completable.apply {

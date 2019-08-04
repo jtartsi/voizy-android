@@ -23,7 +23,7 @@ class LocalFileManager(private val context: Context) {
         .map { Voizy(it) }
         .share()
 
-    fun renameVoizy(newFileName: String) {
+    fun saveVoizy(newFileName: String) {
         renameSubject.onNext(newFileName)
     }
 
@@ -76,6 +76,8 @@ class LocalFileManager(private val context: Context) {
         }
     }
 
+    // TODO remove
+    @Deprecated("Remove as we don't need anymore")
     private fun getAllFilesInFolderTree(parentDir: File, criteria: String): List<File> {
         val inFiles = mutableListOf<File>()
         val files = parentDir.listFiles()

@@ -67,8 +67,8 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     }
 
     override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
-        Timber.d("onClick $position ${voizy.name} ${voizy.filePath}")
-        viewModel.playVoizy(voizy.filePath)
+        Timber.d("onClick $position ${voizy.name} ${voizy.localFilePath}")
+        viewModel.playVoizy(voizy.localFilePath)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -125,7 +125,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
                 Timber.d("voizysStream received $it")
                 voizyListAdapter.addAll(it)
                 it.forEach {
-                    Timber.d("voizysStream received ${it.name} ${it.filePath}")
+                    Timber.d("voizysStream received ${it.name} ${it.localFilePath}")
                 }
             }
 
@@ -142,7 +142,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
                 }.show()
             }
 
-        viewModel.getOwnVoizys()
+        viewModel.getLocalVoizys()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -152,7 +152,6 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
             Timber.d("READ_EXTERNAL_PERMISSION YES")
-            viewModel.getReceivedVoizys()
         } else {
             Timber.d("READ_EXTERNAL_PERMISSION NO")
         }
@@ -163,12 +162,11 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             FileProvider.getUriForFile(
                 context!!,
                 "com.voizy.android.fileprovider",
-                File(voizy.filePath)
+                File(voizy.localFilePath)
             )
         } catch (e: IllegalArgumentException) {
             Timber.e(
-                e, "File Selector",
-                "The selected file can't be shared: ${voizy.filePath}"
+                e, "File Selector. The selected file can't be shared: ${voizy.localFilePath}"
             )
             null
         }

@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.middleware.model.Voizy
 import com.voizy.android.middleware.viewmodels.RecordingOverlayViewModel
 import com.voizy.android.utils.getScopeProvider
 import io.reactivex.Observable
@@ -45,7 +46,8 @@ class RecordingOverlayFragment : Fragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            viewModel.saveVoizy(et_voizy_name.text.toString())
+            val voizyToSave = Voizy(et_voizy_name.text.toString(), listOf("Sports", "Football", "Goal"))
+            viewModel.saveVoizy(voizyToSave)
         }
     }
 
@@ -82,7 +84,7 @@ class RecordingOverlayFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("voizy save event ${it.name} ${it.filePath}")
+                Timber.d("voizy save event ${it.name} ${it.localFilePath}")
                 if (it.name.isNotEmpty()) {
                     hideSoftKeyboard(playButton)
                     fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
