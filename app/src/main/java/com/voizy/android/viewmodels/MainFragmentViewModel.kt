@@ -26,7 +26,7 @@ class MainFragmentViewModel(
         .observeOn(Schedulers.io())
         .map { voizyRepository.getAllOwnVoizys() }
 
-    fun getSaveVoizyEvents(): Observable<Voizy> {
+    fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return voizyRepository.getSaveVoizyEvents()
     }
 

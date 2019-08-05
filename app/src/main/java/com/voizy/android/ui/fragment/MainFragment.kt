@@ -136,15 +136,15 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             }
 
         viewModel.getSaveVoizyEvents()
-            .filter { it.name.isNotEmpty() }
+            .filter { it.first }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { voizy ->
-                voizyListAdapter.addAll(listOf(voizy))
+            .subscribe { pair ->
+                voizyListAdapter.addAll(listOf(pair.second!!))
                 Snackbar.make(
                     view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
                 ).setAction(R.string.share) {
-                    shareVoizy(voizy)
+                    shareVoizy(pair.second!!)
                 }.show()
             }
 
