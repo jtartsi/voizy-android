@@ -9,6 +9,7 @@ import com.voizy.android.ui.model.Voizy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 
 class RecordingOverlayViewModel(
     private val voizyRepository: VoizyRepository,
@@ -35,7 +36,15 @@ class RecordingOverlayViewModel(
         }
     }
 
-    fun saveVoizy(voizy: Voizy) {
+    fun oldSaveVoizy(voizy: Voizy) {
         voizyRepository.saveVoizy(voizy)
+    }
+
+    private val subject = PublishSubject.create<Boolean>()
+
+    fun saveVoizy(voizy: Voizy): Observable<Boolean> {
+        Observable.just(true)
+            .subscribe(subject)
+        return subject
     }
 }

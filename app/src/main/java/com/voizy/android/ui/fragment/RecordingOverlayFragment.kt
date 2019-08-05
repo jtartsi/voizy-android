@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
+import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
@@ -18,6 +19,7 @@ import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -44,11 +46,16 @@ class RecordingOverlayFragment : Fragment() {
         playButton.setOnClickListener {
             viewModel.playVoizy()
         }
+        
+        RxView.clicks(btn_save_voizy)
+            .map { Voizy(et_voizy_name.text.toString(), listOf("movies", "quote")) }
+            .map { viewModel.saveVoizy(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
 
-        btn_save_voizy.setOnClickListener {
-            val voizyToSave = Voizy(et_voizy_name.text.toString(), listOf("sports", "football", "goal"))
-            viewModel.saveVoizy(voizyToSave)
-        }
+            }
     }
 
     override fun onStart() {
