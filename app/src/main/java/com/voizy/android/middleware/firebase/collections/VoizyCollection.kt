@@ -1,8 +1,10 @@
 package com.voizy.android.middleware.firebase.collections
 
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.voizy.android.middleware.firebase.model.FirestoreVoizy
-import com.voizy.android.ui.model.Voizy
+import com.voizy.android.utils.toObservable
+import io.reactivex.Observable
 import timber.log.Timber
 
 class VoizyCollection(private val firestore: FirebaseFirestore) {
@@ -11,17 +13,11 @@ class VoizyCollection(private val firestore: FirebaseFirestore) {
         private val VOIZYS_COLLECTION = "voizys"
     }
 
-    fun saveVoizy(voizy: Voizy) {
-
-        Timber.d("saveVoizy()")
-        firestore.collection(VOIZYS_COLLECTION)
-            .add(voizy.toFirestoreData())
-            .addOnSuccessListener {
-                Timber.d("saveVoizy success $it")
-            }
-            .addOnFailureListener {
-                Timber.e(it, "saveVoizy failed")
-            }
+    fun saveVoizy(firestoreVoizy: FirestoreVoizy): Observable<DocumentReference> {
+        return firestore
+            .collection(VOIZYS_COLLECTION)
+            .add(firestoreVoizy)
+            .toObservable()
     }
 
     fun getVoizys() {
