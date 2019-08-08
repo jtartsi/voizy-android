@@ -3,6 +3,7 @@ package com.voizy.android.viewmodels
 import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
+import com.voizy.android.middleware.firebase.model.FirestoreVoizy
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.model.Voizy
 import io.reactivex.Completable
@@ -50,7 +51,7 @@ class MainFragmentViewModel(
             .map { voizyPlayer.play(it) }
     }
 
-    fun fetchRemoteVoizys() {
-        voizyRepository.getVoizys()
+    fun fetchRemoteVoizys(): Observable<List<FirestoreVoizy>> {
+        return voizyRepository.getVoizys()
     }
 }

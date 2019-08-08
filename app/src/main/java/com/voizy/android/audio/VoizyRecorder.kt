@@ -55,7 +55,7 @@ class VoizyRecorder {
 
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
             setOutputFile(fileName)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
 

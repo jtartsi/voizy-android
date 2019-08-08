@@ -106,6 +106,12 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
         // TODO remove this test button
         test_button.setOnClickListener {
             viewModel.fetchRemoteVoizys()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .autoDisposable(getScopeProvider())
+                .subscribe {
+                    Timber.d("fetched voizys")
+                }
         }
 
         voizyListAdapter = VoizyRecyclerViewAdapter(this)
