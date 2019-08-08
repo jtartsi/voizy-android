@@ -9,6 +9,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -68,12 +69,16 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     }
 
     override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
-        Timber.d("onClick $position ${voizy.name} ${voizy.localPath}")
-        viewModel.playVoizy(voizy.localPath)
+        Timber.d("onClick $position ${voizy.name} ${voizy.localFilePath}")
+        viewModel.playVoizy(voizy.localFilePath!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { viewHolder.animateProgress(it) }
+            .subscribe({
+                viewHolder.animateProgress(it)
+            }, {
+                Toast.makeText(context!!, "Audio file not found", Toast.LENGTH_SHORT).show()
+            })
     }
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
@@ -131,7 +136,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
                 Timber.d("voizysStream received $it")
                 voizyListAdapter.addAll(it)
                 it.forEach {
-                    Timber.d("voizysStream received ${it.name} ${it.localPath}")
+                    Timber.d("voizysStream received ${it.name} ${it.localFilePath}")
                 }
             }
 
@@ -168,11 +173,11 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             FileProvider.getUriForFile(
                 context!!,
                 "com.voizy.android.fileprovider",
-                File(voizy.localPath)
+                File(voizy.localFilePath)
             )
         } catch (e: IllegalArgumentException) {
             Timber.e(
-                e, "File Selector. The selected file can't be shared: ${voizy.localPath}"
+                e, "File Selector. The selected file can't be shared: ${voizy.localFilePath}"
             )
             null
         }

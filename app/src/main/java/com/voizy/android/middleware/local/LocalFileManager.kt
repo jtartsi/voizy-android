@@ -30,10 +30,10 @@ class LocalFileManager(private val context: Context) {
     // }
 
     fun saveVoizy(voizy: Voizy): Observable<Voizy> {
-        return Observable.just(voizy.name)
+        return Observable.just(voizy)
             .map {
-                val newPath = renameFile(it)
-                Voizy(newPath, voizy.tags)
+                it.localFilePath = renameFile(it.name)
+                return@map it
             }
     }
 

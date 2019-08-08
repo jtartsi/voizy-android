@@ -1,16 +1,15 @@
 package com.voizy.android.ui.model
 
 import com.voizy.android.middleware.firebase.model.FirestoreVoizy
-import com.voizy.android.middleware.local.LocalFileManager
 
 data class Voizy(
-    private val localFilePath: String,
+    private val nameField: String,
     private var tagsList: List<String> = listOf()
 ) {
     constructor() : this("", listOf())
 
-    val localPath: String
-        get() = localFilePath
+    var firebaseFilePath: String? = null
+    var localFilePath: String? = null
 
     var tags: List<String>
         get() = tagsList
@@ -19,12 +18,9 @@ data class Voizy(
         }
 
     val name: String
-        get() = localPath
-            .replaceBefore(LocalFileManager.VOIZY_FILE_PREFIX, "")
-            .removePrefix(LocalFileManager.VOIZY_FILE_PREFIX)
-            .removeSuffix(LocalFileManager.MP3_FILE_EXT)
+        get() = nameField
 
     fun toFirestoreData(): FirestoreVoizy {
-        return FirestoreVoizy(name, tags.map { it to true }.toMap())
+        return FirestoreVoizy(name, tags.map { it to true }.toMap(), firebaseFilePath!!)
     }
 }
