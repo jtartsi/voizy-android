@@ -9,7 +9,7 @@
         <item name="actionBarStyle">@style/VoizyTheme.ActionBarStyle</item>
     </style>
 
-    <style name="VoizyTheme.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
+    <style name="VoizyTheme.ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="android:titleTextColor">@android:color/white</item>
     </style>
 

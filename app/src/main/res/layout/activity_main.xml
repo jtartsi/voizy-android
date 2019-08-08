@@ -12,14 +12,16 @@
         android:id="@+id/app_bar_layout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/VoizyTheme.ActionBarStyle">
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.widget.Toolbar
             android:id="@+id/toolbar"
+            android:theme="@style/VoizyTheme.ActionBarStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:title="@string/app_name"/>
+            android:title="@string/app_name">
+
+        </android.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
