@@ -18,17 +18,16 @@ class VoizyFirebaseStorage(
     }
 
     fun uploadVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy>> {
-        val firebaseFileName = voizy.name.plus(Date().time).plus(".mp3")
+        val firebaseFileName = voizy.name.plus(Date().time)
         val uploadRef = storageRef.child(VOIZYS_PATH).child(firebaseFileName)
         val stream = FileInputStream(File(voizy.localFilePath))
-
         return uploadRef.putStream(stream).toObservable()
             .map {
                 Timber.d("save-voizy uploadVoizy $it")
                 if (it.uploadSessionUri == null) {
                     throw IllegalStateException("Failed to upload voizy")
                 }
-                voizy.firebaseFilePath = it.uploadSessionUri!!.path
+                voizy.firebaseFilePath = uploadRef.path
                 Pair(true, voizy)
             }
     }

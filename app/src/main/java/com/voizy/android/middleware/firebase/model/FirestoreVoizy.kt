@@ -5,9 +5,9 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.PropertyName
 
 class FirestoreVoizy(
-    @PropertyName(NAME_KEY) val name: String,
-    @PropertyName(TAGS_KEY) val tags: Map<String, Boolean>,
-    @PropertyName(FILE_PATH) val firebaseFilePath: String
+    @get:PropertyName(NAME_KEY) val name: String,
+    @get:PropertyName(TAGS_KEY) val tags: Map<String, Boolean>,
+    @get:PropertyName(FILE_PATH) val firebaseFilePath: String
 ) {
 
     companion object {
