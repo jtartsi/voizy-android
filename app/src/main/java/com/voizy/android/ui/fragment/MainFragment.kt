@@ -2,7 +2,6 @@ package com.voizy.android.ui.fragment
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -159,18 +158,6 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             }
 
         viewModel.getLocalVoizys()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_READ_EXTERNAL_PERMISSIONS &&
-            permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE &&
-            grantResults[0] == PackageManager.PERMISSION_GRANTED
-        ) {
-            Timber.d("READ_EXTERNAL_PERMISSION YES")
-        } else {
-            Timber.d("READ_EXTERNAL_PERMISSION NO")
-        }
     }
 
     private fun shareVoizy(voizy: Voizy) {

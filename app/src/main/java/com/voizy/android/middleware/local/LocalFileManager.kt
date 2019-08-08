@@ -14,21 +14,6 @@ class LocalFileManager(private val context: Context) {
         const val MP3_FILE_EXT = ".mp3"
     }
 
-    // private val renameSubject = PublishSubject.create<String>()
-    // private val saveNameEvents = renameSubject
-    //     .observeOn(Schedulers.io())
-    //     .map { renameFile(it) }
-    //     .map { Voizy(it) }
-    //     .share()
-    //
-    // fun saveVoizy(newFileName: String) {
-    //     renameSubject.onNext(newFileName)
-    // }
-
-    // fun getSaveVoizyEvents(): Observable<Voizy> {
-    //     return saveNameEvents
-    // }
-
     fun saveVoizy(voizy: Voizy): Observable<Voizy> {
         return Observable.just(voizy)
             .map {
