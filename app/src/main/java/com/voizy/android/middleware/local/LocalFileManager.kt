@@ -69,7 +69,12 @@ class LocalFileManager(private val context: Context) {
     }
 
     fun getAllOwnVoizys(): List<Voizy> {
-        return context.filesDir.listFiles().map { Voizy(it.path) }
+        return context
+            .filesDir
+            .listFiles()
+            .map {
+                Voizy(it.path)
+            }
     }
 
     fun deleteFile(filePath: String) {
