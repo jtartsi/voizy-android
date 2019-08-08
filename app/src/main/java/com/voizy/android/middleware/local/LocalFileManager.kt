@@ -73,7 +73,14 @@ class LocalFileManager(private val context: Context) {
             .filesDir
             .listFiles()
             .map {
-                Voizy(it.path)
+                val path = it.path
+                val name = it.path
+                    .replaceBefore(LocalFileManager.VOIZY_FILE_PREFIX, "")
+                    .removePrefix(LocalFileManager.VOIZY_FILE_PREFIX)
+                    .removeSuffix(LocalFileManager.MP3_FILE_EXT)
+                val voizy = Voizy(name)
+                voizy.localFilePath = path
+                voizy
             }
     }
 
