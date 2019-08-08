@@ -8,18 +8,12 @@ import com.voizy.android.ui.model.Voizy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
-
-    private val startPlaybackQueue = PublishSubject.create<String>()
-    private val startPlaybackEvents = startPlaybackQueue
-        .observeOn(Schedulers.io())
-        .map { voizyPlayer.play(it) }
 
     private val voizySearchRequest = ReplaySubject.create<Boolean>()
     private val voizysStream = voizySearchRequest
@@ -32,10 +26,6 @@ class MainFragmentViewModel(
 
     fun getVoizyStream(): Observable<List<Voizy>> {
         return voizysStream
-    }
-
-    fun getVoizyPlaybackEvents(): Observable<Int> {
-        return startPlaybackEvents
     }
 
     fun getLocalVoizys() {
