@@ -8,7 +8,6 @@ import com.voizy.android.ui.model.Voizy
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 
 class VoizyRepository(
     private val voizyFirestore: VoizyCollection,
@@ -20,11 +19,8 @@ class VoizyRepository(
     private val saveVoizyEvents = saveVoizyQueue
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
-        .doOnNext { Timber.d("save-voizy local save done $it") }
         .switchMap { voizyStorage.uploadVoizy(it) }
-        .doOnNext { Timber.d("save-voizy upload done $it") }
         .switchMap { voizyFirestore.saveVoizy(it.second) }
-        .doOnNext { Timber.d("save-voizy firestore save $it") }
         .onErrorReturnItem(Pair(false, null))
         .share()
 
@@ -37,7 +33,6 @@ class VoizyRepository(
     }
 
     fun saveVoizy(voizy: Voizy) {
-        Timber.d("save-voizy")
         saveVoizyQueue.onNext(voizy)
     }
 

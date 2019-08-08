@@ -18,19 +18,4 @@ class VoizyPlayer {
         }
         return durationInMillis
     }
-
-    fun playStreaming(streamPath: String): Int {
-        var durationInMillis: Int = -1
-
-        MediaPlayer().apply {
-
-            prepare()
-            start()
-            setOnCompletionListener {
-                it.release()
-            }
-            durationInMillis = duration
-        }
-        return durationInMillis
-    }
 }

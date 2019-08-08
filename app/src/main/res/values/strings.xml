@@ -13,4 +13,5 @@
     <string name="share">Share</string>
     <string name="voizy_save_failed">"Saving Voizy failed, make sure you input name."</string>
     <string name="audio_file_found">"Audio file not found"</string>
+    <string name="share_voizy">"Share Voizy"</string>
 </resources>

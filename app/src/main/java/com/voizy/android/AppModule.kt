@@ -29,7 +29,7 @@ val repositoryModule = module {
 }
 
 val viewModels = module {
-    viewModel { MainFragmentViewModel(get(), get(), get()) }
+    viewModel { MainFragmentViewModel(get(), get()) }
     viewModel { RecordingOverlayViewModel(get(), get(), get()) }
     viewModel { RecordButtonViewModel(get(), get()) }
 }
