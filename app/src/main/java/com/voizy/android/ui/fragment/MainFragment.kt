@@ -110,7 +110,10 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
                 .observeOn(AndroidSchedulers.mainThread())
                 .autoDisposable(getScopeProvider())
                 .subscribe {
-                    Timber.d("fetched voizys")
+                    Timber.d("play-remote-voizy fetched voizys ${it.size}")
+                    Timber.d("play-remote-voizy path ${it.first().firebaseFilePath}")
+                    val voizy = Voizy(it.first().name, it.first().tagsList)
+                    viewModel.playRemoteVoizy(it.first().firebaseFilePath)
                 }
         }
 
