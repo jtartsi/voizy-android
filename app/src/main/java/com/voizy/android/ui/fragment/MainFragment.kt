@@ -26,6 +26,7 @@ import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.io.File
@@ -102,19 +103,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
         Timber.d("onViewCreated()")
 
         // TODO remove this test button
-        // test_button.setOnClickListener {
-        //     viewModel.fetchRemoteVoizys()
-        //         .subscribeOn(Schedulers.io())
-        //         .observeOn(AndroidSchedulers.mainThread())
-        //         .autoDisposable(getScopeProvider())
-        //         .subscribe {
-        //             Timber.d("play-remote-voizy fetched voizys ${it.size}")
-        //             Timber.d("play-remote-voizy path ${it.first().firebaseFilePath}")
-        //             val voizy = Voizy(it.first().name, it.first().tagsList)
-        //             // viewModel.playRemoteVoizy(it.first().firebaseFilePath)
-        //             // viewModel.downloadVoizy(context!!, it.first().firebaseFilePath)
-        //         }
-        // }
+        test_button.setOnClickListener {}
 
         voizyListAdapter = VoizyRecyclerViewAdapter(this)
         voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
@@ -145,16 +134,19 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             }
 
         viewModel.getSaveVoizyEvents()
-            .filter { it.first }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { pair ->
-                voizyListAdapter.addAll(listOf(pair.second!!))
-                Snackbar.make(
-                    view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
-                ).setAction(R.string.share) {
-                    shareVoizy(pair.second!!)
-                }.show()
+                if (pair.first) {
+                    voizyListAdapter.addAll(listOf(pair.second!!))
+                    Snackbar.make(
+                        view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
+                    ).setAction(R.string.share) {
+                        shareVoizy(pair.second!!)
+                    }.show()
+                } else {
+                    Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT).show()
+                }
             }
 
         viewModel.getLocalVoizys()

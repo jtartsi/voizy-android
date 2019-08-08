@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
@@ -48,6 +47,7 @@ class RecordingOverlayFragment : Fragment() {
         btn_save_voizy.setOnClickListener {
             val voizyToSave = Voizy(et_voizy_name.text.toString(), listOf("sports", "football", "goal"))
             viewModel.saveVoizy(voizyToSave)
+            close()
         }
     }
 
@@ -79,20 +79,11 @@ class RecordingOverlayFragment : Fragment() {
                     }
                 }
             }
+    }
 
-        viewModel.saveVoizyEvents()
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                Timber.d("save-voizy event ${it.first} ${it.second}")
-                if (it.first) {
-                    hideSoftKeyboard(playButton)
-                    fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                } else {
-                    Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT)
-                        .show()
-                }
-            }
+    private fun close() {
+        hideSoftKeyboard(playButton)
+        fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     private fun startTimer() {
