@@ -1,6 +1,7 @@
 package com.voizy.android.middleware.firebase
 
 import android.net.Uri
+import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageReference
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.toObservable
@@ -31,6 +32,12 @@ class VoizyFirebaseStorage(
                 voizy.firebaseFilePath = uploadRef.path
                 Pair(true, voizy)
             }
+    }
+
+    fun getFile(fireBasePath: String, destinationFile: File): Observable<FileDownloadTask.TaskSnapshot> {
+        return storageRef.child(fireBasePath)
+            .getFile(destinationFile)
+            .toObservable()
     }
 
     fun getDownloadUri(path: String): Observable<Uri> {

@@ -1,10 +1,12 @@
 package com.voizy.android.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.model.FirestoreVoizy
+import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.model.Voizy
 import io.reactivex.Completable
@@ -13,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.ReplaySubject
 import timber.log.Timber
+import java.io.File
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
@@ -58,6 +61,13 @@ class MainFragmentViewModel(
                 Timber.d("play-remote-voizy playRemoteVoizy $it, path ${it.path}")
                 voizyPlayer.play(it.path)
             }
+    }
+
+    fun downloadVoizy(context: Context, firebasePath: String) {
+        val destinationFile = File(LocalFileManager(context).getTempFilePath())
+        voizyStorage.getFile(firebasePath, destinationFile)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun playVoizy(filePath: String): Observable<Int> {
