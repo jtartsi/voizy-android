@@ -2,6 +2,10 @@ package com.voizy.android.ui.fragment
 
 import android.app.Activity
 import android.os.Bundle
+import android.text.Editable
+import android.text.Spanned
+import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,11 +27,39 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class RecordingOverlayFragment : Fragment() {
+class RecordingOverlayFragment : Fragment(), TextWatcher {
 
     private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
     private lateinit var playButton: View
     private var timer: Disposable? = null
+
+    override fun afterTextChanged(editable: Editable?) {
+        Timber.d("afterTextChanged $editable")
+        Timber.d("afterTextChanged last ${editable!!.last()}")
+        Timber.d("afterTextChanged endsWith space ${editable!!.endsWith(" ")}")
+        if (editable!!.endsWith(" ")) {
+            Timber.d("afterTextChanged ends with space")
+            val colorSpan = ForegroundColorSpan(context!!.getColor(android.R.color.holo_orange_dark))
+            editable.setSpan(colorSpan, 0, editable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        if (editable!!.last().equals(" ")) {
+            Timber.d("afterTextChanged user inputted space")
+        }
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        Timber.d("beforeTextChanged $s")
+        // if (s!!.last()) {
+        //     Timber.d("BEFORE User entered space")
+        // }
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        Timber.d("onTextChanged $s")
+        if (s!!.last().equals(" ")) {
+            Timber.d("onTextChanged user inputted space")
+        }
+    }
 
     companion object {
         public val TAG = RecordingOverlayFragment::class.java.simpleName
@@ -52,6 +84,8 @@ class RecordingOverlayFragment : Fragment() {
             activity!!.showProgressBar(true)
             close()
         }
+
+        et_voizy_tags.addTextChangedListener(this)
     }
 
     override fun onStart() {

@@ -50,6 +50,9 @@
         android:ellipsize="start"
         android:gravity="center"
         android:visibility="gone"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="22sp"
+        android:letterSpacing="0.001"
         test:visibility="visible"
         android:hint="@string/name_your_voizy"/>
 
@@ -64,11 +67,12 @@
         android:layout_marginEnd="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginBottom="16dp"
-        android:inputType="textCapSentences"
         android:ellipsize="start"
         android:gravity="center"
         android:visibility="gone"
         test:visibility="visible"
+        android:singleLine="true"
+        android:textSize="16sp"
         android:hint="Input tags with spaces"/>
 
     <Button
