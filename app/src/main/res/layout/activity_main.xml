@@ -10,7 +10,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_width="match_parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -22,6 +22,18 @@
             android:title="@string/app_name">
 
         </android.widget.Toolbar>
+
+        <ProgressBar
+            android:id="@+id/pb_app_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:minHeight="14dp"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="bottom"
+            android:progressTint="@android:color/holo_orange_dark"
+            android:indeterminate="true"
+            android:visibility="gone"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

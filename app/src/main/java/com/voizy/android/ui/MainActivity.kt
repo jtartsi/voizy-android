@@ -3,15 +3,16 @@ package com.voizy.android.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.fragment.app.FragmentActivity
 import com.voizy.android.R
 import com.voizy.android.ui.fragment.MainFragment
 
-class MainActivity : FragmentActivity() {
+class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        appBarProgressBar = findViewById(R.id.pb_app_bar)
 
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, MainFragment())

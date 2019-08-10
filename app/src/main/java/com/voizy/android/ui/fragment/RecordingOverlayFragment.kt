@@ -13,6 +13,7 @@ import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getScopeProvider
+import com.voizy.android.utils.showProgressBar
 import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -47,6 +48,7 @@ class RecordingOverlayFragment : Fragment() {
         btn_save_voizy.setOnClickListener {
             val voizyToSave = Voizy(et_voizy_name.text.toString(), listOf("sports", "football", "goal"))
             viewModel.saveVoizy(voizyToSave)
+            activity!!.showProgressBar(true)
             close()
         }
     }
@@ -57,7 +59,6 @@ class RecordingOverlayFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("recording event $it")
                 when (it) {
                     VoizyRecorder.RecordingEvents.STARTED -> {
                         startTimer()

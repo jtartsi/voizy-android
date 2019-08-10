@@ -22,6 +22,7 @@ import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.ui.listener.OnItemClickListener
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getScopeProvider
+import com.voizy.android.utils.showProgressBar
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -102,7 +103,6 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated()")
 
-        // TODO remove this test button
         test_button.setOnClickListener {}
 
         voizyListAdapter = VoizyRecyclerViewAdapter(this)
@@ -137,6 +137,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { pair ->
+                activity!!.showProgressBar(false)
                 if (pair.first) {
                     voizyListAdapter.addAll(listOf(pair.second!!))
                     Snackbar.make(
