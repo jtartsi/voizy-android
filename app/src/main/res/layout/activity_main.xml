@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="14dp"
             android:minHeight="14dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1px"
             android:layout_gravity="bottom"
             android:progressTint="@android:color/holo_orange_dark"
             android:indeterminate="true"

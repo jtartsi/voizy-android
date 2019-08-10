@@ -46,7 +46,8 @@ class RecordingOverlayFragment : Fragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            val voizyToSave = Voizy(et_voizy_name.text.toString(), listOf("sports", "football", "goal"))
+            val tags = et_voizy_tags.text.toString().split(" ").toList()
+            val voizyToSave = Voizy(et_voizy_name.text.toString(), tags)
             viewModel.saveVoizy(voizyToSave)
             activity!!.showProgressBar(true)
             close()
@@ -64,12 +65,14 @@ class RecordingOverlayFragment : Fragment() {
                         startTimer()
                         playButton.visibility = View.GONE
                         et_voizy_name.visibility = View.GONE
+                        et_voizy_tags.visibility = View.GONE
                         btn_save_voizy.visibility = View.GONE
                     }
                     VoizyRecorder.RecordingEvents.FINISHED -> {
                         stopTimer()
                         playButton.visibility = View.VISIBLE
                         et_voizy_name.visibility = View.VISIBLE
+                        et_voizy_tags.visibility = View.VISIBLE
                         btn_save_voizy.visibility = View.VISIBLE
                     }
                     VoizyRecorder.RecordingEvents.START_FAILED -> {
@@ -115,5 +118,8 @@ class RecordingOverlayFragment : Fragment() {
         val inputMethodManager: InputMethodManager = context!!
             .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.rootView.windowToken, 0, null)
+    }
+
+    private fun parseTags() {
     }
 }
