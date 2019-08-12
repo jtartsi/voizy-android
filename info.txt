@@ -1,0 +1,18 @@
+// TODO:
+- v0.2
+    X Upload audio file
+    X Save voizy to server
+    X Progress bar
+    X Tags
+    X Tags styling
+    - Setup signatures
+    - Beta sharing in playstore
+    - Recording error message if recording shorter than 2s
+    - Instructions
+    - Remove test button
+    - Screen rotation crash
+    - Basic analytics
+    - Rec button to play button
+    - Do not allow playing recordings from list while overlay
+    - Handle back button better
+- Setup Firebase security rules
