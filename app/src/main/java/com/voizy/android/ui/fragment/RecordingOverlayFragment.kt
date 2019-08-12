@@ -2,10 +2,6 @@ package com.voizy.android.ui.fragment
 
 import android.app.Activity
 import android.os.Bundle
-import android.text.Editable
-import android.text.Spanned
-import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,109 +23,11 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class RecordingOverlayFragment : Fragment(), TextWatcher {
+class RecordingOverlayFragment : Fragment() {
 
     private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
     private lateinit var playButton: View
     private var timer: Disposable? = null
-    private val tagEditor = TagEditor()
-
-    private class TagEditor() {
-
-        private var nonModifiedTagString: String = ""
-        private var editedTagString: String = ""
-
-        val tagString: String
-            get() = editedTagString
-
-        // fun onTextChanged(inputString: String): String {
-        //     nonModifiedTagString = inputString
-        //
-        //     if (nonModifiedTagString.isEmpty()) {
-        //         return nonModifiedTagString
-        //     }
-        //
-        //     if (nonModifiedTagString.endsWith("  ")) {
-        //         editedTagString.removeRange(editedTagString.length, editedTagString.length)
-        //         return editedTagString
-        //     }
-        //
-        //     val tags = nonModifiedTagString.split(" ")
-        //     editedTagString = ""
-        //     for (tag in tags) {
-        //
-        //         if (tags.last().equals(tag)) {
-        //             editedTagString = editedTagString.plus(tag)
-        //             break
-        //         }
-        //
-        //         Timber.d("onTextChanged tag $tag")
-        //         editedTagString = if (tag.contains("#")) {
-        //             Timber.d("onTextChanged tag has hashtag")
-        //             editedTagString.plus(tag).plus(" ")
-        //         } else {
-        //             Timber.d("onTextChanged editing tag $tag")
-        //             val editedTag = StringBuilder(tag).insert(0, "#").toString()
-        //             Timber.d("onTextChanged edited tag $editedTag")
-        //
-        //             editedTagString.plus(editedTag).plus(" ")
-        //         }
-        //         Timber.d("onTextChanged editedTagString $editedTagString")
-        //     }
-        //     return editedTagString
-        // }
-
-        fun onTextChanged(inputString: String): String {
-            Timber.d("onTextChanged() inputString")
-            editedTagString = if (inputString.isNotEmpty() && !inputString.startsWith("#")) {
-                "#".plus(inputString)
-            } else {
-                inputString
-            }
-            editedTagString = editedTagString
-                .replace(" ", "#")
-                .replace("##", "#")
-
-            Timber.d("onTextChanged() outputString $editedTagString")
-            return editedTagString
-        }
-    }
-
-    override fun afterTextChanged(editable: Editable?) {
-        Timber.d("afterTextChanged $editable")
-        // Timber.d("afterTextChanged last ${editable!!.last()}")
-
-        if (editable.toString() != tagEditor.tagString) {
-            val editedString = tagEditor.onTextChanged(editable.toString())
-            Timber.d("afterTextChanged editedString $editedString")
-            editable!!.replace(0, editable!!.length, editedString)
-        } else {
-            Timber.d("afterTextChanged same string")
-        }
-
-        val colorUntil = editable!!.lastIndexOf("#")
-        if (colorUntil > 0) {
-            val orangeColorSpan = ForegroundColorSpan(context!!.getColor(android.R.color.holo_orange_dark))
-            editable.setSpan(orangeColorSpan, 0, colorUntil, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-
-            val blackColorSpan = ForegroundColorSpan(context!!.getColor(android.R.color.widget_edittext_dark))
-            editable.setSpan(blackColorSpan, colorUntil, editable.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        }
-    }
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        // Timber.d("beforeTextChanged $s")
-        // if (s!!.last()) {
-        //     Timber.d("BEFORE User entered space")
-        // }
-    }
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        // Timber.d("onTextChanged $s")
-        // if (s!!.isNotEmpty() && s!!.last().equals(" ")) {
-        //     Timber.d("onTextChanged user inputted space")
-        // }
-    }
 
     companion object {
         public val TAG = RecordingOverlayFragment::class.java.simpleName
@@ -154,8 +52,6 @@ class RecordingOverlayFragment : Fragment(), TextWatcher {
             activity!!.showProgressBar(true)
             close()
         }
-
-        et_voizy_tags.addTextChangedListener(this)
     }
 
     override fun onStart() {
@@ -222,8 +118,5 @@ class RecordingOverlayFragment : Fragment(), TextWatcher {
         val inputMethodManager: InputMethodManager = context!!
             .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.rootView.windowToken, 0, null)
-    }
-
-    private fun parseTags() {
     }
 }

@@ -56,7 +56,7 @@
         test:visibility="visible"
         android:hint="@string/name_your_voizy"/>
 
-    <EditText
+    <com.voizy.android.ui.widget.VoizyTagEditText
         android:id="@+id/et_voizy_tags"
         android:layout_width="match_parent"
         android:layout_height="50dp"
