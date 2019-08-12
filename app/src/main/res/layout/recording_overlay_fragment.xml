@@ -73,7 +73,7 @@
         test:visibility="visible"
         android:singleLine="true"
         android:textSize="16sp"
-        android:hint="Input tags with spaces"/>
+        android:hint="@string/enter_tags_hint"/>
 
     <Button
         android:id="@+id/btn_save_voizy"
