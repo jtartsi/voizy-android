@@ -46,8 +46,7 @@ class RecordingOverlayFragment : Fragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            val tags = et_voizy_tags.text.toString().split(" ").toList()
-            val voizyToSave = Voizy(et_voizy_name.text.toString(), tags)
+            val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
             viewModel.saveVoizy(voizyToSave)
             activity!!.showProgressBar(true)
             close()

@@ -10,7 +10,7 @@ import android.util.AttributeSet
 import android.widget.EditText
 import timber.log.Timber
 
-class VoizyTagEditText : EditText, TextWatcher {
+class TagEditText : EditText, TextWatcher {
 
     private val tagEditor = TagEditor()
 
@@ -44,7 +44,7 @@ class VoizyTagEditText : EditText, TextWatcher {
             Timber.d("afterTextChanged same string")
         }
 
-        val colorUntil = editable!!.lastIndexOf("#")
+        val colorUntil = editable!!.lastIndexOf(" ")
         if (colorUntil > 0) {
             val orangeColorSpan = ForegroundColorSpan(context!!.getColor(R.color.holo_orange_dark))
             editable.setSpan(orangeColorSpan, 0, colorUntil, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
@@ -62,31 +62,36 @@ class VoizyTagEditText : EditText, TextWatcher {
 
     private class TagEditor {
 
-        private var editedTagString: String = ""
+        var editedTagString: String = ""
 
         val tagString: String
             get() = editedTagString
 
         fun onTextChanged(inputString: String): String {
-
             if (inputString.isEmpty()) {
                 editedTagString = inputString
                 return editedTagString
             }
 
-            Timber.d("onTextChanged() inputString")
-            editedTagString = if (!inputString.startsWith("#")) {
+            editedTagString = if (!editedTagString.startsWith("#")) {
                 "#".plus(inputString)
             } else {
                 inputString
             }
 
             editedTagString = editedTagString
-                .replace(" ", "#")
+                .replace(" ", " #")
                 .replace("##", "#")
+                .removeSuffix("#")
 
-            Timber.d("onTextChanged() outputString $editedTagString")
             return editedTagString
         }
+    }
+
+    fun getTags(): List<String> {
+        return tagEditor
+            .editedTagString
+            .replace("#", "")
+            .split(" ")
     }
 }
