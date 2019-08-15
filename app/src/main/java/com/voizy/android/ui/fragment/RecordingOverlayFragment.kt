@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
@@ -23,14 +22,22 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class RecordingOverlayFragment : Fragment() {
+class RecordingOverlayFragment : BaseFragment() {
 
     private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
     private lateinit var playButton: View
-    private var timer: Disposable? = null
+    private var timerDisposable: Disposable? = null
 
     companion object {
         public val TAG = RecordingOverlayFragment::class.java.simpleName
+    }
+
+    override fun doubleBackPress(): Boolean {
+        return true
+    }
+
+    override fun getBackstackTag(): String {
+        return TAG
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,6 +62,7 @@ class RecordingOverlayFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        
         viewModel.recordingEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -68,7 +76,9 @@ class RecordingOverlayFragment : Fragment() {
                         btn_save_voizy.visibility = View.GONE
                     }
                     VoizyRecorder.RecordingEvents.FINISHED -> {
-                        stopTimer()
+                        timerDisposable?.let {
+                            it.dispose()
+                        }
                         playButton.visibility = View.VISIBLE
                         et_voizy_name.visibility = View.VISIBLE
                         et_voizy_tags.visibility = View.VISIBLE
@@ -91,7 +101,7 @@ class RecordingOverlayFragment : Fragment() {
 
     private fun startTimer() {
         tv_recording_time.text = "00:00 / 00:15"
-        timer = Observable.intervalRange(
+        timerDisposable = Observable.intervalRange(
             1L, 15, 1L, 1L,
             TimeUnit.SECONDS, AndroidSchedulers.mainThread()
         )
@@ -107,10 +117,6 @@ class RecordingOverlayFragment : Fragment() {
             .subscribe {
                 tv_recording_time.text = it
             }
-    }
-
-    private fun stopTimer() {
-        timer?.let { it.dispose() }
     }
 
     private fun hideSoftKeyboard(view: View) {

@@ -8,3 +8,7 @@ fun Activity.showProgressBar(visible: Boolean) {
         this.showProgressBar(visible)
     }
 }
+
+// fun Activity.getScopeProvider(): AndroidLifecycleScopeProvider {
+//     AndroidLifecycleScopeProvider.from(this)
+// }
