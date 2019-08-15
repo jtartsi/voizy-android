@@ -8,11 +8,11 @@
     - Setup signatures
     - Beta sharing in playstore
     - Recording error message if recording shorter than 2s
-    - Instructions
+    ? Instructions (invalid)
     - Remove test button
     - Screen rotation crash
-    - Basic analytics
-    - Rec button to play button
+    X Basic analytics
     - Do not allow playing recordings from list while overlay
-    - Handle back button better
+    - Handle back button better in overlay
+    - Rec button to play button
 - Setup Firebase security rules
