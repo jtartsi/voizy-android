@@ -7,12 +7,11 @@
     X Tags styling
     - Setup signatures
     - Beta sharing in playstore
-    - Recording error message if recording shorter than 2s
-    ? Instructions (invalid)
+
     - Remove test button
-    - Screen rotation crash
+    X Screen rotation crash
     X Basic analytics
     - Do not allow playing recordings from list while overlay
-    - Handle back button better in overlay
+    X Handle back button better in overlay
     - Rec button to play button
-- Setup Firebase security rules
+    X Setup Firebase security rules

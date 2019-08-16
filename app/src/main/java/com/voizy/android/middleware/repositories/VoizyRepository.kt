@@ -38,6 +38,7 @@ class VoizyRepository(
 
     fun getAllOwnVoizys(): List<Voizy> {
         return localFileManager.getAllOwnVoizys()
+            .filter { it.name != "tmp" }
     }
 
     fun deleteLocalVoizy(localFilePath: String) {
