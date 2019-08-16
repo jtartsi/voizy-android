@@ -62,7 +62,6 @@ class RecordingOverlayFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        
         viewModel.recordingEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())

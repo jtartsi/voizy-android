@@ -1,52 +1,61 @@
 package com.voizy.android.ui
 
-import android.content.Context
-import android.util.AttributeSet
 import android.view.View
 import android.widget.ProgressBar
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.snackbar.Snackbar
+import com.uber.autodispose.android.lifecycle.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.ui.fragment.BaseFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 abstract class BaseActivity : FragmentActivity() {
 
     protected lateinit var appBarProgressBar: ProgressBar
-    private val backPressEvent = PublishSubject.create<Long>()
+    private val backPressEvent = PublishSubject.create<String>()
+    private lateinit var rootView: View
 
-    override fun onCreateView(parent: View?, name: String?, context: Context?, attrs: AttributeSet?): View {
-        return super.onCreateView(parent, name, context, attrs)
+    companion object {
+        private const val ACCEPT_BACK_THRESHOLD = 3000
+    }
 
-        // backPressEvent
-        //     .debounce(100, TimeUnit.MILLISECONDS)
-        //     .doOnNext { Snackbar.make(parent!!, "Press back again to delete voizy", Snackbar.LENGTH_SHORT).show() }
-        //     .timeInterval(TimeUnit.MILLISECONDS)
-        //     .skip(1)
-        //     .filter {
-        //         Timber.d("back-key filter time ${it.time()}")
-        //         if (it.time() < 1000) {
-        //             Timber.d("back-key pass")
-        //             true
-        //         } else {
-        //             Timber.d("back-key NOT pass")
-        //             false
-        //         }
-        //     }
-        //     .subscribe {
-        //         Timber.d("back-key subscribe")
-        //         supportFragmentManager!!.popBackStackImmediate()
-        //     }
+    override fun onStart() {
+        super.onStart()
+        rootView = findViewById(android.R.id.content)
+
+        backPressEvent
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .timeInterval(TimeUnit.MILLISECONDS)
+            .filter {
+                if (it.time() < ACCEPT_BACK_THRESHOLD) {
+                    true
+                } else {
+                    Snackbar.make(
+                        rootView,
+                        resources.getText(R.string.press_back_again_discard_voizy),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    false
+                }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(this)
+            .subscribe {
+                supportFragmentManager!!.popBackStackImmediate(
+                    it.value(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+            }
     }
 
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-
         if (currentFragment is BaseFragment && currentFragment.doubleBackPress()) {
-            supportFragmentManager.popBackStack(
-                currentFragment.getBackstackTag(),
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
+            backPressEvent.onNext(currentFragment.getBackstackTag())
         } else {
             super.onBackPressed()
         }
