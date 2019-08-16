@@ -27,7 +27,6 @@ import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.io.File
@@ -102,8 +101,6 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated()")
-
-        test_button.setOnClickListener {}
 
         voizyListAdapter = VoizyRecyclerViewAdapter(this)
         voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
