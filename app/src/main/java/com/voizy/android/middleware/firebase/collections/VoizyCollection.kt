@@ -5,6 +5,7 @@ import com.voizy.android.middleware.firebase.model.FirestoreVoizy
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.toObservable
 import io.reactivex.Observable
+import timber.log.Timber
 
 class VoizyCollection(private val firestore: FirebaseFirestore) {
 
@@ -13,11 +14,16 @@ class VoizyCollection(private val firestore: FirebaseFirestore) {
     }
 
     fun saveVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy?>> {
+        Timber.d("saveVoizy name ${voizy.name}, tags count ${voizy.tags.size}, tags: ${voizy.tags.forEach { "$it," }}")
+
         return firestore
             .collection(VOIZYS_COLLECTION)
             .add(voizy.toFirestoreData())
             .toObservable()
             .map { Pair<Boolean, Voizy?>(true, voizy) }
+            .doOnError {
+                Timber.e(it, "saveVoizy")
+            }
             .onErrorReturn { Pair(false, null) }
     }
 

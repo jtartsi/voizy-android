@@ -89,9 +89,18 @@ class TagEditText : EditText, TextWatcher {
     }
 
     fun getTags(): List<String> {
-        return tagEditor
+        val tags = tagEditor
             .editedTagString
             .replace("#", "")
             .split(" ")
+            .filter { !it.isNullOrEmpty() }
+            .distinctBy { it }
+
+        Timber.d("getTags() size ${tags.size}")
+        for (tag in tags) {
+            Timber.d("tag: $tag")
+        }
+
+        return tags
     }
 }

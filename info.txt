@@ -14,4 +14,4 @@
     X Handle back button better in overlay
     - Rec button to play button
     X Setup Firebase security rules
-    - Tag validation
+    X Tag validation
