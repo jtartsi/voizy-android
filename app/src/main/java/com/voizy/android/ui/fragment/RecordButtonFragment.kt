@@ -79,7 +79,7 @@ class RecordButtonFragment : Fragment() {
     private fun addRecordingFragment() {
         Handler().postDelayed({
             fragmentManager!!.beginTransaction()
-                .add(
+                .replace(
                     R.id.fragment_container,
                     RecordingOverlayFragment(),
                     RecordingOverlayFragment.TAG

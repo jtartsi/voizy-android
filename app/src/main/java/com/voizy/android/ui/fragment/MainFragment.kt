@@ -150,6 +150,26 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
         viewModel.getLocalVoizys()
     }
 
+    override fun onStart() {
+        super.onStart()
+        Timber.d("onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("onStop")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("onPause")
+    }
+
     private fun shareVoizy(voizy: Voizy) {
         val fileUri: Uri? = try {
             FileProvider.getUriForFile(

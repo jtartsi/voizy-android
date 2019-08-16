@@ -10,7 +10,7 @@
     X Remove test button
     X Screen rotation crash
     X Basic analytics
-    - Do not allow playing recordings from list while overlay
+    X Do not allow playing recordings from list while overlay
     X Handle back button better in overlay
     - Rec button to play button
     X Setup Firebase security rules

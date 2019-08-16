@@ -7,7 +7,7 @@ import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.model.Voizy
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
 
 class VoizyRepository(
     private val voizyFirestore: VoizyCollection,
@@ -15,7 +15,7 @@ class VoizyRepository(
     private val voizyStorage: VoizyFirebaseStorage
 ) {
 
-    private val saveVoizyQueue = PublishSubject.create<Voizy>()
+    private val saveVoizyQueue = BehaviorSubject.create<Voizy>()
     private val saveVoizyEvents = saveVoizyQueue
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
