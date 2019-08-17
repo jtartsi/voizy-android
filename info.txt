@@ -15,3 +15,9 @@
     - Rec button to play button
     X Setup Firebase security rules
     X Tag validation
+
+Design ideas:
+    - One color app bar?
+    - Remove app bar?
+    - Gradientally changing background top with color, bottom plain
+    - Change white to same what android uses on buttons?
