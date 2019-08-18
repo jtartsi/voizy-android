@@ -17,9 +17,10 @@
 
 -v0.3.0
     X List Voizys from cloud (simple impl.)
-    - Play Voizy from server
+    X Play Voizy from server
     X Generic error handler to save streams
     - Error repository to deliver errors to user
+    - Review all error handling usages for streams
     - Download cloud stored Voizys
     - Share cloud stored Voizys
     - Search Voizys
@@ -27,6 +28,7 @@
     - Search UI
     - Backend pagination
     - App facelift
+    - Delete local files once upload ready
 
 Design ideas:
     - One color app bar?

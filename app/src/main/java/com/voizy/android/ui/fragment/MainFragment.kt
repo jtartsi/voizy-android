@@ -67,7 +67,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
 
     override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
         Timber.d("onClick $position ${voizy.name} ${voizy.localFilePath}")
-        viewModel.playVoizy(voizy.localFilePath!!)
+        viewModel.playVoizy(voizy)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())

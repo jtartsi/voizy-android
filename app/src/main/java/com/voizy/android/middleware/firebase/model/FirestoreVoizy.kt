@@ -38,6 +38,8 @@ class FirestoreVoizy(
     }
 
     fun toVoizy(): Voizy {
-        return Voizy(name, tags.keys.toList())
+        val voizy = Voizy(name, tags.keys.toList())
+        voizy.firebaseFilePath = this.firebaseFilePath
+        return voizy
     }
 }

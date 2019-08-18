@@ -26,7 +26,7 @@ class RecordingOverlayViewModel(
 
     fun playVoizy() {
         val completable = Completable.fromAction {
-            voizyPlayer.play(voizyRepository.getTempFilePath())
+            voizyPlayer.playLocal(voizyRepository.getTempFilePath())
         }.subscribeOn(Schedulers.io())
 
         completable.apply {

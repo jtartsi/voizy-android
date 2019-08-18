@@ -5,15 +5,21 @@ import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.model.Voizy
+import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import timber.log.Timber
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
+
+    companion object {
+        private val TAG = MainFragmentViewModel::class.java.simpleName
+    }
 
     private val voizyFetchRequest = BehaviorSubject.create<Boolean>()
     private val voizysStream = voizyFetchRequest
@@ -47,8 +53,14 @@ class MainFragmentViewModel(
         }
     }
 
-    fun playVoizy(filePath: String): Observable<Int> {
-        return Observable.just(filePath)
-            .map { voizyPlayer.play(it) }
+    fun playVoizy(voizy: Voizy): Observable<Int> {
+        Timber.d("playVoizy $voizy")
+        Timber.d("playVoizy ${voizy.firebaseFilePath}")
+        return voizyRepository.getDownloadUrl(voizy.firebaseFilePath!!)
+            .map {
+                Timber.d("playVoizy downloadUrl $it")
+                voizyPlayer.playRemote(it)
+            }
+            .withErrorHandling(TAG, "Failed to play Voizy")
     }
 }

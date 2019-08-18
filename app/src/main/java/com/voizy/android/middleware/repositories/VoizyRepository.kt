@@ -58,4 +58,9 @@ class VoizyRepository(
             .toObservable()
             .withErrorHandling(TAG, "failed to fetch Voizys")
     }
+
+    fun getDownloadUrl(firestorePath: String): Observable<String> {
+        return voizyStorage.getDownloadUri(firestorePath)
+            .map { it.toString() }
+    }
 }
