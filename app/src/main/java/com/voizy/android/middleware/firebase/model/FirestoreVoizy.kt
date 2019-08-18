@@ -2,15 +2,13 @@ package com.voizy.android.middleware.firebase.model
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.PropertyName
+import com.voizy.android.ui.model.Voizy
 
 class FirestoreVoizy(
     @get:PropertyName(NAME_KEY) val name: String,
     @get:PropertyName(TAGS_KEY) val tags: Map<String, Boolean>,
     @get:PropertyName(FILE_PATH) val firebaseFilePath: String
 ) {
-
-    val tagsList: List<String>
-        get() = tags.keys.toList()
 
     companion object {
         private const val NAME_KEY = "name"
@@ -37,5 +35,9 @@ class FirestoreVoizy(
             }
             return FirestoreVoizy(name!!, tags!!, firebaseFilePath!!)
         }
+    }
+
+    fun toVoizy(): Voizy {
+        return Voizy(name, tags.keys.toList())
     }
 }

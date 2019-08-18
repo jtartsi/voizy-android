@@ -2,7 +2,6 @@ package com.voizy.android.middleware.repositories
 
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizyCollection
-import com.voizy.android.middleware.firebase.model.FirestoreVoizy
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.model.Voizy
 import io.reactivex.Observable
@@ -45,7 +44,11 @@ class VoizyRepository(
         localFileManager.deleteFile(localFilePath)
     }
 
-    fun getVoizys(): Observable<List<FirestoreVoizy>> {
+    fun getVoizys(): Observable<List<Voizy>> {
         return voizyFirestore.getVoizys()
+            .flatMap { Observable.fromIterable(it) }
+            .map { it.toVoizy() }
+            .toList()
+            .toObservable()
     }
 }

@@ -1,6 +1,5 @@
 package com.voizy.android.ui.fragment
 
-import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -24,7 +23,6 @@ import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.showProgressBar
 import com.voizy.android.viewmodels.MainFragmentViewModel
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
@@ -111,19 +109,8 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
         }
         ItemTouchHelper(VoizySwipeCallback(context!!, this)).attachToRecyclerView(voizyList)
 
-        Completable
-            .fromAction {
-                requestPermissions(
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQUEST_READ_EXTERNAL_PERMISSIONS
-                )
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe()
-
         viewModel.getVoizyStream()
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
@@ -147,7 +134,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
                 }
             }
 
-        viewModel.getLocalVoizys()
+        viewModel.fetchVoizys()
     }
 
     override fun onStart() {

@@ -8,17 +8,17 @@ import com.voizy.android.ui.model.Voizy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.ReplaySubject
+import io.reactivex.subjects.BehaviorSubject
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: VoizyPlayer
 ) : ViewModel() {
 
-    private val voizySearchRequest = ReplaySubject.create<Boolean>()
-    private val voizysStream = voizySearchRequest
+    private val voizyFetchRequest = BehaviorSubject.create<Boolean>()
+    private val voizysStream = voizyFetchRequest
         .observeOn(Schedulers.io())
-        .map { voizyRepository.getAllOwnVoizys() }
+        .flatMap { voizyRepository.getVoizys() }
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return voizyRepository.getSaveVoizyEvents()
@@ -28,10 +28,11 @@ class MainFragmentViewModel(
         return voizysStream
     }
 
-    fun getLocalVoizys() {
-        voizySearchRequest.onNext(true)
+    fun fetchVoizys() {
+        voizyFetchRequest.onNext(true)
     }
 
+    // TODO v0.3.0 remove this
     fun deleteVoizy(voizy: Voizy) {
         val completable = Completable.fromAction {
             voizyRepository.deleteLocalVoizy(voizy.localFilePath!!)
@@ -49,8 +50,4 @@ class MainFragmentViewModel(
         return Observable.just(filePath)
             .map { voizyPlayer.play(it) }
     }
-
-    // fun fetchRemoteVoizys(): Observable<List<FirestoreVoizy>> {
-    //     return voizyRepository.getVoizys()
-    // }
 }
