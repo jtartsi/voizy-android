@@ -2,6 +2,7 @@ package com.voizy.android.middleware.local
 
 import android.content.Context
 import com.voizy.android.ui.model.Voizy
+import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
@@ -9,6 +10,8 @@ import java.io.File
 class LocalFileManager(private val context: Context) {
 
     companion object {
+        private val TAG = LocalFileManager::class.java.simpleName
+
         const val TMP_VOIZY_FILE_NAME = "voizy_tmp.mp3"
         const val VOIZY_FILE_PREFIX = "voizy_"
         const val MP3_FILE_EXT = ".mp3"
@@ -20,6 +23,7 @@ class LocalFileManager(private val context: Context) {
                 it.localFilePath = renameFile(it.name)
                 return@map it
             }
+            .withErrorHandling(TAG, "Failed to save voizy locally")
     }
 
     fun getTempFilePath(): String {

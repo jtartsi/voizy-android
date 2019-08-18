@@ -4,6 +4,7 @@ import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizyCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.model.Voizy
+import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -14,13 +15,18 @@ class VoizyRepository(
     private val voizyStorage: VoizyFirebaseStorage
 ) {
 
+    companion object {
+        private val TAG = VoizyRepository::class.java.simpleName
+    }
+
+    // TODO implement error repository
+
     private val saveVoizyQueue = BehaviorSubject.create<Voizy>()
     private val saveVoizyEvents = saveVoizyQueue
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
         .switchMap { voizyStorage.uploadVoizy(it) }
         .switchMap { voizyFirestore.saveVoizy(it.second) }
-        .onErrorReturnItem(Pair(false, null))
         .share()
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
@@ -50,5 +56,6 @@ class VoizyRepository(
             .map { it.toVoizy() }
             .toList()
             .toObservable()
+            .withErrorHandling(TAG, "failed to fetch Voizys")
     }
 }

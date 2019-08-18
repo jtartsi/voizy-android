@@ -5,6 +5,7 @@ import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageReference
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.toObservable
+import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import java.io.File
 import java.io.FileInputStream
@@ -15,6 +16,7 @@ class VoizyFirebaseStorage(
 ) {
 
     companion object {
+        private val TAG = VoizyFirebaseStorage::class.java.simpleName
         private const val VOIZYS_PATH = "voizys"
     }
 
@@ -30,6 +32,7 @@ class VoizyFirebaseStorage(
                 voizy.firebaseFilePath = uploadRef.path
                 Pair(true, voizy)
             }
+            .withErrorHandling(TAG, "Failed to upload audio file")
     }
 
     fun getFile(fireBasePath: String, destinationFile: File): Observable<FileDownloadTask.TaskSnapshot> {

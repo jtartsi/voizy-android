@@ -16,10 +16,12 @@
     X Tag validation
 
 -v0.3.0
-    - List Voizys on cloud
+    X List Voizys from cloud (simple impl.)
     - Play Voizy from server
-    - Play Voizy from server
-    - Download and share cloud stored Voizys
+    X Generic error handler to save streams
+    - Error repository to deliver errors to user
+    - Download cloud stored Voizys
+    - Share cloud stored Voizys
     - Search Voizys
     - Rec button to play button
     - Search UI
