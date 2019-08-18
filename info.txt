@@ -12,9 +12,19 @@
     X Basic analytics
     X Do not allow playing recordings from list while overlay
     X Handle back button better in overlay
-    - Rec button to play button
     X Setup Firebase security rules
     X Tag validation
+
+-v0.3.0
+    - List Voizys on cloud
+    - Play Voizy from server
+    - Play Voizy from server
+    - Download and share cloud stored Voizys
+    - Search Voizys
+    - Rec button to play button
+    - Search UI
+    - Backend pagination
+    - App facelift
 
 Design ideas:
     - One color app bar?
