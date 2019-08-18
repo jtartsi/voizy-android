@@ -22,6 +22,7 @@ class MainFragmentViewModel(
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return voizyRepository.getSaveVoizyEvents()
+            .doOnNext { voizyFetchRequest.onNext(true) }
     }
 
     fun getVoizyStream(): Observable<List<Voizy>> {

@@ -123,7 +123,6 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             .subscribe { pair ->
                 activity!!.showProgressBar(false)
                 if (pair.first) {
-                    voizyListAdapter.addAll(listOf(pair.second!!))
                     Snackbar.make(
                         view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
                     ).setAction(R.string.share) {

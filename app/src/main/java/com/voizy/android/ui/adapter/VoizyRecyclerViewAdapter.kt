@@ -13,8 +13,6 @@ import com.voizy.android.R
 import com.voizy.android.ui.listener.OnItemClickListener
 import com.voizy.android.ui.model.Voizy
 import timber.log.Timber
-import java.util.Date
-import kotlin.random.Random
 
 class VoizyRecyclerViewAdapter(
     private val onItemClickListener: OnItemClickListener<VoizyViewHolder, Voizy>
@@ -22,18 +20,6 @@ class VoizyRecyclerViewAdapter(
 
     private val dataset = mutableListOf<Voizy>()
     private var cancellableDeletedItem: Pair<Int, Voizy>? = null
-
-    companion object {
-        private val sports = listOf<String>("#football ", "#icehockey ", "#soccer ", "#rugby ")
-        private val adjectives = listOf<String>("#best ", "#awesome ", "#superb ")
-        private val actions = listOf<String>("#goal ", "#win ", "#champions ")
-
-        private fun getRandomTags(): String {
-            return sports.shuffled().take(1)[0]
-                .plus(adjectives.shuffled().take(1)[0])
-                .plus(actions.shuffled().take(1)[0])
-        }
-    }
 
     val items: List<Voizy>
         get() = dataset
@@ -75,10 +61,9 @@ class VoizyRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: VoizyViewHolder, position: Int) {
-        holder.tvTitle.text = dataset[position].name
-        val randomShareCount = Random(Date().time).nextInt(1700)
-        holder.tvShareCount.text = "$randomShareCount"
-        holder.tvTags.text = getRandomTags()
+        val voizy = dataset[position]
+        holder.tvTitle.text = voizy.name
+        holder.tvTags.text = getHashTags(voizy.tags)
         holder.itemView.setOnClickListener {
             onItemClickListener.onClick(holder, position, items[position])
         }
@@ -110,5 +95,9 @@ class VoizyRecyclerViewAdapter(
             dataset.add(it.first, it.second)
             notifyItemInserted(it.first)
         }
+    }
+
+    private fun getHashTags(tags: List<String>): String {
+        return tags.joinToString(separator = " #", prefix = "#")
     }
 }
