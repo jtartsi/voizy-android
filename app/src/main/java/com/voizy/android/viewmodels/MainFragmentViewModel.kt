@@ -1,8 +1,10 @@
 package com.voizy.android.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
+import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.withErrorHandling
@@ -10,7 +12,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import timber.log.Timber
+import java.io.File
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
@@ -54,13 +56,16 @@ class MainFragmentViewModel(
     }
 
     fun playVoizy(voizy: Voizy): Observable<Int> {
-        Timber.d("playVoizy $voizy")
-        Timber.d("playVoizy ${voizy.firebaseFilePath}")
-        return voizyRepository.getDownloadUrl(voizy.firebaseFilePath!!)
-            .map {
-                Timber.d("playVoizy downloadUrl $it")
-                voizyPlayer.playRemote(it)
-            }
+        return voizyRepository.getFileUrl(voizy.firebaseFilePath!!)
+            .map { voizyPlayer.playRemote(it) }
+            .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to play Voizy")
+    }
+
+    fun downloadVoizy(context: Context, voizy: Voizy): Observable<File> {
+        val destinationFile = File(LocalFileManager(context).getTempFilePath())
+        return voizyRepository.downloadVoizy(voizy.firebaseFilePath!!, destinationFile)
+            .subscribeOn(Schedulers.io())
+            .withErrorHandling(TAG, "Failed to download Voizy")
     }
 }

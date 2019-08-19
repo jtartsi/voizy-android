@@ -21,8 +21,9 @@
     X Generic error handler to save streams
     - Error repository to deliver errors to user
     - Review all error handling usages for streams
-    - Download cloud stored Voizys
-    - Share cloud stored Voizys
+    - Observables - lifecycles - double loading
+    X Download cloud stored Voizys
+    X Share cloud stored Voizys
     - Search Voizys
     - Rec button to play button
     - Search UI

@@ -16,4 +16,5 @@
     <string name="share_voizy">"Share Voizy"</string>
     <string name="enter_tags_hint">"Enter tags"</string>
     <string name="press_back_again_discard_voizy">"Press back again to discard Voizy"</string>
+    <string name="audio_file_not_found">"Audio file not found"</string>
 </resources>

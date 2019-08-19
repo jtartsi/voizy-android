@@ -1,14 +1,10 @@
 package com.voizy.android.ui.fragment
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,17 +16,20 @@ import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
 import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.ui.listener.OnItemClickListener
 import com.voizy.android.ui.model.Voizy
+import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.showProgressBar
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.functions.Consumer
+import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import java.io.File
 
 class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy> {
+
+    private val shareRequests = PublishSubject.create<Voizy>()
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
@@ -54,8 +53,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
             }
             ItemTouchHelper.RIGHT -> {
                 voizyListAdapter.notifyItemChanged(position)
-                shareVoizy(voizy)
-
+                shareRequests.onNext(voizy)
                 Snackbar.make(
                     view!!,
                     getString(R.string.voizy_sharing, voizy.name),
@@ -68,14 +66,9 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
         Timber.d("onClick $position ${voizy.name} ${voizy.localFilePath}")
         viewModel.playVoizy(voizy)
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe({
-                viewHolder.animateProgress(it)
-            }, {
-                Toast.makeText(context!!, "Audio file not found", Toast.LENGTH_SHORT).show()
-            })
+            .subscribe { viewHolder.animateProgress(it) }
     }
 
     private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
@@ -109,72 +102,41 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
         }
         ItemTouchHelper(VoizySwipeCallback(context!!, this)).attachToRecyclerView(voizyList)
 
-        viewModel.getVoizyStream()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                voizyListAdapter.addAll(it)
-            }
-
-        viewModel.getSaveVoizyEvents()
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe { pair ->
-                activity!!.showProgressBar(false)
-                if (pair.first) {
-                    Snackbar.make(
-                        view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
-                    ).setAction(R.string.share) {
-                        shareVoizy(pair.second!!)
-                    }.show()
-                } else {
-                    Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT).show()
-                }
-            }
+        setObservables()
 
         viewModel.fetchVoizys()
     }
 
-    override fun onStart() {
-        super.onStart()
-        Timber.d("onStart")
+    private fun setObservables() {
+        shareRequests
+            .switchMap { viewModel.downloadVoizy(context!!, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { ShareUtils.shareVoizy(context!!, it) }
+
+        viewModel.getSaveVoizyEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(saveEventObserver())
+
+        viewModel.getVoizyStream()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { voizyListAdapter.addAll(it) }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Timber.d("onResume")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Timber.d("onStop")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("onPause")
-    }
-
-    private fun shareVoizy(voizy: Voizy) {
-        val fileUri: Uri? = try {
-            FileProvider.getUriForFile(
-                context!!,
-                "com.voizy.android.fileprovider",
-                File(voizy.localFilePath)
-            )
-        } catch (e: IllegalArgumentException) {
-            Timber.e(
-                e, "File Selector. The selected file can't be shared: ${voizy.localFilePath}"
-            )
-            null
+    private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
+        return Consumer { pair ->
+            activity!!.showProgressBar(false)
+            if (pair.first) {
+                Snackbar.make(
+                    view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
+                ).setAction(R.string.share) {
+                    shareRequests.onNext(pair.second!!)
+                }.show()
+            } else {
+                Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT).show()
+            }
         }
-
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, fileUri)
-            type = "audio/*"
-        }
-        startActivity(Intent.createChooser(sendIntent, getString(R.string.share_voizy)))
     }
 }

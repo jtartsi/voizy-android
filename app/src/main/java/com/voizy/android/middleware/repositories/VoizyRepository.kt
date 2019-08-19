@@ -1,13 +1,16 @@
 package com.voizy.android.middleware.repositories
 
+import android.content.Context
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizyCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import java.io.File
 
 class VoizyRepository(
     private val voizyFirestore: VoizyCollection,
@@ -59,8 +62,20 @@ class VoizyRepository(
             .withErrorHandling(TAG, "failed to fetch Voizys")
     }
 
-    fun getDownloadUrl(firestorePath: String): Observable<String> {
+    fun getFileUrl(firestorePath: String): Observable<String> {
         return voizyStorage.getDownloadUri(firestorePath)
             .map { it.toString() }
+    }
+
+    fun downloadVoizy(context: Context, firebasePath: String) {
+        val destinationFile = File(LocalFileManager(context).getTempFilePath())
+        voizyStorage.getFile(firebasePath, destinationFile)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun downloadVoizy(firestorePath: String, destinationFile: File): Observable<File> {
+        return voizyStorage.getFile(firestorePath, destinationFile)
+            .map { destinationFile }
     }
 }
