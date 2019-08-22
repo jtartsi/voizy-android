@@ -6,10 +6,31 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawablePadding="8dp"
+        android:foregroundTintMode="@android:color/white"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:hint="Search"
+        android:textColor="@android:color/white"
+        android:background="@drawable/et_search_background"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_voizy_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/et_search"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
 
