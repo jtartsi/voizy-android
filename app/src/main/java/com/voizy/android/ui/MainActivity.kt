@@ -12,7 +12,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        appBarProgressBar = findViewById(R.id.pb_app_bar)
+        // appBarProgressBar = findViewById(R.id.pb_app_bar)
 
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, MainFragment())

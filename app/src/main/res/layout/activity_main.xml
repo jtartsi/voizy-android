@@ -6,43 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context=".ui.MainActivity">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_height="60dp"
-        android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <android.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:theme="@style/VoizyTheme.ActionBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:title="@string/app_name">
-
-        </android.widget.Toolbar>
-
-        <ProgressBar
-            android:id="@+id/pb_app_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="14dp"
-            android:minHeight="14dp"
-            android:layout_marginTop="1px"
-            android:layout_gravity="bottom"
-            android:progressTint="@android:color/holo_orange_dark"
-            android:indeterminate="true"
-            android:visibility="gone"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    tools:context=".ui.MainActivity"
+    android:background="@android:color/white">
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <fragment
         android:name="com.voizy.android.ui.fragment.RecordButtonFragment"
