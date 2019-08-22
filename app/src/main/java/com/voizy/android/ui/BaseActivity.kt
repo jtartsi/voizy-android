@@ -61,7 +61,8 @@ abstract class BaseActivity : FragmentActivity() {
         }
     }
 
-    fun showProgressBar(visibility: Boolean) {
-        appBarProgressBar.visibility = if (visibility) View.VISIBLE else View.GONE
-    }
+    // TODO progressbar
+    // fun showProgressBar(visibility: Boolean) {
+    //     appBarProgressBar.visibility = if (visibility) View.VISIBLE else View.GONE
+    // }
 }

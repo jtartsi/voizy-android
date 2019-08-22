@@ -18,7 +18,6 @@ import com.voizy.android.ui.listener.OnItemClickListener
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.utils.showProgressBar
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
@@ -127,7 +126,7 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
 
     private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
         return Consumer { pair ->
-            activity!!.showProgressBar(false)
+            // activity!!.showProgressBar(false) // TODO progressbar
             if (pair.first) {
                 Snackbar.make(
                     view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG

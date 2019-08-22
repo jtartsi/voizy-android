@@ -10,4 +10,7 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <!--<style name="VoizyTheme.BorderButton" parent="android:Widget.Material.Button.Borderless">-->
+    <!--<item name="android:background"-->
+    <!--</style>-->
 </resources>

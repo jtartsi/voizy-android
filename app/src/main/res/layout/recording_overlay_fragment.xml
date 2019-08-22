@@ -85,8 +85,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="130dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@android:color/holo_orange_light"
-        android:textColor="@android:color/white"
+        android:background="@drawable/voizy_button_ripples"
+        android:textColor="@android:color/holo_orange_dark"
         android:visibility="gone"
         test:visibility="visible"
         android:text="@string/finish"/>
