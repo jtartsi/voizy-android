@@ -5,12 +5,15 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="colorAccent">@android:color/holo_orange_dark</item>
+        <item name="colorAccent">@color/voizy_orange</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <!--<style name="VoizyTheme.BorderButton" parent="android:Widget.Material.Button.Borderless">-->
-    <!--<item name="android:background"-->
-    <!--</style>-->
+    <style name="VoizyTheme.BorderButton" parent="android:Widget.Material.Button.Borderless">
+        <item name="android:background">@drawable/voizy_button_ripples</item>
+        <item name="android:textColor">@color/voizy_orange</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
 </resources>

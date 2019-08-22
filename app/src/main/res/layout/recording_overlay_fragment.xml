@@ -76,6 +76,7 @@
         android:hint="@string/enter_tags_hint"/>
 
     <Button
+        style="@style/VoizyTheme.BorderButton"
         android:id="@+id/btn_save_voizy"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -85,9 +86,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="130dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/voizy_button_ripples"
-        android:textColor="@android:color/holo_orange_dark"
-        android:visibility="gone"
         test:visibility="visible"
         android:text="@string/finish"/>
 
