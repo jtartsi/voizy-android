@@ -66,7 +66,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_delete_sweep_orange_dark" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/sound_wave.png" />
+                                      <entry key="outputName" value="sound_waves_orange_dark" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="ff8800" />
                                     </map>

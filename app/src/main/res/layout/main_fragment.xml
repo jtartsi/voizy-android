@@ -20,7 +20,6 @@
         android:foregroundTintMode="@android:color/white"
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:hint="Search"
-        android:textColor="@android:color/white"
         android:background="@drawable/et_search_background"/>
 
     <androidx.recyclerview.widget.RecyclerView
