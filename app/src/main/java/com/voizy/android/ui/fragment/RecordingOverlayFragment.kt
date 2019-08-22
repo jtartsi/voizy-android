@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import io.reactivex.Observable
@@ -51,10 +53,19 @@ class RecordingOverlayFragment : BaseFragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            // val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
-            // viewModel.saveVoizy(voizyToSave)
-            // // activity!!.showProgressBar(true) // TODO progressbar
-            // close()
+            val voizyName = et_voizy_name.text.toString()
+
+            if (!voizyName.isNullOrEmpty()) {
+                val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
+                viewModel.saveVoizy(voizyToSave)
+                // activity!!.showProgressBar(true) // TODO progressbar
+                hideSoftKeyboard(playButton)
+                fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            } else {
+                Snackbar.make(
+                    view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -89,11 +100,6 @@ class RecordingOverlayFragment : BaseFragment() {
                     }
                 }
             }
-    }
-
-    private fun close() {
-        hideSoftKeyboard(playButton)
-        fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     private fun startTimer() {

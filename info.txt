@@ -19,6 +19,7 @@
     X List Voizys from cloud (simple impl.)
     X Play Voizy from server
     X Generic error handler to save streams
+    - Ensure no empty hashtags goes to server
     - Error repository to deliver errors to user
     - Review all error handling usages for streams
     - Observables - lifecycles - double loading
@@ -26,7 +27,7 @@
     X Share cloud stored Voizys
     - Search Voizys
     - Rec button to play button
-    - Search UI
+    X Search UI
     - Backend pagination
     - App facelift
     - Delete local files once upload ready
