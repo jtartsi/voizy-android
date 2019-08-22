@@ -8,40 +8,6 @@
         <item name="colorAccent">@android:color/holo_orange_dark</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
-        <!--<item name="actionBarStyle">@style/VoizyTheme.ActionBarStyle</item>-->
     </style>
-
-    <style name="VoizyTheme.ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar">
-        <item name="android:titleTextColor">@android:color/white</item>
-    </style>
-
-    <!--<style name="VoizyTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">-->
-    <!--<item name="android:titleTextColor">@android:color/white</item>-->
-    <!--<item name="android:textColor">@android:color/white</item>-->
-    <!--<item name="android:textColorPrimary">@android:color/white</item>-->
-    <!--</style>-->
-
-    <!--<style name="VoizyTheme.ThemeOverlay.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">-->
-    <!--&lt;!&ndash; title text color &ndash;&gt;-->
-    <!--<item name="android:textColorPrimary">@android:color/white</item>-->
-    <!--<item name="android:titleTextColor">@android:color/white</item>-->
-    <!--</style>-->
-
-    <!--<style name="ThemeOverlay.AppTheme.PopupMenu" parent="ThemeOverlay.AppCompat.Dark">-->
-    <!--&lt;!&ndash; popup menu background - NEVER "android:background" !!! in themes &ndash;&gt;-->
-    <!--&lt;!&ndash;<item name="android:colorBackground">...</item>&ndash;&gt;-->
-    <!--&lt;!&ndash; popup menu item text color &ndash;&gt;-->
-    <!--<item name="android:textColorPrimary">@android:color/white</item>-->
-    <!--<item name="android:titleTextColor">@android:color/white</item>-->
-    <!--</style>-->
-
-    <!--<style name="VoizyTheme.NoActionBar">-->
-    <!--<item name="windowActionBar">false</item>-->
-    <!--<item name="windowNoTitle">true</item>-->
-    <!--</style>-->
-
-
-    <!--<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>-->
-    <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>-->
 
 </resources>
