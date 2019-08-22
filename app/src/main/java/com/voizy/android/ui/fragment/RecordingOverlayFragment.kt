@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
-import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingOverlayViewModel
 import io.reactivex.Observable
@@ -52,10 +51,10 @@ class RecordingOverlayFragment : BaseFragment() {
         }
 
         btn_save_voizy.setOnClickListener {
-            val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
-            viewModel.saveVoizy(voizyToSave)
-            // activity!!.showProgressBar(true) // TODO progressbar
-            close()
+            // val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
+            // viewModel.saveVoizy(voizyToSave)
+            // // activity!!.showProgressBar(true) // TODO progressbar
+            // close()
         }
     }
 

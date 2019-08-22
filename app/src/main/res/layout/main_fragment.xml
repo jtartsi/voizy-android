@@ -20,7 +20,7 @@
         android:foregroundTintMode="@android:color/white"
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:hint="Search"
-        android:background="@drawable/et_search_background"/>
+        android:background="@drawable/border_background"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_voizy_list"
