@@ -1,32 +1,4 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!--<item>-->
-    <!--<shape>-->
-    <!--<solid android:color="@android:color/holo_orange_dark" />-->
-    <!--<corners android:radius="6dp" />-->
-    <!--</shape>-->
-    <!--</item>-->
-
-    <!--<item>-->
-    <!--<shape>-->
-    <!--<corners android:radius="6dp" />-->
-    <!--<solid android:color="@android:color/holo_blue_light" />-->
-    <!--</shape>-->
-    <!--</item>-->
-
-    <!--<item>-->
-    <!--&lt;!&ndash; left is icon size + 2x side padding around icon&ndash;&gt;-->
-    <!--&lt;!&ndash; 18 + 8 + 8 &ndash;&gt;-->
-    <!--<shape>-->
-    <!--<solid android:color="@android:color/holo_orange_dark" />-->
-    <!--<corners android:radius="6dp"-->
-    <!--android:topRightRadius="6dp"-->
-    <!--android:topLeftRadius="6dp"-->
-    <!--android:bottomRightRadius="6dp"-->
-    <!--android:bottomLeftRadius="6dp"/>-->
-    <!--</shape>-->
-    <!--</item>-->
-
     <item>
         <shape>
             <corners android:radius="6dp"/>
