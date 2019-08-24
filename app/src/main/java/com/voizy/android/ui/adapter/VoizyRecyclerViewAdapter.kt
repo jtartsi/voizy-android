@@ -64,6 +64,7 @@ class VoizyRecyclerViewAdapter(
         val voizy = dataset[position]
         holder.tvTitle.text = voizy.name
         holder.tvTags.text = getHashTags(voizy.tags)
+        holder.progressBar.progress = 0
         holder.itemView.setOnClickListener {
             onItemClickListener.onClick(holder, position, items[position])
         }

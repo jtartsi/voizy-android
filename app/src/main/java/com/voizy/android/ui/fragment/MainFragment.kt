@@ -75,10 +75,6 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
     private val deleteHandler = Handler()
 
-    companion object {
-        private const val REQUEST_READ_EXTERNAL_PERMISSIONS = 200
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate()")
