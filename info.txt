@@ -16,13 +16,17 @@
     X Tag validation
 
 -v0.3.0
+    - Wrong audio files, duplicate voizys
+    - Double back says Voizy created
+    - Observables - lifecycles - double loading
+    - ProgressBar running in two places
+    - ProgressBar doesn't work always
     X List Voizys from cloud (simple impl.)
     X Play Voizy from server
     X Generic error handler to save streams
     - Ensure no empty hashtags goes to server
     - Error repository to deliver errors to user
     - Review all error handling usages for streams
-    - Observables - lifecycles - double loading
     X Download cloud stored Voizys
     X Share cloud stored Voizys
     - Search Voizys
@@ -31,6 +35,7 @@
     - Backend pagination
     - App facelift
     - Delete local files once upload ready
+
 
 Design ideas:
     - One color app bar?
