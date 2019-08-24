@@ -16,9 +16,9 @@
     X Tag validation
 
 -v0.3.0
-    - Wrong audio files, duplicate voizys
-    - Double back says Voizy created
-    - Observables - lifecycles - double loading
+    X Wrong audio files, duplicate voizys
+    X Double back says Voizy created
+    X Observables - lifecycles - double loading
     - ProgressBar running in two places
     - ProgressBar doesn't work always
     X List Voizys from cloud (simple impl.)

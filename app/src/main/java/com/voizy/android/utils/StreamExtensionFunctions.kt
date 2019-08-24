@@ -33,7 +33,7 @@ fun <T> Observable<T>.withErrorHandling(
     defaultValueOnError: Observable<T> = Observable.empty()
 ): Observable<T> {
     return this.withErrorHandling {
-        Timber.w(it, "$tag $message")
+        Timber.e(it, "$tag $message")
         defaultValueOnError
     }
 }
@@ -44,21 +44,21 @@ fun <T> Flowable<T>.withErrorHandling(
     defaultValueOnError: Flowable<T> = Flowable.empty()
 ): Flowable<T> {
     return this.withErrorHandling {
-        Timber.w(it, "$tag $message")
+        Timber.e(it, "$tag $message")
         defaultValueOnError
     }
 }
 
 fun <T> Flowable<T>.withErrorHandling(tag: String, message: String): Flowable<T> {
     return this.withErrorHandling {
-        Timber.w(it, "$tag $message")
+        Timber.e(it, "$tag $message")
         Flowable.empty()
     }
 }
 
 fun <T> Single<T>.withErrorHandling(tag: String, message: String, valueOnError: T): Single<T> {
     return this.withErrorHandling {
-        Timber.w(it, "$tag $message")
+        Timber.e(it, "$tag $message")
         Single.just(valueOnError)
     }
 }

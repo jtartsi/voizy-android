@@ -11,7 +11,7 @@ import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import java.io.File
 
 class MainFragmentViewModel(
@@ -23,7 +23,7 @@ class MainFragmentViewModel(
         private val TAG = MainFragmentViewModel::class.java.simpleName
     }
 
-    private val voizyFetchRequest = BehaviorSubject.create<Boolean>()
+    private val voizyFetchRequest = PublishSubject.create<Boolean>()
     private val voizysStream = voizyFetchRequest
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.getVoizys() }
