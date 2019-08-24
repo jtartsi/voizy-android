@@ -18,8 +18,10 @@ import com.voizy.android.R
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordButtonViewModel
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 
 @SuppressWarnings("ClickableViewAccessibility")
@@ -28,6 +30,8 @@ class RecordButtonFragment : Fragment() {
     private val viewModel: RecordButtonViewModel by inject<RecordButtonViewModel>()
     private lateinit var recordButton: ImageButton
     private val stopTimer = Handler()
+
+    private enum class ButtonState { RECORD, PLAY }
 
     companion object {
         public val TAG = RecordButtonFragment::class.java.simpleName
@@ -57,6 +61,18 @@ class RecordButtonFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun fragmentChanges(): Observable<Fragment> {
+        val backstackSubject = PublishSubject.create<Fragment>()
+
+        fragmentManager!!.addOnBackStackChangedListener {
+            val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
+            if (topFragment != null) {
+                backstackSubject.onNext(topFragment)
+            }
+        }
+        return backstackSubject
     }
 
     private fun startRecording() {

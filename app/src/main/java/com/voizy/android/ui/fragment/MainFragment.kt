@@ -5,7 +5,6 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +24,16 @@ import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
+class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
     OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy> {
+
+    companion object {
+        public val TAG = MainFragment::class.java.simpleName
+    }
+
+    override fun getBackstackTag(): String {
+        return TAG
+    }
 
     private val shareRequests = PublishSubject.create<Voizy>()
 
