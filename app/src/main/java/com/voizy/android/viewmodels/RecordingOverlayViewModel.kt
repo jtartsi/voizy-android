@@ -9,6 +9,7 @@ import com.voizy.android.ui.model.Voizy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class RecordingOverlayViewModel(
     private val voizyRepository: VoizyRepository,
@@ -36,6 +37,7 @@ class RecordingOverlayViewModel(
     }
 
     fun saveVoizy(voizy: Voizy) {
+        Timber.d("save-voizy ${voizy.name}")
         voizyRepository.saveVoizy(voizy)
     }
 }

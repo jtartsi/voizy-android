@@ -127,6 +127,12 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
     private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
         return Consumer { pair ->
             // activity!!.showProgressBar(false) // TODO progressbar
+            if (pair.second != null) {
+                Timber.d("save-voizy saveEventObserver() ${pair.second!!.name}")
+            } else {
+                Timber.d("save-voizy saveEventObserver null")
+            }
+
             if (pair.first) {
                 Snackbar.make(
                     view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
