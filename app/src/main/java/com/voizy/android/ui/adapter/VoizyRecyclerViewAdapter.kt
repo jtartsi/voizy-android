@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import com.voizy.android.ui.listener.OnItemClickListener
 import com.voizy.android.ui.model.Voizy
-import timber.log.Timber
 
 class VoizyRecyclerViewAdapter(
     private val onItemClickListener: OnItemClickListener<VoizyViewHolder, Voizy>
@@ -31,7 +30,6 @@ class VoizyRecyclerViewAdapter(
         var progressBar: ProgressBar = view.findViewById(R.id.pb_voizy_row_progress)
 
         fun animateProgress(durationInMillis: Int) {
-            Timber.d("animateProgress duration $durationInMillis")
             progressBar.max = durationInMillis
             val progressAnimator = ObjectAnimator.ofInt(
                 progressBar,
@@ -65,6 +63,7 @@ class VoizyRecyclerViewAdapter(
         holder.tvTitle.text = voizy.name
         holder.tvTags.text = getHashTags(voizy.tags)
         holder.progressBar.progress = 0
+        holder.progressBar.max = 0
         holder.itemView.setOnClickListener {
             onItemClickListener.onClick(holder, position, items[position])
         }
@@ -80,6 +79,9 @@ class VoizyRecyclerViewAdapter(
     fun clear() {
         dataset.clear()
         notifyDataSetChanged()
+    }
+
+    fun animateProgress(position: Int, durationInMillis: Int) {
     }
 
     /**

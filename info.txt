@@ -19,8 +19,8 @@
     X Wrong audio files, duplicate voizys
     X Double back says Voizy created
     X Observables - lifecycles - double loading
-    - ProgressBar running in two places
-    - ProgressBar doesn't work always
+    X ProgressBar running in two places
+    X ProgressBar doesn't work always
     X List Voizys from cloud (simple impl.)
     X Play Voizy from server
     X Generic error handler to save streams
