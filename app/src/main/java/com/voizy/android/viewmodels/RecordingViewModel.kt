@@ -10,13 +10,13 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class RecordingOverlayViewModel(
+class RecordingViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyRecorder: VoizyRecorder,
     private val voizyPlayer: VoizyPlayer
 ) : DisposingViewModel() {
 
-    fun recordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
+    fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
         return voizyRecorder.recordingEvents()
     }
 

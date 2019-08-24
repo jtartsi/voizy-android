@@ -67,7 +67,7 @@ class RecordButtonFragment : Fragment() {
             delayedVibrate(recordButton)
             animateButtonOnStart()
 
-            var recFragment = fragmentManager!!.findFragmentByTag(RecordingOverlayFragment.TAG)
+            var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
             if (recFragment == null) {
                 addRecordingFragment()
             }
@@ -81,10 +81,10 @@ class RecordButtonFragment : Fragment() {
             fragmentManager!!.beginTransaction()
                 .replace(
                     R.id.fragment_container,
-                    RecordingOverlayFragment(),
-                    RecordingOverlayFragment.TAG
+                    RecordingFragment(),
+                    RecordingFragment.TAG
                 )
-                .addToBackStack(RecordingOverlayFragment.TAG)
+                .addToBackStack(RecordingFragment.TAG)
                 .commit()
         }, ANIMATION_DELAY)
     }

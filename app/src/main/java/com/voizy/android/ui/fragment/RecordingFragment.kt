@@ -13,7 +13,7 @@ import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.viewmodels.RecordingOverlayViewModel
+import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -22,14 +22,14 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class RecordingOverlayFragment : BaseFragment() {
+class RecordingFragment : BaseFragment() {
 
-    private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
+    private val viewModel: RecordingViewModel by inject<RecordingViewModel>()
     private lateinit var playButton: View
     private var timerDisposable: Disposable? = null
 
     companion object {
-        public val TAG = RecordingOverlayFragment::class.java.simpleName
+        public val TAG = RecordingFragment::class.java.simpleName
     }
 
     override fun doubleBackPress(): Boolean {
@@ -71,7 +71,7 @@ class RecordingOverlayFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.recordingEvents()
+        viewModel.getRecordingEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
