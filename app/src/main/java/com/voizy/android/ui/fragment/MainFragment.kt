@@ -121,7 +121,10 @@ class MainFragment : Fragment(), VoizySwipeCallback.VoizySwipeListener,
         viewModel.getVoizyStream()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { voizyListAdapter.addAll(it) }
+            .subscribe {
+                voizyListAdapter.clear()
+                voizyListAdapter.addAll(it)
+            }
     }
 
     private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
