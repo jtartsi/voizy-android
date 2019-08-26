@@ -32,6 +32,7 @@ class MainFragmentViewModel(
 
     init {
         voizyRepository.getSaveVoizyEvents()
+            .withErrorHandling(TAG, "save voizy events error")
             .subscribe { saveVoizyEventsBehaviorSubject.onNext(it) }
             .autoDispose()
     }
@@ -39,6 +40,7 @@ class MainFragmentViewModel(
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return saveVoizyEventsBehaviorSubject
             .doOnNext { voizyFetchRequest.onNext(true) }
+            .withErrorHandling(TAG, "save voizy events error")
     }
 
     fun getVoizyStream(): Observable<List<Voizy>> {

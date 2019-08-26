@@ -13,7 +13,7 @@ import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.viewmodels.RecordingOverlayViewModel
+import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -22,14 +22,13 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class RecordingOverlayFragment : BaseFragment() {
+class RecordingFragment : BaseFragment() {
 
-    private val viewModel: RecordingOverlayViewModel by inject<RecordingOverlayViewModel>()
-    private lateinit var playButton: View
+    private val viewModel: RecordingViewModel by inject<RecordingViewModel>()
     private var timerDisposable: Disposable? = null
 
     companion object {
-        public val TAG = RecordingOverlayFragment::class.java.simpleName
+        public val TAG = RecordingFragment::class.java.simpleName
     }
 
     override fun doubleBackPress(): Boolean {
@@ -47,11 +46,6 @@ class RecordingOverlayFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playButton = view.findViewById<View>(R.id.btn_play_preview)
-        playButton.setOnClickListener {
-            viewModel.playVoizy()
-        }
-
         btn_save_voizy.setOnClickListener {
             val voizyName = et_voizy_name.text.toString()
 
@@ -59,7 +53,7 @@ class RecordingOverlayFragment : BaseFragment() {
                 val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
                 viewModel.saveVoizy(voizyToSave)
                 // activity!!.showProgressBar(true) // TODO progressbar
-                hideSoftKeyboard(playButton)
+                hideSoftKeyboard(view)
                 fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             } else {
                 Snackbar.make(
@@ -71,31 +65,26 @@ class RecordingOverlayFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.recordingEvents()
+
+        startTimer()
+
+        viewModel.getRecordingEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    VoizyRecorder.RecordingEvents.STARTED -> {
-                        startTimer()
-                        playButton.visibility = View.GONE
-                        et_voizy_name.visibility = View.GONE
-                        et_voizy_tags.visibility = View.GONE
-                        btn_save_voizy.visibility = View.GONE
-                    }
-                    VoizyRecorder.RecordingEvents.FINISHED -> {
+                    VoizyRecorder.RecordingEvent.FINISHED -> {
                         timerDisposable?.let {
                             it.dispose()
                         }
-                        playButton.visibility = View.VISIBLE
                         et_voizy_name.visibility = View.VISIBLE
                         et_voizy_tags.visibility = View.VISIBLE
                         btn_save_voizy.visibility = View.VISIBLE
                     }
-                    VoizyRecorder.RecordingEvents.START_FAILED -> {
+                    VoizyRecorder.RecordingEvent.START_FAILED -> {
                         Timber.e("Failed to start recording")
                     }
-                    VoizyRecorder.RecordingEvents.CLOSE_FAILED -> {
+                    VoizyRecorder.RecordingEvent.CLOSE_FAILED -> {
                         Timber.e("Failed to close recording")
                     }
                 }

@@ -9,8 +9,8 @@ import com.voizy.android.middleware.firebase.collections.VoizyCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.viewmodels.MainFragmentViewModel
-import com.voizy.android.viewmodels.RecordButtonViewModel
-import com.voizy.android.viewmodels.RecordingOverlayViewModel
+import com.voizy.android.viewmodels.RecordPlayButtonViewModel
+import com.voizy.android.viewmodels.RecordingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -30,8 +30,8 @@ val repositoryModule = module {
 
 val viewModels = module {
     viewModel { MainFragmentViewModel(get(), get()) }
-    viewModel { RecordingOverlayViewModel(get(), get(), get()) }
-    viewModel { RecordButtonViewModel(get(), get()) }
+    viewModel { RecordingViewModel(get(), get()) }
+    viewModel { RecordPlayButtonViewModel(get(), get(), get(), get()) }
 }
 
 val allModules = listOf(appLogicsModule, repositoryModule, viewModels)

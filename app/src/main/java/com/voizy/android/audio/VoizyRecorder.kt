@@ -10,7 +10,7 @@ class VoizyRecorder {
 
     private var mediaRecorder: MediaRecorder? = null
 
-    enum class RecordingEvents {
+    enum class RecordingEvent {
         START_FAILED, STARTED, FINISHED, CLOSE_FAILED
     }
 
@@ -20,27 +20,24 @@ class VoizyRecorder {
     private val startRecordingEvents = startRecordingQueue.share()
         .observeOn(Schedulers.io())
         .map {
-            Timber.d("recording voizy $it")
             record(it)
-            RecordingEvents.STARTED
+            RecordingEvent.STARTED
         }
         .onErrorReturn {
             Timber.e(it, "Starting recording failed")
-            RecordingEvents.START_FAILED
+            RecordingEvent.START_FAILED
         }
 
     private val stopRecordingEvents = stopRecordingQueue.share()
         .observeOn(Schedulers.io())
         .map {
             finish()
-            RecordingEvents.FINISHED
+            RecordingEvent.FINISHED
         }
-        .onErrorReturn { RecordingEvents.CLOSE_FAILED }
+        .onErrorReturn { RecordingEvent.CLOSE_FAILED }
 
-    private val recordingEvents = startRecordingEvents.mergeWith(stopRecordingEvents)
-
-    fun recordingEvents(): Observable<RecordingEvents> {
-        return recordingEvents
+    fun recordingEvents(): Observable<RecordingEvent> {
+        return startRecordingEvents.mergeWith(stopRecordingEvents)
     }
 
     fun startRecording(fileName: String) {
