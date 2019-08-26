@@ -6,6 +6,7 @@ import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.local.LocalFileManager
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
 class RecordButtonViewModel(
@@ -30,7 +31,7 @@ class RecordButtonViewModel(
         voizyRecorder.stopRecording()
     }
 
-    fun getRecordingEvents() {
-        voizyRecorder.recordingEvents()
+    fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
+        return voizyRecorder.recordingEvents()
     }
 }

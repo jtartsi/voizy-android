@@ -4,17 +4,16 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.ui.widget.RecordPlayActionButton
+import com.voizy.android.ui.widget.RecordPlayActionButton.Event
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordButtonViewModel
 import io.reactivex.Completable
@@ -28,14 +27,10 @@ import org.koin.android.ext.android.inject
 class RecordButtonFragment : Fragment() {
 
     private val viewModel: RecordButtonViewModel by inject<RecordButtonViewModel>()
-    private lateinit var recordButton: ImageButton
-    private val stopTimer = Handler()
-
-    private enum class ButtonState { RECORD, PLAY }
+    private lateinit var recordButton: RecordPlayActionButton
 
     companion object {
         public val TAG = RecordButtonFragment::class.java.simpleName
-        private const val ANIMATION_DELAY = 200L
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,25 +40,40 @@ class RecordButtonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recordButton = view.findViewById<FloatingActionButton>(R.id.button_record)
-        recordButton.setOnTouchListener { view, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    startRecording()
-                    false
-                }
-                MotionEvent.ACTION_UP -> {
-                    stopRecording()
-                    false
-                }
-                else -> {
-                    false
+        recordButton = view.findViewById(R.id.button_record)
+        recordButton.getButtonEvents()
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                when (it) {
+                    Event.START_RECORD -> {
+                        startRecording()
+                    }
+                    Event.STOP_RECORD -> {
+                        viewModel.stopRecording()
+                    }
+                    Event.PLAY -> {
+                        // TODO implement play
+                    }
                 }
             }
-        }
+
+        mainFragmentLaunched()
+            .observeOn(Schedulers.io())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                recordButton.state = RecordPlayActionButton.State.RECORD
+            }
+
+        viewModel.getRecordingEvents()
+            .filter { it == VoizyRecorder.RecordingEvents.FINISHED }
+            .observeOn(Schedulers.io())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                recordButton.state = RecordPlayActionButton.State.PLAY
+            }
     }
 
-    private fun fragmentChanges(): Observable<Fragment> {
+    private fun mainFragmentLaunched(): Observable<BaseFragment> {
         val backstackSubject = PublishSubject.create<Fragment>()
 
         fragmentManager!!.addOnBackStackChangedListener {
@@ -73,15 +83,14 @@ class RecordButtonFragment : Fragment() {
             }
         }
         return backstackSubject
+            .filter { it is BaseFragment }
+            .map { it as BaseFragment }
+            .filter { it.getBackstackTag() == MainFragment.TAG }
     }
 
     private fun startRecording() {
         if (hasAudioRecordPermission()) {
-            stopTimer.postDelayed({ stopRecording() }, 15500)
             viewModel.startRecording()
-
-            delayedVibrate(recordButton)
-            animateButtonOnStart()
 
             var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
             if (recFragment == null) {
@@ -102,36 +111,7 @@ class RecordButtonFragment : Fragment() {
                 )
                 .addToBackStack(RecordingFragment.TAG)
                 .commit()
-        }, ANIMATION_DELAY)
-    }
-
-    private fun stopRecording() {
-        stopTimer.removeCallbacksAndMessages(null)
-        viewModel.stopRecording()
-
-        delayedVibrate(recordButton)
-        animateButtonOnStop()
-    }
-
-    private fun animateButtonOnStart() {
-        recordButton.animate()
-            .scaleY(1.75f)
-            .scaleX(1.75f)
-            .duration = ANIMATION_DELAY
-    }
-
-    private fun animateButtonOnStop() {
-        recordButton.animate()
-            .scaleY(1f)
-            .scaleX(1f)
-            .duration = ANIMATION_DELAY
-    }
-
-    private fun delayedVibrate(view: View) {
-        Handler().postDelayed(
-            { view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY) },
-            ANIMATION_DELAY
-        )
+        }, 200)
     }
 
     private fun hasAudioRecordPermission(): Boolean {
