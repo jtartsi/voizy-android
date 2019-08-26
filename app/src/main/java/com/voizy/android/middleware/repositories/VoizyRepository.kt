@@ -9,7 +9,7 @@ import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 
@@ -23,20 +23,13 @@ class VoizyRepository(
         private val TAG = VoizyRepository::class.java.simpleName
     }
 
-    // TODO implement error repository
-
-    // private val saveVoizyQueue = PublishSubject.create<Voizy>()
-    // private val saveVoizyEvents = saveVoizyQueue
-    //     .observeOn(Schedulers.io())
-    //     .doOnNext {
-    //         Timber.d("save-voizy saveVoizyEventStream, before save local")
-    //     }
-    //     .switchMap { localFileManager.saveVoizy(it) }
-    //     .switchMap { voizyStorage.uploadVoizy(it) }
-    //     .switchMap { voizyFirestore.saveVoizy(it.second) }
-    //     .share()
-
-    private val saveVoizyEvents = BehaviorSubject.create<Pair<Boolean, Voizy?>>()
+    private val saveVoizyQueue = PublishSubject.create<Voizy>()
+    private val saveVoizyEvents = saveVoizyQueue
+        .observeOn(Schedulers.io())
+        .switchMap { localFileManager.saveVoizy(it) }
+        .switchMap { voizyStorage.uploadVoizy(it) }
+        .switchMap { voizyFirestore.saveVoizy(it.second) }
+        .share()
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         Timber.d("save-voizy getSaveVoizyEvents()")
@@ -48,18 +41,7 @@ class VoizyRepository(
     }
 
     fun saveVoizy(voizy: Voizy) {
-        Timber.d("save-voizy saveVoizy() ${voizy.name}")
-
-        Observable.just(voizy)
-            .doOnNext { Timber.d("save-voizy before local save ") }
-            .switchMap { localFileManager.saveVoizy(it) }
-            .doOnNext { Timber.d("save-voizy before upload") }
-            .switchMap { voizyStorage.uploadVoizy(it) }
-            .doOnNext { Timber.d("save-voizy before save db") }
-            .switchMap { voizyFirestore.saveVoizy(it.second) }
-            .doOnNext { Timber.d("save-voizy after save db") }
-            .subscribeOn(Schedulers.io())
-            .subscribe(saveVoizyEvents)
+        saveVoizyQueue.onNext(voizy)
     }
 
     fun getAllOwnVoizys(): List<Voizy> {

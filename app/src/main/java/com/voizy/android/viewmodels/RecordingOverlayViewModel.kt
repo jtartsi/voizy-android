@@ -1,6 +1,5 @@
 package com.voizy.android.viewmodels
 
-import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
@@ -15,7 +14,7 @@ class RecordingOverlayViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyRecorder: VoizyRecorder,
     private val voizyPlayer: VoizyPlayer
-) : ViewModel() {
+) : DisposingViewModel() {
 
     fun recordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
         return voizyRecorder.recordingEvents()
