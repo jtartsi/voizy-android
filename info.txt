@@ -24,18 +24,19 @@
     X List Voizys from cloud (simple impl.)
     X Play Voizy from server
     X Generic error handler to save streams
+    X Download cloud stored Voizys
+    X Share cloud stored Voizys
+    X Rec button to play button
+    X Search UI
+    X App facelift
+    - Search Voizys
     - Ensure no empty hashtags goes to server
     - Error repository to deliver errors to user
     - Review all error handling usages for streams
-    X Download cloud stored Voizys
-    X Share cloud stored Voizys
-    - Search Voizys
-    - Rec button to play button
-    X Search UI
-    - Backend pagination
-    - App facelift
-    - Delete local files once upload ready
+    - Remove delete feature
 
+-later
+    - Backend pagination
 
 Design ideas:
     - One color app bar?
