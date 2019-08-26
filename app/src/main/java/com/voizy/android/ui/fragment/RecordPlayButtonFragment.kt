@@ -65,7 +65,7 @@ class RecordPlayButtonFragment : Fragment() {
             }
 
         viewModel.getRecordingEvents()
-            .filter { it == VoizyRecorder.RecordingEvents.FINISHED }
+            .filter { it == VoizyRecorder.RecordingEvent.FINISHED }
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {

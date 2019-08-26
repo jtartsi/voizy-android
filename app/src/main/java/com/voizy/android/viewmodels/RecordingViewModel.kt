@@ -16,7 +16,7 @@ class RecordingViewModel(
     private val voizyPlayer: VoizyPlayer
 ) : DisposingViewModel() {
 
-    fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
+    fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvent> {
         return voizyRecorder.recordingEvents()
             .doOnNext { Timber.d("rec-event-iss recording voizy $it") }
     }

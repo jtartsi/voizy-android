@@ -71,20 +71,15 @@ class RecordingFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
+
+        startTimer()
+
         viewModel.getRecordingEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("rec-event-iss recording events $it")
                 when (it) {
-                    VoizyRecorder.RecordingEvents.STARTED -> {
-                        startTimer()
-                        playButton.visibility = View.GONE
-                        et_voizy_name.visibility = View.GONE
-                        et_voizy_tags.visibility = View.GONE
-                        btn_save_voizy.visibility = View.GONE
-                    }
-                    VoizyRecorder.RecordingEvents.FINISHED -> {
+                    VoizyRecorder.RecordingEvent.FINISHED -> {
                         timerDisposable?.let {
                             it.dispose()
                         }
@@ -93,10 +88,10 @@ class RecordingFragment : BaseFragment() {
                         et_voizy_tags.visibility = View.VISIBLE
                         btn_save_voizy.visibility = View.VISIBLE
                     }
-                    VoizyRecorder.RecordingEvents.START_FAILED -> {
+                    VoizyRecorder.RecordingEvent.START_FAILED -> {
                         Timber.e("Failed to start recording")
                     }
-                    VoizyRecorder.RecordingEvents.CLOSE_FAILED -> {
+                    VoizyRecorder.RecordingEvent.CLOSE_FAILED -> {
                         Timber.e("Failed to close recording")
                     }
                 }
