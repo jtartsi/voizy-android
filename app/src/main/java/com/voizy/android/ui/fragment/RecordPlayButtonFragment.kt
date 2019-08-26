@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
-import com.voizy.android.ui.widget.RecordPlayActionButton
-import com.voizy.android.ui.widget.RecordPlayActionButton.Event
+import com.voizy.android.ui.widget.RecordPlayButton
+import com.voizy.android.ui.widget.RecordPlayButton.Event
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordPlayButtonViewModel
 import io.reactivex.Completable
@@ -27,7 +27,7 @@ import org.koin.android.ext.android.inject
 class RecordPlayButtonFragment : Fragment() {
 
     private val viewModel: RecordPlayButtonViewModel by inject<RecordPlayButtonViewModel>()
-    private lateinit var recordButton: RecordPlayActionButton
+    private lateinit var recordButton: RecordPlayButton
 
     companion object {
         public val TAG = RecordPlayButtonFragment::class.java.simpleName
@@ -61,7 +61,7 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                recordButton.state = RecordPlayActionButton.State.RECORD
+                recordButton.state = RecordPlayButton.State.RECORD
             }
 
         viewModel.getRecordingEvents()
@@ -69,7 +69,7 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                recordButton.state = RecordPlayActionButton.State.PLAY
+                recordButton.state = RecordPlayButton.State.PLAY
             }
     }
 

@@ -1,6 +1,7 @@
 package com.voizy.android.ui.widget
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
@@ -10,7 +11,7 @@ import com.voizy.android.R
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class RecordPlayActionButton : FloatingActionButton {
+class RecordPlayButton : FloatingActionButton {
 
     companion object {
         private const val ANIMATION_DELAY = 200L
@@ -47,10 +48,16 @@ class RecordPlayActionButton : FloatingActionButton {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         handleStartRecording()
+                        setImageResource(R.drawable.sound_waves_white)
+                        val colorStateList = ColorStateList.valueOf(context.getColor(R.color.voizy_orange))
+                        backgroundTintList = colorStateList
                         true
                     }
                     MotionEvent.ACTION_UP -> {
                         handleStopRecording()
+                        setImageResource(R.drawable.sound_waves_orange_dark)
+                        val colorStateList = ColorStateList.valueOf(context.getColor(android.R.color.white))
+                        backgroundTintList = colorStateList
                         true
                     }
                 }
@@ -85,8 +92,8 @@ class RecordPlayActionButton : FloatingActionButton {
 
     private fun animateButtonOnStart() {
         animate()
-            .scaleY(1.75f)
-            .scaleX(1.75f)
+            .scaleY(1.25f)
+            .scaleX(1.25f)
             .duration = ANIMATION_DELAY
     }
 
