@@ -1,7 +1,6 @@
 package com.voizy.android.viewmodels
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.local.LocalFileManager
@@ -11,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 class RecordButtonViewModel(
     private val context: Context,
     private val voizyRecorder: VoizyRecorder
-) : ViewModel() {
+) : DisposingViewModel() {
 
     fun startRecording() {
         val completable = Completable.fromAction {

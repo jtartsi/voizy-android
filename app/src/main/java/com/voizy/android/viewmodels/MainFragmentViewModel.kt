@@ -1,7 +1,6 @@
 package com.voizy.android.viewmodels
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.local.LocalFileManager
@@ -11,25 +10,34 @@ import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: VoizyPlayer
-) : ViewModel() {
+) : DisposingViewModel() {
 
     companion object {
         private val TAG = MainFragmentViewModel::class.java.simpleName
     }
+
+    private val saveVoizyEventsBehaviorSubject = BehaviorSubject.create<Pair<Boolean, Voizy?>>()
 
     private val voizyFetchRequest = PublishSubject.create<Boolean>()
     private val voizysStream = voizyFetchRequest
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.getVoizys() }
 
+    init {
+        voizyRepository.getSaveVoizyEvents()
+            .subscribe { saveVoizyEventsBehaviorSubject.onNext(it) }
+            .autoDispose()
+    }
+
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
-        return voizyRepository.getSaveVoizyEvents()
+        return saveVoizyEventsBehaviorSubject
             .doOnNext { voizyFetchRequest.onNext(true) }
     }
 
