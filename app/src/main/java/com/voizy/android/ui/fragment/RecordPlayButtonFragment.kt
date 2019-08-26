@@ -52,7 +52,7 @@ class RecordPlayButtonFragment : Fragment() {
                         viewModel.stopRecording()
                     }
                     Event.PLAY -> {
-                        // TODO implement play
+                        viewModel.startPreviewVoizyPlayback()
                     }
                 }
             }

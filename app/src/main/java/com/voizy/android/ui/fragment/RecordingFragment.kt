@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit
 class RecordingFragment : BaseFragment() {
 
     private val viewModel: RecordingViewModel by inject<RecordingViewModel>()
-    private lateinit var playButton: View
     private var timerDisposable: Disposable? = null
 
     companion object {
@@ -47,11 +46,6 @@ class RecordingFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playButton = view.findViewById<View>(R.id.btn_play_preview)
-        playButton.setOnClickListener {
-            viewModel.playVoizy()
-        }
-
         btn_save_voizy.setOnClickListener {
             val voizyName = et_voizy_name.text.toString()
 
@@ -59,7 +53,7 @@ class RecordingFragment : BaseFragment() {
                 val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
                 viewModel.saveVoizy(voizyToSave)
                 // activity!!.showProgressBar(true) // TODO progressbar
-                hideSoftKeyboard(playButton)
+                hideSoftKeyboard(view)
                 fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             } else {
                 Snackbar.make(
@@ -83,7 +77,6 @@ class RecordingFragment : BaseFragment() {
                         timerDisposable?.let {
                             it.dispose()
                         }
-                        playButton.visibility = View.VISIBLE
                         et_voizy_name.visibility = View.VISIBLE
                         et_voizy_tags.visibility = View.VISIBLE
                         btn_save_voizy.visibility = View.VISIBLE

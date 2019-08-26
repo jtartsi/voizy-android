@@ -25,16 +25,6 @@
         app:layout_constraintVertical_bias="0.25"
         android:text="00:00 / 00:15"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_play_preview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="@dimen/fab_margin"
-        android:visibility="gone"
-        android:src="@android:drawable/ic_media_play"/>
-
     <EditText
         android:id="@+id/et_voizy_name"
         android:layout_width="match_parent"

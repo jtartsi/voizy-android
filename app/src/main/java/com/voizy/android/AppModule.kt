@@ -31,7 +31,7 @@ val repositoryModule = module {
 val viewModels = module {
     viewModel { MainFragmentViewModel(get(), get()) }
     viewModel { RecordingViewModel(get(), get(), get()) }
-    viewModel { RecordPlayButtonViewModel(get(), get(), get()) }
+    viewModel { RecordPlayButtonViewModel(get(), get(), get(), get()) }
 }
 
 val allModules = listOf(appLogicsModule, repositoryModule, viewModels)
