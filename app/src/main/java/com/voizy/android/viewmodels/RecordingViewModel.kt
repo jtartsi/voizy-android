@@ -18,6 +18,7 @@ class RecordingViewModel(
 
     fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvents> {
         return voizyRecorder.recordingEvents()
+            .doOnNext { Timber.d("rec-event-iss recording voizy $it") }
     }
 
     fun saveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
@@ -36,7 +37,6 @@ class RecordingViewModel(
     }
 
     fun saveVoizy(voizy: Voizy) {
-        Timber.d("save-voizy ${voizy.name}")
         voizyRepository.saveVoizy(voizy)
     }
 }

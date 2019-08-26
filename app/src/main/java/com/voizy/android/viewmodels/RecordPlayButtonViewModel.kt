@@ -9,7 +9,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
-class RecordButtonViewModel(
+class RecordPlayButtonViewModel(
     private val context: Context,
     private val voizyRecorder: VoizyRecorder,
     private val voizyPlayer: VoizyPlayer

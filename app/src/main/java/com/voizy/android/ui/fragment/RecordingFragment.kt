@@ -75,6 +75,7 @@ class RecordingFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                Timber.d("rec-event-iss recording events $it")
                 when (it) {
                     VoizyRecorder.RecordingEvents.STARTED -> {
                         startTimer()

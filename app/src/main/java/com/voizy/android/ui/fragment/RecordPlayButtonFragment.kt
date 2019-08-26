@@ -15,7 +15,7 @@ import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.ui.widget.RecordPlayActionButton
 import com.voizy.android.ui.widget.RecordPlayActionButton.Event
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.viewmodels.RecordButtonViewModel
+import com.voizy.android.viewmodels.RecordPlayButtonViewModel
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,13 +24,13 @@ import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 
 @SuppressWarnings("ClickableViewAccessibility")
-class RecordButtonFragment : Fragment() {
+class RecordPlayButtonFragment : Fragment() {
 
-    private val viewModel: RecordButtonViewModel by inject<RecordButtonViewModel>()
+    private val viewModel: RecordPlayButtonViewModel by inject<RecordPlayButtonViewModel>()
     private lateinit var recordButton: RecordPlayActionButton
 
     companion object {
-        public val TAG = RecordButtonFragment::class.java.simpleName
+        public val TAG = RecordPlayButtonFragment::class.java.simpleName
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
