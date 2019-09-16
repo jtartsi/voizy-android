@@ -29,11 +29,26 @@
     X Rec button to play button
     X Search UI
     X App facelift
+
+-v0.4.0
     - Search Voizys
+        - Deploy ElasticSearch
+        - Setup ES indexing
+        - Cloud functions to push data to ES on Voizy create
+        - Query ES
+        - Setup repository for cloud functions code
+        - Push all existing Voizys to ES
+        - Remove all test Voizys
     - Ensure no empty hashtags goes to server
     - Error repository to deliver errors to user
     - Review all error handling usages for streams
-    - Remove delete feature
+    - Remove delete feature from client
+    - Voizy tags into map format
+
+Public MVP backlog:
+    - Guidance on long press for recording
+    - Rights for icon
+
 
 -later
     - Backend pagination
