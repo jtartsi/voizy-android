@@ -21,6 +21,6 @@ data class Voizy(
         get() = nameField
 
     fun toFirestoreData(): FirestoreVoizy {
-        return FirestoreVoizy(name, tags.map { it to true }.toMap(), firebaseFilePath!!)
+        return FirestoreVoizy(name, tags, firebaseFilePath!!)
     }
 }
