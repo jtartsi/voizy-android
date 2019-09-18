@@ -31,12 +31,12 @@ class LocalFileManager(private val context: Context) {
     }
 
     /**
-     * @newFileName does not include the path, only the file name
+     * @newFileName does not include the path, only the file mName
      */
     private fun renameFile(newFileName: String): String {
         try {
             if (newFileName.isEmpty()) {
-                throw IllegalArgumentException("Empty file name")
+                throw IllegalArgumentException("Empty file mName")
             }
             val tmpPath = getTempFilePath()
             val newPath = tmpPath.replace(
