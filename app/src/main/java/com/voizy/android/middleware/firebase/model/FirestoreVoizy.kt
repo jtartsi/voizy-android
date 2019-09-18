@@ -1,9 +1,7 @@
 package com.voizy.android.middleware.firebase.model
 
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.PropertyName
-import com.google.firebase.firestore.ServerTimestamp
 import com.voizy.android.ui.model.Voizy
 
 class FirestoreVoizy(
@@ -12,14 +10,10 @@ class FirestoreVoizy(
     @get:PropertyName(FILE_PATH) val firebaseFilePath: String
 ) {
 
-    @ServerTimestamp
-    val timestamp = FieldValue.serverTimestamp()
-
     companion object {
         private const val NAME_KEY = "name"
         private const val TAGS_KEY = "tags"
         private const val FILE_PATH = "file_path"
-        private const val CREATED_AT = "created_at"
 
         fun from(documentSnapshot: DocumentSnapshot): FirestoreVoizy {
             var name = ""
@@ -27,7 +21,6 @@ class FirestoreVoizy(
                 name = documentSnapshot.get(NAME_KEY) as String
             }
 
-            // TODO structure-change remove this
             var tags = emptyList<String>()
             if (documentSnapshot.get(TAGS_KEY) is HashMap<*, *>) {
                 var tagsMap: Map<String, Boolean> = HashMap()

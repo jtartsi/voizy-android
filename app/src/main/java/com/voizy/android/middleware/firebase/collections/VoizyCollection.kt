@@ -12,11 +12,12 @@ class VoizyCollection(private val firestore: FirebaseFirestore) {
     companion object {
         private val TAG = VoizyCollection::class.java.simpleName
         private val VOIZYS_COLLECTION = "voizys"
+        private val VOIZYS_DEV_COLLECTION = "voizys-dev"
     }
 
     fun saveVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy?>> {
         return firestore
-            .collection(VOIZYS_COLLECTION)
+            .collection(VOIZYS_DEV_COLLECTION)
             .add(voizy.toFirestoreData())
             .toObservable()
             .map { Pair<Boolean, Voizy?>(true, voizy) }
@@ -25,11 +26,9 @@ class VoizyCollection(private val firestore: FirebaseFirestore) {
 
     fun getVoizys(): Observable<List<FirestoreVoizy>> {
         return firestore
-            .collection(VOIZYS_COLLECTION)
+            .collection(VOIZYS_DEV_COLLECTION)
             .get()
             .toObservable()
-            .map { querySnapshot ->
-                querySnapshot.documents.map { FirestoreVoizy.from(it) }
-            }
+            .map { it.toObjects(FirestoreVoizy::class.java) }
     }
 }
