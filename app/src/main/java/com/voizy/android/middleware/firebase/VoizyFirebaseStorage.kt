@@ -17,7 +17,7 @@ class VoizyFirebaseStorage(
 
     companion object {
         private val TAG = VoizyFirebaseStorage::class.java.simpleName
-        private const val VOIZYS_PATH = "voizys"
+        private const val VOIZYS_PATH = "voizys-dev"
     }
 
     fun uploadVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy>> {
@@ -35,7 +35,10 @@ class VoizyFirebaseStorage(
             .withErrorHandling(TAG, "Failed to upload audio file")
     }
 
-    fun getFile(fireBasePath: String, destinationFile: File): Observable<FileDownloadTask.TaskSnapshot> {
+    fun getFile(
+        fireBasePath: String,
+        destinationFile: File
+    ): Observable<FileDownloadTask.TaskSnapshot> {
         return storageRef.child(fireBasePath)
             .getFile(destinationFile)
             .toObservable()

@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.io.File
 
 class VoizyRepository(
@@ -32,7 +31,6 @@ class VoizyRepository(
         .share()
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
-        Timber.d("save-voizy getSaveVoizyEvents()")
         return saveVoizyEvents
     }
 
