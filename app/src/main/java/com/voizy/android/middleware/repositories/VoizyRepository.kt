@@ -1,17 +1,20 @@
 package com.voizy.android.middleware.repositories
 
+import com.google.firebase.firestore.DocumentReference
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
-import com.voizy.android.middleware.firebase.collections.VoizyCollection
+import com.voizy.android.middleware.firebase.collections.VoizysCollection
+import com.voizy.android.middleware.firebase.collections.VoizysSearchCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.model.Voizy
-import com.voizy.android.utils.withErrorHandling
+import com.voizy.android.utils.getSnapshotChange
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 
 class VoizyRepository(
-    private val voizyFirestore: VoizyCollection,
+    private val voizys: VoizysCollection,
+    private val voizysSearch: VoizysSearchCollection
     private val localFileManager: LocalFileManager,
     private val voizyStorage: VoizyFirebaseStorage
 ) {
@@ -25,7 +28,7 @@ class VoizyRepository(
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
         .switchMap { voizyStorage.uploadVoizy(it) }
-        .switchMap { voizyFirestore.saveVoizy(it.second) }
+        .switchMap { voizys.saveVoizy(it.second) }
         .share()
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
@@ -44,14 +47,22 @@ class VoizyRepository(
         localFileManager.deleteFile(localFilePath)
     }
 
-    fun getVoizys(): Observable<List<Voizy>> {
-        return voizyFirestore.getVoizys()
-            .flatMap { Observable.fromIterable(it) }
-            .map { it.toVoizy() }
-            .toList()
-            .toObservable()
-            .withErrorHandling(TAG, "failed to fetch Voizys")
+    fun searchVoizys(searchKeyword: String): Observable<List<Voizy>> {
+        voizysSearch.find(searchKeyword)
+            .getSnapshotChange()
+            .map {
+
+            }
     }
+
+    // fun getVoizys(searchKeyword: String = ""): Observable<List<Voizy>> {
+    //     return voizys.getVoizys()
+    //         .flatMap { Observable.fromIterable(it) }
+    //         .map { it.toVoizy() }
+    //         .toList()
+    //         .toObservable()
+    //         .withErrorHandling(TAG, "failed to fetch Voizys")
+    // }
 
     fun getFileUrl(firestorePath: String): Observable<String> {
         return voizyStorage.getDownloadUri(firestorePath)

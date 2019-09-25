@@ -7,12 +7,13 @@ import com.voizy.android.utils.toObservable
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 
-class VoizyCollection(private val firestore: FirebaseFirestore) {
+class VoizysCollection(private val firestore: FirebaseFirestore) {
 
     companion object {
-        private val TAG = VoizyCollection::class.java.simpleName
+        private val TAG = VoizysCollection::class.java.simpleName
         private val VOIZYS_COLLECTION = "voizys"
-        private val VOIZYS_DEV_COLLECTION = "voizys-dev"
+        private val VOIZYS_DEV_COLLECTION =
+            "voizys-dev" // TODO search go back to production version
     }
 
     fun saveVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy?>> {
@@ -24,6 +25,7 @@ class VoizyCollection(private val firestore: FirebaseFirestore) {
             .withErrorHandling(TAG, "Failed to save Voizy to Firestore")
     }
 
+    // TODO search remove once done
     fun getVoizys(): Observable<List<FirestoreVoizy>> {
         return firestore
             .collection(VOIZYS_DEV_COLLECTION)

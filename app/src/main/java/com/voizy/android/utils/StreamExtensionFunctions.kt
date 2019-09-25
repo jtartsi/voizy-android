@@ -1,10 +1,35 @@
 package com.voizy.android.utils
 
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import timber.log.Timber
+
+fun <T> Task<T>.toObservable(): Observable<T> {
+    return Observable.fromCallable {
+        Tasks.await(this)
+    }
+}
+
+fun Observable<DocumentReference>.getSnapshotChange(): Observable<DocumentSnapshot> {
+    return this.flatMap { documentRef ->
+        Observable.create<DocumentSnapshot> { emitter ->
+            documentRef.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                Timber.d("getSnapshotChange")
+                if (documentSnapshot != null && firebaseFirestoreException == null) {
+                    emitter.onNext(documentSnapshot)
+                } else {
+                    emitter.onError(Throwable(firebaseFirestoreException))
+                }
+            }
+        }
+    }
+}
 
 fun <F, S> toPair(): BiFunction<F, S, Pair<F, S>> =
     BiFunction { first, second -> Pair(first, second) }

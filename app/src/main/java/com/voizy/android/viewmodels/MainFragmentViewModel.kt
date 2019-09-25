@@ -25,10 +25,10 @@ class MainFragmentViewModel(
 
     private val saveVoizyEventsBehaviorSubject = BehaviorSubject.create<Pair<Boolean, Voizy?>>()
 
-    private val voizyFetchRequest = PublishSubject.create<Boolean>()
-    private val voizysStream = voizyFetchRequest
+    private val searchVoizysRequest = PublishSubject.create<String>()
+    private val voizysStream = searchVoizysRequest
         .observeOn(Schedulers.io())
-        .flatMap { voizyRepository.getVoizys() }
+        .flatMap { voizyRepository.searchVoizys(it) }
 
     init {
         voizyRepository.getSaveVoizyEvents()
@@ -39,7 +39,7 @@ class MainFragmentViewModel(
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return saveVoizyEventsBehaviorSubject
-            .doOnNext { voizyFetchRequest.onNext(true) }
+            .doOnNext { searchVoizysRequest.onNext(true) }
             .withErrorHandling(TAG, "save voizy events error")
     }
 
@@ -47,8 +47,8 @@ class MainFragmentViewModel(
         return voizysStream
     }
 
-    fun fetchVoizys() {
-        voizyFetchRequest.onNext(true)
+    fun searchVoizys(searchKeyword: String = "") {
+        searchVoizysRequest.onNext(searchKeyword)
     }
 
     // TODO v0.3.0 remove this

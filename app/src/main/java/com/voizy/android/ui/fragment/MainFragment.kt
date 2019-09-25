@@ -69,7 +69,11 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
         }
     }
 
-    override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
+    override fun onClick(
+        viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder,
+        position: Int,
+        voizy: Voizy
+    ) {
         Timber.d("onClick $position ${voizy.name} ${voizy.localFilePath}")
         viewModel.playVoizy(voizy)
             .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +94,11 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
         Timber.d("onCreate()")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
@@ -109,7 +117,7 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
 
         setObservables()
 
-        viewModel.fetchVoizys()
+        viewModel.searchVoizys()
     }
 
     private fun setObservables() {
@@ -144,7 +152,8 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
                     shareRequests.onNext(pair.second!!)
                 }.show()
             } else {
-                Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT)
+                    .show()
             }
         }
     }
