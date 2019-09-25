@@ -1,13 +1,11 @@
 package com.voizy.android.middleware.repositories
 
-import android.content.Context
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizyCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.io.File
@@ -42,11 +40,6 @@ class VoizyRepository(
         saveVoizyQueue.onNext(voizy)
     }
 
-    fun getAllOwnVoizys(): List<Voizy> {
-        return localFileManager.getAllOwnVoizys()
-            .filter { it.name != "tmp" }
-    }
-
     fun deleteLocalVoizy(localFilePath: String) {
         localFileManager.deleteFile(localFilePath)
     }
@@ -63,13 +56,6 @@ class VoizyRepository(
     fun getFileUrl(firestorePath: String): Observable<String> {
         return voizyStorage.getDownloadUri(firestorePath)
             .map { it.toString() }
-    }
-
-    fun downloadVoizy(context: Context, firebasePath: String) {
-        val destinationFile = File(LocalFileManager(context).getTempFilePath())
-        voizyStorage.getFile(firebasePath, destinationFile)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun downloadVoizy(firestorePath: String, destinationFile: File): Observable<File> {
