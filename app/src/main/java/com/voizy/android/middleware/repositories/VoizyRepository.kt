@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.firebase.collections.VoizysSearchCollection
+import com.voizy.android.middleware.firebase.model.VoizySearchResult
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getSnapshotChange
@@ -47,12 +48,10 @@ class VoizyRepository(
         localFileManager.deleteFile(localFilePath)
     }
 
-    fun searchVoizys(searchKeyword: String): Observable<List<Voizy>> {
-        voizysSearch.find(searchKeyword)
+    fun searchVoizys(searchKeyword: String): Observable<VoizySearchResult> {
+        return voizysSearch.find(searchKeyword)
             .getSnapshotChange()
-            .map {
-
-            }
+            .map { it.toObject(VoizySearchResult::class.java) }
     }
 
     // fun getVoizys(searchKeyword: String = ""): Observable<List<Voizy>> {

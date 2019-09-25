@@ -44,7 +44,7 @@ class MainFragmentViewModel(
     }
 
     fun getVoizyStream(): Observable<List<Voizy>> {
-        return voizysStream
+        return voizysStream.map { it.voizys }
     }
 
     fun searchVoizys(searchKeyword: String = "") {
