@@ -25,7 +25,7 @@ class Voizy() {
     companion object {
         private const val NAME_KEY = "name"
         private const val TAGS_KEY = "tags"
-        private const val FILE_PATH = "file_path"
-        private const val CREATED_AT = "created_at"
+        private const val FILE_PATH = "filePath"
+        private const val CREATED_AT = "createdAt"
     }
 }
