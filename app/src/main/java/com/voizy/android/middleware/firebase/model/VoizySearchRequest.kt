@@ -22,4 +22,4 @@ data class VoizySearchRequest(
         Ascending("ASC"),
         Descending("DESC")
     }
-} 
+}

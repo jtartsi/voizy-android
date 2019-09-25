@@ -24,7 +24,7 @@ val repositoryModule = module {
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance().reference }
     single { VoizysCollection(get()) }
-    single { VoizyRepository(get(), get(), get()) }
+    single { VoizyRepository(get(), get(), get(), get()) }
     single { LocalFileManager(get()) }
 }
 

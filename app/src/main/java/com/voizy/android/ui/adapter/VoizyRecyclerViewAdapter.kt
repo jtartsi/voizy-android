@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
+import com.voizy.android.middleware.firebase.model.Voizy
 import com.voizy.android.ui.listener.OnItemClickListener
-import com.voizy.android.ui.model.Voizy
 
 class VoizyRecyclerViewAdapter(
     private val onItemClickListener: OnItemClickListener<VoizyViewHolder, Voizy>
@@ -26,7 +26,6 @@ class VoizyRecyclerViewAdapter(
     class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tvTitle: TextView = view.findViewById(R.id.tv_voizy_row_title)
         var tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
-        var tvShareCount: TextView = view.findViewById(R.id.tv_voizy_row_shares)
         var progressBar: ProgressBar = view.findViewById(R.id.pb_voizy_row_progress)
 
         fun animateProgress(durationInMillis: Int) {

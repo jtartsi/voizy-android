@@ -1,12 +1,11 @@
 package com.voizy.android.middleware.repositories
 
-import com.google.firebase.firestore.DocumentReference
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.firebase.collections.VoizysSearchCollection
+import com.voizy.android.middleware.firebase.model.Voizy
 import com.voizy.android.middleware.firebase.model.VoizySearchResult
 import com.voizy.android.middleware.local.LocalFileManager
-import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.getSnapshotChange
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -15,7 +14,7 @@ import java.io.File
 
 class VoizyRepository(
     private val voizys: VoizysCollection,
-    private val voizysSearch: VoizysSearchCollection
+    private val voizysSearch: VoizysSearchCollection,
     private val localFileManager: LocalFileManager,
     private val voizyStorage: VoizyFirebaseStorage
 ) {

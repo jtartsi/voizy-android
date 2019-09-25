@@ -3,9 +3,9 @@ package com.voizy.android.viewmodels
 import android.content.Context
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
+import com.voizy.android.middleware.firebase.model.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
-import com.voizy.android.ui.model.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -39,7 +39,6 @@ class MainFragmentViewModel(
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return saveVoizyEventsBehaviorSubject
-            .doOnNext { searchVoizysRequest.onNext(true) }
             .withErrorHandling(TAG, "save voizy events error")
     }
 
@@ -54,7 +53,7 @@ class MainFragmentViewModel(
     // TODO v0.3.0 remove this
     fun deleteVoizy(voizy: Voizy) {
         val completable = Completable.fromAction {
-            voizyRepository.deleteLocalVoizy(voizy.localFilePath!!)
+            voizyRepository.deleteLocalVoizy(voizy.filePath!!)
         }
             .onErrorComplete()
             .subscribeOn(Schedulers.io())
@@ -66,7 +65,7 @@ class MainFragmentViewModel(
     }
 
     fun playVoizy(voizy: Voizy): Observable<Int> {
-        return voizyRepository.getFileUrl(voizy.firebaseFilePath!!)
+        return voizyRepository.getFileUrl(voizy.filePath!!)
             .map { voizyPlayer.playRemote(it) }
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to play Voizy")
@@ -74,7 +73,7 @@ class MainFragmentViewModel(
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<File> {
         val destinationFile = File(LocalFileManager(context).getTempFilePath())
-        return voizyRepository.downloadVoizy(voizy.firebaseFilePath!!, destinationFile)
+        return voizyRepository.downloadVoizy(voizy.filePath!!, destinationFile)
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to download Voizy")
     }

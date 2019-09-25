@@ -3,7 +3,7 @@ package com.voizy.android.middleware.firebase
 import android.net.Uri
 import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageReference
-import com.voizy.android.ui.model.Voizy
+import com.voizy.android.middleware.firebase.model.Voizy
 import com.voizy.android.utils.toObservable
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
@@ -23,13 +23,13 @@ class VoizyFirebaseStorage(
     fun uploadVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy>> {
         val firebaseFileName = voizy.name.plus(Date().time).plus(".mp3")
         val uploadRef = storageRef.child(VOIZYS_PATH).child(firebaseFileName)
-        val stream = FileInputStream(File(voizy.localFilePath))
+        val stream = FileInputStream(File(voizy.filePath))
         return uploadRef.putStream(stream).toObservable()
             .map {
                 if (it.uploadSessionUri == null) {
                     throw IllegalStateException("Failed to upload voizy")
                 }
-                voizy.firebaseFilePath = uploadRef.path
+                voizy.filePath = uploadRef.path
                 Pair(true, voizy)
             }
             .withErrorHandling(TAG, "Failed to upload audio file")
