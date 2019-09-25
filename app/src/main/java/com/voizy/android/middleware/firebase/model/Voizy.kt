@@ -1,7 +1,6 @@
 package com.voizy.android.middleware.firebase.model
 
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
 
 class Voizy() {
@@ -17,18 +16,10 @@ class Voizy() {
         this.filePath = filePath
     }
 
-    @get:PropertyName(NAME_KEY)
-    @set:PropertyName(NAME_KEY)
     var name: String = ""
-    @get:PropertyName(TAGS_KEY)
-    @set:PropertyName(TAGS_KEY)
     var tags: List<String> = emptyList()
-    @set:PropertyName(FILE_PATH)
-    @get:PropertyName(FILE_PATH)
     var filePath: String = ""
-
     @ServerTimestamp
-    @get:PropertyName(CREATED_AT)
     var createdAt: FieldValue? = FieldValue.serverTimestamp()
 
     companion object {
