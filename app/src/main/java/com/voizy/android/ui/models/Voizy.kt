@@ -1,4 +1,4 @@
-package com.voizy.android.middleware.firebase.model
+package com.voizy.android.ui.models
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp

@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
-import com.voizy.android.middleware.firebase.model.Voizy
 import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
 import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.ui.listener.OnItemClickListener
+import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel

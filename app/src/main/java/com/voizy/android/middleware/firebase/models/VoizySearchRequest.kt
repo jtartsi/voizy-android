@@ -1,4 +1,4 @@
-package com.voizy.android.middleware.firebase.model
+package com.voizy.android.middleware.firebase.models
 
 data class VoizySearchRequest(
     val defaultOperator: SearchOperator = SearchOperator.AND,

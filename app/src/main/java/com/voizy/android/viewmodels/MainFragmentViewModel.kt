@@ -3,9 +3,9 @@ package com.voizy.android.viewmodels
 import android.content.Context
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
-import com.voizy.android.middleware.firebase.model.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
+import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable

@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
-import com.voizy.android.middleware.firebase.model.Voizy
 import com.voizy.android.ui.listener.OnItemClickListener
+import com.voizy.android.ui.models.Voizy
 
 class VoizyRecyclerViewAdapter(
     private val onItemClickListener: OnItemClickListener<VoizyViewHolder, Voizy>

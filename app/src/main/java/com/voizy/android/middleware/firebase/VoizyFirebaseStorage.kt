@@ -3,7 +3,7 @@ package com.voizy.android.middleware.firebase
 import android.net.Uri
 import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageReference
-import com.voizy.android.middleware.firebase.model.Voizy
+import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.toObservable
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
