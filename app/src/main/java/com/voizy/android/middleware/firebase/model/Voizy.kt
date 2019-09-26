@@ -16,6 +16,7 @@ class Voizy() {
         this.filePath = filePath
     }
 
+    @get:ParameterName("name")
     var name: String = ""
     var tags: List<String> = emptyList()
     var filePath: String = ""
