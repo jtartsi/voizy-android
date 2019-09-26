@@ -1,6 +1,6 @@
 package com.voizy.android.middleware.firebase.model
 
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 
 class Voizy() {
@@ -20,7 +20,7 @@ class Voizy() {
     var tags: List<String> = emptyList()
     var filePath: String = ""
     @ServerTimestamp
-    var createdAt: FieldValue? = FieldValue.serverTimestamp()
+    var createdAt: Timestamp? = Timestamp.now()
 
     companion object {
         private const val NAME_KEY = "name"
