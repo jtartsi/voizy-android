@@ -2,6 +2,7 @@ package com.voizy.android.utils
 
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import io.reactivex.Flowable
@@ -16,13 +17,27 @@ fun <T> Task<T>.toObservable(): Observable<T> {
     }
 }
 
-fun Observable<DocumentReference>.getSnapshotChange(): Observable<DocumentSnapshot> {
+fun Observable<DocumentReference>.snapshotChange(): Observable<DocumentSnapshot> {
     return this.flatMap { documentRef ->
         Observable.create<DocumentSnapshot> { emitter ->
             documentRef.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                Timber.d("getSnapshotChange")
+                Timber.d("snapshotChange")
                 if (documentSnapshot != null && firebaseFirestoreException == null) {
                     emitter.onNext(documentSnapshot)
+                } else {
+                    emitter.onError(Throwable(firebaseFirestoreException))
+                }
+            }
+        }
+    }
+}
+
+fun Observable<CollectionReference>.collectionChange(): Observable<List<DocumentSnapshot>> {
+    return this.flatMap { collectionRef ->
+        Observable.create<List<DocumentSnapshot>> { emitter ->
+            collectionRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (querySnapshot != null && firebaseFirestoreException == null) {
+                    emitter.onNext(querySnapshot.documents)
                 } else {
                     emitter.onError(Throwable(firebaseFirestoreException))
                 }

@@ -10,7 +10,8 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
 
     companion object {
         private val TAG = VoizySearchRequestCollection::class.java.simpleName
-        private const val VOIZYS_SEARCH_COLLECTION = "voizySearchRequests"
+        const val VOIZYS_SEARCH_COLLECTION = "voizySearchRequests"
+        const val RESULT = "result"
     }
 
     fun find(searchKeyword: String = ""): Observable<DocumentReference> {
@@ -23,7 +24,11 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
     fun getVoizyResults(): Observable<String> {
         return Observable.just("")
     }
-
-    private fun FirebaseFirestore.voizySearchRequestCollection() =
-        collection(VOIZYS_SEARCH_COLLECTION)
 }
+
+fun FirebaseFirestore.voizySearchRequestCollection() =
+    collection(VoizySearchRequestCollection.VOIZYS_SEARCH_COLLECTION)
+
+fun DocumentReference.result() = collection(VoizySearchRequestCollection.RESULT)
+
+fun DocumentReference.resultDoc(uid: String) = result().document(uid)

@@ -3,8 +3,10 @@ package com.voizy.android.middleware.repositories
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
+import com.voizy.android.middleware.firebase.collections.result
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.models.Voizy
+import com.voizy.android.utils.collectionChange
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -48,9 +50,13 @@ class VoizyRepository(
 
     fun searchVoizys(searchKeyword: String): Observable<Boolean> {
         return voizysSearch.find(searchKeyword)
+            .map { it.result() }
+            .collectionChange()
             .map {
-                // TODO search parse data
-                Timber.d("search-voizys snapshot change $it")
+                Timber.d("search-voizys collection change")
+                for (snap in it) {
+                    Timber.d("search-voizys changed doc: $snap")
+                }
                 true
             }
     }
