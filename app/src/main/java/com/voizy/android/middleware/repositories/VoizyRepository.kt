@@ -5,7 +5,6 @@ import com.voizy.android.middleware.firebase.collections.VoizySearchRequestColle
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.models.Voizy
-import com.voizy.android.utils.getSnapshotChange
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -49,7 +48,6 @@ class VoizyRepository(
 
     fun searchVoizys(searchKeyword: String): Observable<Boolean> {
         return voizysSearch.find(searchKeyword)
-            .getSnapshotChange()
             .map {
                 // TODO search parse data
                 Timber.d("search-voizys snapshot change $it")
