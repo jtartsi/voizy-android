@@ -4,12 +4,12 @@ import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.firebase.collections.VoizysSearchCollection
 import com.voizy.android.middleware.firebase.model.Voizy
-import com.voizy.android.middleware.firebase.model.VoizySearchResult
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.utils.getSnapshotChange
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.io.File
 
 class VoizyRepository(
@@ -47,10 +47,14 @@ class VoizyRepository(
         localFileManager.deleteFile(localFilePath)
     }
 
-    fun searchVoizys(searchKeyword: String): Observable<VoizySearchResult> {
+    fun searchVoizys(searchKeyword: String): Observable<Boolean> {
         return voizysSearch.find(searchKeyword)
             .getSnapshotChange()
-            .map { it.toObject(VoizySearchResult::class.java) }
+            .map {
+                // TODO search parse data
+                Timber.d("search-voizys snapshot change $it")
+                true
+            }
     }
 
     // fun getVoizys(searchKeyword: String = ""): Observable<List<Voizy>> {

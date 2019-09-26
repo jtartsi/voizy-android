@@ -10,7 +10,7 @@ class VoizysSearchCollection(private val firestore: FirebaseFirestore) {
 
     companion object {
         private val TAG = VoizysSearchCollection::class.java.simpleName
-        private val VOIZYS_SEARCH_COLLECTION = "voizys_search_request"
+        private val VOIZYS_SEARCH_COLLECTION = "voizysSearchRequest"
     }
 
     fun find(searchKeyword: String = ""): Observable<DocumentReference> {

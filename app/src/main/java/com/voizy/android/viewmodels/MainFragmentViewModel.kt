@@ -29,6 +29,10 @@ class MainFragmentViewModel(
     private val voizysStream = searchVoizysRequest
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.searchVoizys(it) }
+        .map {
+            // TODO search replace this with real result data
+            emptyList<Voizy>()
+        }
 
     init {
         voizyRepository.getSaveVoizyEvents()
@@ -43,7 +47,7 @@ class MainFragmentViewModel(
     }
 
     fun getVoizyStream(): Observable<List<Voizy>> {
-        return voizysStream.map { it.voizys }
+        return voizysStream.map { it }
     }
 
     fun searchVoizys(searchKeyword: String = "") {

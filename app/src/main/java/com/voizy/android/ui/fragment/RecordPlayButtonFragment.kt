@@ -33,7 +33,11 @@ class RecordPlayButtonFragment : Fragment() {
         public val TAG = RecordPlayButtonFragment::class.java.simpleName
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.record_button_fragment, container, false)
     }
 
