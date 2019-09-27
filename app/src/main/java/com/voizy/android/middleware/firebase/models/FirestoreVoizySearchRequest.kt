@@ -1,6 +1,6 @@
 package com.voizy.android.middleware.firebase.models
 
-data class VoizySearchRequest(
+data class FirestoreVoizySearchRequest(
     val defaultOperator: SearchOperator = SearchOperator.AND,
     val searchKeyword: String = "",
     val size: Int = 20

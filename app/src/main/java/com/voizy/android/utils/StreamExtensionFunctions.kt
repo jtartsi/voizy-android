@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -32,12 +33,12 @@ fun Observable<DocumentReference>.snapshotChange(): Observable<DocumentSnapshot>
     }
 }
 
-fun Observable<CollectionReference>.collectionChange(): Observable<List<DocumentSnapshot>> {
+fun Observable<CollectionReference>.collectionChange(): Observable<QuerySnapshot> {
     return this.flatMap { collectionRef ->
-        Observable.create<List<DocumentSnapshot>> { emitter ->
+        Observable.create<QuerySnapshot> { emitter ->
             collectionRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 if (querySnapshot != null && firebaseFirestoreException == null) {
-                    emitter.onNext(querySnapshot.documents)
+                    emitter.onNext(querySnapshot)
                 } else {
                     emitter.onError(Throwable(firebaseFirestoreException))
                 }

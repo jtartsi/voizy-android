@@ -4,6 +4,7 @@ import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.firebase.collections.result
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchResult
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.collectionChange
@@ -52,13 +53,15 @@ class VoizyRepository(
         return voizysSearch.find(searchKeyword)
             .map { it.result() }
             .collectionChange()
-            .map {
-                Timber.d("search-voizys collection change")
-                for (snap in it) {
-                    Timber.d("search-voizys changed doc: $snap")
+            .map { it.toObjects(FirestoreVoizySearchResult::class.java) }
+            .map { it.first() }
+            .map { it.getVoizys() }
+            .doOnNext {
+                for (voizy in it) {
+                    Timber.d("search-voizys ${voizy.name}, ${voizy.tags.joinToString()}")
                 }
-                true
             }
+            .map { true }
     }
 
     // fun getVoizys(searchKeyword: String = ""): Observable<List<Voizy>> {

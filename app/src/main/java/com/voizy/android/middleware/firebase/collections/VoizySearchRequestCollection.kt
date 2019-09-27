@@ -2,7 +2,7 @@ package com.voizy.android.middleware.firebase.collections
 
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.voizy.android.middleware.firebase.models.VoizySearchRequest
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest
 import com.voizy.android.utils.toObservable
 import io.reactivex.Observable
 
@@ -17,7 +17,7 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
     fun find(searchKeyword: String = ""): Observable<DocumentReference> {
         return firestore
             .voizySearchRequestCollection()
-            .add(VoizySearchRequest(searchKeyword = searchKeyword))
+            .add(FirestoreVoizySearchRequest(searchKeyword = searchKeyword))
             .toObservable()
     }
 
