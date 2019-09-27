@@ -2,19 +2,20 @@ package com.voizy.android.middleware.firebase.models
 
 import com.google.firebase.firestore.PropertyName
 import com.voizy.android.ui.models.Voizy
+import timber.log.Timber
 
 data class FirestoreVoizySearchResult(val hits: Hits = Hits()) {
 
     fun getVoizys(): List<Voizy> {
-        return this.hits.voizys.map {
+        return this.hits.hits.map {
+            Timber.d("search-voizys getVoizys sourceName ${it.source.name}")
             it.source.toVoizy()
         }
     }
 }
 
 data class Hits(
-    @PropertyName("hits")
-    val voizys: List<FirestoreElasticVoizy> = emptyList(),
+    var hits: List<FirestoreElasticVoizy> = emptyList(),
     val total: Total = Total()
 )
 
@@ -24,8 +25,12 @@ data class Total(
 )
 
 data class FirestoreElasticVoizy(
-    @PropertyName("_id") val id: String = "",
-    @PropertyName("_source") val source: Source = Source()
+    @get:PropertyName("_id")
+    @set:PropertyName("_id")
+    var id: String = "",
+    @get:PropertyName("_source")
+    @set:PropertyName("_source")
+    var source: Source = Source()
 )
 
 data class Source(
@@ -33,9 +38,5 @@ data class Source(
     val tags: List<String> = emptyList(),
     val filePath: String = ""
 ) {
-    fun toVoizy() = Voizy(
-        name = name,
-        tags = tags,
-        filePath = filePath
-    )
+    fun toVoizy() = Voizy(this.name, this.tags, this.filePath)
 }
