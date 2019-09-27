@@ -19,10 +19,7 @@ class LocalFileManager(private val context: Context) {
 
     fun saveVoizy(voizy: Voizy): Observable<Voizy> {
         return Observable.just(voizy)
-            .map {
-                it.filePath = renameFile(it.name)
-                return@map it
-            }
+            .map { it.copy(filePath = renameFile(it.name)) }
             .withErrorHandling(TAG, "Failed to save voizy locally")
     }
 

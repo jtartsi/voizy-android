@@ -29,8 +29,8 @@ class VoizyFirebaseStorage(
                 if (it.uploadSessionUri == null) {
                     throw IllegalStateException("Failed to upload voizy")
                 }
-                voizy.filePath = uploadRef.path
-                Pair(true, voizy)
+                val uploadedVoizy = voizy.copy(filePath = uploadRef.path)
+                Pair(true, uploadedVoizy)
             }
             .withErrorHandling(TAG, "Failed to upload audio file")
     }
