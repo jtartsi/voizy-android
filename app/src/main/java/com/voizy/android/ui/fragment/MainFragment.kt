@@ -143,8 +143,6 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
 
     private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
         return Consumer { pair ->
-            // activity!!.showProgressBar(false) // TODO progressbar
-
             if (pair.first) {
                 Snackbar.make(
                     view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
