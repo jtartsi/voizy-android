@@ -153,6 +153,7 @@ class MainFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                Timber.d("search-voizys RESULT")
                 voizyListAdapter.clear()
                 voizyListAdapter.addAll(it)
             }

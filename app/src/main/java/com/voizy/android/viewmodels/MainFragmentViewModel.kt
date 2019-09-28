@@ -12,7 +12,9 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
@@ -27,6 +29,13 @@ class MainFragmentViewModel(
 
     private val searchVoizysRequest = PublishSubject.create<String>()
     private val voizysStream = searchVoizysRequest
+        .doOnNext {
+            Timber.d("search-voizys BEFORE debounce")
+        }
+        .debounce(300, TimeUnit.MILLISECONDS)
+        .doOnNext {
+            Timber.d("search-voizys AFTER debounce")
+        }
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.searchVoizys(it) }
 
