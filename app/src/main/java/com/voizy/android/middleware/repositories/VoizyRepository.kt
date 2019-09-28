@@ -49,7 +49,7 @@ class VoizyRepository(
         localFileManager.deleteFile(localFilePath)
     }
 
-    fun searchVoizys(searchKeyword: String): Observable<Boolean> {
+    fun searchVoizys(searchKeyword: String): Observable<List<Voizy>> {
         return voizysSearch.find(searchKeyword)
             .map { it.result() }
             .doOnNext {
@@ -61,6 +61,10 @@ class VoizyRepository(
                 it.documentChanges.size != 0
             }
             .map { it.toObjects(FirestoreVoizySearchResult::class.java) }
+            .filter {
+                Timber.d("search-voizys filter2 size ${it.size}")
+                it.size != 0
+            }
             .map { it.first() }
             .doOnNext {
                 Timber.d("search-voizys hits ${it.hits}")
@@ -76,7 +80,6 @@ class VoizyRepository(
                     Timber.d("search-voizys voizy: ${voizy.name}}")
                 }
             }
-            .map { true }
     }
 
     // fun getVoizys(searchKeyword: String = ""): Observable<List<Voizy>> {

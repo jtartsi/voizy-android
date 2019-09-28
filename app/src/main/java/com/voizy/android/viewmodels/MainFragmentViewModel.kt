@@ -29,10 +29,6 @@ class MainFragmentViewModel(
     private val voizysStream = searchVoizysRequest
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.searchVoizys(it) }
-        .map {
-            // TODO search replace this with real result data
-            emptyList<Voizy>()
-        }
 
     init {
         voizyRepository.getSaveVoizyEvents()
@@ -54,7 +50,7 @@ class MainFragmentViewModel(
         searchVoizysRequest.onNext(searchKeyword)
     }
 
-    // TODO v0.3.0 remove this
+    // TODO launch v0.4.0 remove this
     fun deleteVoizy(voizy: Voizy) {
         val completable = Completable.fromAction {
             voizyRepository.deleteLocalVoizy(voizy.filePath!!)
