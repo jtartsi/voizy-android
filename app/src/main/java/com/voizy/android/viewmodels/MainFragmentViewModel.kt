@@ -29,13 +29,9 @@ class MainFragmentViewModel(
 
     private val searchVoizysRequest = PublishSubject.create<String>()
     private val voizysStream = searchVoizysRequest
-        .doOnNext {
-            Timber.d("search-voizys BEFORE debounce")
-        }
+        .doOnNext { Timber.d("search-voizys BEFORE debounce") }
         .debounce(300, TimeUnit.MILLISECONDS)
-        .doOnNext {
-            Timber.d("search-voizys AFTER debounce")
-        }
+        .doOnNext { Timber.d("search-voizys AFTER debounce") }
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.searchVoizys(it) }
 
