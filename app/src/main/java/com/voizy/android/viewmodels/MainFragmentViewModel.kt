@@ -34,6 +34,7 @@ class MainFragmentViewModel(
         .doOnNext { Timber.d("search-voizys AFTER debounce") }
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.searchVoizys(it) }
+        .withErrorHandling(TAG, "Searching voizys failed")
 
     init {
         voizyRepository.getSaveVoizyEvents()
