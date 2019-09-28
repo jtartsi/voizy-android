@@ -2,15 +2,11 @@ package com.voizy.android.middleware.firebase.models
 
 import com.google.firebase.firestore.PropertyName
 import com.voizy.android.ui.models.Voizy
-import timber.log.Timber
 
 data class FirestoreVoizySearchResult(val hits: Hits = Hits()) {
 
     fun getVoizys(): List<Voizy> {
-        return this.hits.hits.map {
-            Timber.d("search-voizys getVoizys sourceName ${it.source.name}")
-            it.source.toVoizy()
-        }
+        return this.hits.hits.map { it.source.toVoizy() }
     }
 }
 
