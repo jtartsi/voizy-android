@@ -2,9 +2,12 @@ package com.voizy.android.ui.fragment
 
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +27,17 @@ import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
-    OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy> {
+class MainFragment :
+    BaseFragment(),
+    VoizySwipeCallback.VoizySwipeListener,
+    OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy>,
+    TextWatcher {
 
     private val viewModel: MainFragmentViewModel by inject()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
     private val deleteHandler = Handler()
+    private val shareRequests = PublishSubject.create<Voizy>()
 
     companion object {
         public val TAG = MainFragment::class.java.simpleName
@@ -40,7 +47,15 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
         return TAG
     }
 
-    private val shareRequests = PublishSubject.create<Voizy>()
+    override fun afterTextChanged(s: Editable?) {
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    }
+
+    override fun onTextChanged(searchText: CharSequence?, start: Int, before: Int, count: Int) {
+        viewModel.searchVoizys(searchText.toString())
+    }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
@@ -79,7 +94,6 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
         position: Int,
         voizy: Voizy
     ) {
-        Timber.d("onClick $position ${voizy.name} ${voizy.filePath}")
         viewModel.playVoizy(voizy)
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -105,6 +119,9 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated()")
+
+        val editTextSearch = view.findViewById<EditText>(R.id.et_search)
+        editTextSearch.addTextChangedListener(this)
 
         voizyListAdapter = VoizyRecyclerViewAdapter(this)
         voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
