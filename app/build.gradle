@@ -10,7 +10,7 @@ android {
         applicationId "com.voizy.android"
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 3
+        versionCode 4
         versionName "v0.4.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
