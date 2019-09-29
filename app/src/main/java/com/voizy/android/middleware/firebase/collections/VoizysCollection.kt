@@ -24,14 +24,5 @@ class VoizysCollection(private val firestore: FirebaseFirestore) {
             .withErrorHandling(TAG, "Failed to save Voizy to Firestore")
     }
 
-    // TODO search remove once done
-    fun getVoizys(): Observable<List<Voizy>> {
-        return firestore
-            .voizysCollection()
-            .get()
-            .toObservable()
-            .map { it.toObjects(Voizy::class.java) }
-    }
-
     private fun FirebaseFirestore.voizysCollection() = collection(VOIZYS_DEV_COLLECTION)
 }
