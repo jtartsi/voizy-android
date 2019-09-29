@@ -13,8 +13,15 @@ import io.reactivex.functions.BiFunction
 import timber.log.Timber
 
 fun <T> Task<T>.toObservable(): Observable<T> {
-    return Observable.fromCallable {
-        Tasks.await(this)
+    return Observable.defer {
+        Observable.just(Tasks.await(this))
+    }.withErrorHandling {
+        if (it is InterruptedException) {
+            Timber.d("Task.toObservable - catching interrupted exception")
+            Observable.empty()
+        } else {
+            throw it
+        }
     }
 }
 
@@ -50,24 +57,6 @@ fun Observable<CollectionReference>.collectionChange(): Observable<QuerySnapshot
 fun <F, S> toPair(): BiFunction<F, S, Pair<F, S>> =
     BiFunction { first, second -> Pair(first, second) }
 
-fun <T> Observable<T>.withErrorHandling(errorHandling: (throwable: Throwable) -> Observable<T>): Observable<T> {
-    return this.onErrorResumeNext { throwable: Throwable ->
-        errorHandling(throwable)
-    }
-}
-
-fun <T> Flowable<T>.withErrorHandling(errorHandling: (throwable: Throwable) -> Flowable<T>): Flowable<T> {
-    return this.onErrorResumeNext { throwable: Throwable ->
-        errorHandling(throwable)
-    }
-}
-
-fun <T> Single<T>.withErrorHandling(errorHandling: (throwable: Throwable) -> Single<T>): Single<T> {
-    return this.onErrorResumeNext { throwable: Throwable ->
-        errorHandling(throwable)
-    }
-}
-
 fun <T> Observable<T>.withErrorHandling(
     tag: String,
     message: String,
@@ -77,6 +66,10 @@ fun <T> Observable<T>.withErrorHandling(
         Timber.e(it, "$tag $message")
         defaultValueOnError
     }
+}
+
+fun <T> Observable<T>.withErrorHandling(errorHandling: (throwable: Throwable) -> Observable<T>): Observable<T> {
+    return this.onErrorResumeNext(errorHandling)
 }
 
 fun <T> Flowable<T>.withErrorHandling(
@@ -90,16 +83,19 @@ fun <T> Flowable<T>.withErrorHandling(
     }
 }
 
-fun <T> Flowable<T>.withErrorHandling(tag: String, message: String): Flowable<T> {
-    return this.withErrorHandling {
-        Timber.e(it, "$tag $message")
-        Flowable.empty()
-    }
+fun <T> Flowable<T>.withErrorHandling(errorHandling: (throwable: Throwable) -> Flowable<T>): Flowable<T> {
+    return this.onErrorResumeNext(errorHandling)
 }
 
 fun <T> Single<T>.withErrorHandling(tag: String, message: String, valueOnError: T): Single<T> {
     return this.withErrorHandling {
         Timber.e(it, "$tag $message")
         Single.just(valueOnError)
+    }
+}
+
+fun <T> Single<T>.withErrorHandling(errorHandling: (throwable: Throwable) -> Single<T>): Single<T> {
+    return this.onErrorResumeNext { throwable: Throwable ->
+        errorHandling(throwable)
     }
 }
