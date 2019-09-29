@@ -5,7 +5,7 @@ import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
-import com.voizy.android.ui.model.Voizy
+import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -25,10 +25,11 @@ class MainFragmentViewModel(
 
     private val saveVoizyEventsBehaviorSubject = BehaviorSubject.create<Pair<Boolean, Voizy?>>()
 
-    private val voizyFetchRequest = PublishSubject.create<Boolean>()
-    private val voizysStream = voizyFetchRequest
+    private val searchVoizysRequest = PublishSubject.create<String>()
+    private val voizysStream = searchVoizysRequest
         .observeOn(Schedulers.io())
-        .flatMap { voizyRepository.getVoizys() }
+        .flatMap { voizyRepository.searchVoizys(it) }
+        .withErrorHandling(TAG, "Searching voizys failed")
 
     init {
         voizyRepository.getSaveVoizyEvents()
@@ -39,22 +40,21 @@ class MainFragmentViewModel(
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return saveVoizyEventsBehaviorSubject
-            .doOnNext { voizyFetchRequest.onNext(true) }
             .withErrorHandling(TAG, "save voizy events error")
     }
 
     fun getVoizyStream(): Observable<List<Voizy>> {
-        return voizysStream
+        return voizysStream.map { it }
     }
 
-    fun fetchVoizys() {
-        voizyFetchRequest.onNext(true)
+    fun searchVoizys(searchKeyword: String = "") {
+        searchVoizysRequest.onNext(searchKeyword)
     }
 
-    // TODO v0.3.0 remove this
+    // TODO launch v0.4.0 remove this
     fun deleteVoizy(voizy: Voizy) {
         val completable = Completable.fromAction {
-            voizyRepository.deleteLocalVoizy(voizy.localFilePath!!)
+            voizyRepository.deleteLocalVoizy(voizy.filePath!!)
         }
             .onErrorComplete()
             .subscribeOn(Schedulers.io())
@@ -66,7 +66,7 @@ class MainFragmentViewModel(
     }
 
     fun playVoizy(voizy: Voizy): Observable<Int> {
-        return voizyRepository.getFileUrl(voizy.firebaseFilePath!!)
+        return voizyRepository.getFileUrl(voizy.filePath!!)
             .map { voizyPlayer.playRemote(it) }
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to play Voizy")
@@ -74,7 +74,7 @@ class MainFragmentViewModel(
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<File> {
         val destinationFile = File(LocalFileManager(context).getTempFilePath())
-        return voizyRepository.downloadVoizy(voizy.firebaseFilePath!!, destinationFile)
+        return voizyRepository.downloadVoizy(voizy.filePath!!, destinationFile)
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to download Voizy")
     }

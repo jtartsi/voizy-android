@@ -2,9 +2,12 @@ package com.voizy.android.ui.fragment
 
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +17,7 @@ import com.voizy.android.R
 import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
 import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.ui.listener.OnItemClickListener
-import com.voizy.android.ui.model.Voizy
+import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
@@ -24,8 +27,17 @@ import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
-    OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy> {
+class MainFragment :
+    BaseFragment(),
+    VoizySwipeCallback.VoizySwipeListener,
+    OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy>,
+    TextWatcher {
+
+    private val viewModel: MainFragmentViewModel by inject()
+    private lateinit var voizyList: RecyclerView
+    private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
+    private val deleteHandler = Handler()
+    private val shareRequests = PublishSubject.create<Voizy>()
 
     companion object {
         public val TAG = MainFragment::class.java.simpleName
@@ -35,7 +47,15 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
         return TAG
     }
 
-    private val shareRequests = PublishSubject.create<Voizy>()
+    override fun afterTextChanged(s: Editable?) {
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    }
+
+    override fun onTextChanged(searchText: CharSequence?, start: Int, before: Int, count: Int) {
+        viewModel.searchVoizys(searchText.toString())
+    }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
@@ -69,8 +89,11 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
         }
     }
 
-    override fun onClick(viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder, position: Int, voizy: Voizy) {
-        Timber.d("onClick $position ${voizy.name} ${voizy.localFilePath}")
+    override fun onClick(
+        viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder,
+        position: Int,
+        voizy: Voizy
+    ) {
         viewModel.playVoizy(voizy)
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -80,23 +103,25 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
             }
     }
 
-    private val viewModel: MainFragmentViewModel by inject<MainFragmentViewModel>()
-    private lateinit var voizyList: RecyclerView
-    private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
-    private val deleteHandler = Handler()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate()")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated()")
+
+        val editTextSearch = view.findViewById<EditText>(R.id.et_search)
+        editTextSearch.addTextChangedListener(this)
 
         voizyListAdapter = VoizyRecyclerViewAdapter(this)
         voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
@@ -109,7 +134,7 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
 
         setObservables()
 
-        viewModel.fetchVoizys()
+        viewModel.searchVoizys()
     }
 
     private fun setObservables() {
@@ -128,6 +153,7 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                Timber.d("search-voizys RESULT")
                 voizyListAdapter.clear()
                 voizyListAdapter.addAll(it)
             }
@@ -135,8 +161,6 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
 
     private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
         return Consumer { pair ->
-            // activity!!.showProgressBar(false) // TODO progressbar
-
             if (pair.first) {
                 Snackbar.make(
                     view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
@@ -144,7 +168,8 @@ class MainFragment : BaseFragment(), VoizySwipeCallback.VoizySwipeListener,
                     shareRequests.onNext(pair.second!!)
                 }.show()
             } else {
-                Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT)
+                    .show()
             }
         }
     }

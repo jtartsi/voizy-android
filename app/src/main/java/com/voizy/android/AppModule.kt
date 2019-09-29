@@ -5,7 +5,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
-import com.voizy.android.middleware.firebase.collections.VoizyCollection
+import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
+import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.viewmodels.MainFragmentViewModel
@@ -23,8 +24,9 @@ val repositoryModule = module {
     single { VoizyFirebaseStorage(get()) }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance().reference }
-    single { VoizyCollection(get()) }
-    single { VoizyRepository(get(), get(), get()) }
+    single { VoizysCollection(get()) }
+    single { VoizySearchRequestCollection(get()) }
+    single { VoizyRepository(get(), get(), get(), get()) }
     single { LocalFileManager(get()) }
 }
 

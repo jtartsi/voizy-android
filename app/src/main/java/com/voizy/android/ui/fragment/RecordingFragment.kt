@@ -11,7 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
-import com.voizy.android.ui.model.Voizy
+import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
@@ -39,7 +39,11 @@ class RecordingFragment : BaseFragment() {
         return TAG
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.recording_overlay_fragment, container, false)
     }
 
@@ -50,7 +54,10 @@ class RecordingFragment : BaseFragment() {
             val voizyName = et_voizy_name.text.toString()
 
             if (!voizyName.isNullOrEmpty()) {
-                val voizyToSave = Voizy(et_voizy_name.text.toString(), et_voizy_tags.getTags())
+                val voizyToSave = Voizy(
+                    et_voizy_name.text.toString(),
+                    et_voizy_tags.getTags()
+                )
                 viewModel.saveVoizy(voizyToSave)
                 // activity!!.showProgressBar(true) // TODO progressbar
                 hideSoftKeyboard(view)

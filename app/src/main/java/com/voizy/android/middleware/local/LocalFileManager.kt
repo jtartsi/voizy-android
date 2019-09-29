@@ -1,7 +1,7 @@
 package com.voizy.android.middleware.local
 
 import android.content.Context
-import com.voizy.android.ui.model.Voizy
+import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import timber.log.Timber
@@ -19,10 +19,7 @@ class LocalFileManager(private val context: Context) {
 
     fun saveVoizy(voizy: Voizy): Observable<Voizy> {
         return Observable.just(voizy)
-            .map {
-                it.localFilePath = renameFile(it.name)
-                return@map it
-            }
+            .map { it.copy(filePath = renameFile(it.name)) }
             .withErrorHandling(TAG, "Failed to save voizy locally")
     }
 
@@ -55,22 +52,6 @@ class LocalFileManager(private val context: Context) {
             Timber.e(e, "Failed to rename the file return empty")
             return ""
         }
-    }
-
-    fun getAllOwnVoizys(): List<Voizy> {
-        return context
-            .filesDir
-            .listFiles()
-            .map {
-                val path = it.path
-                val name = it.path
-                    .replaceBefore(LocalFileManager.VOIZY_FILE_PREFIX, "")
-                    .removePrefix(LocalFileManager.VOIZY_FILE_PREFIX)
-                    .removeSuffix(LocalFileManager.MP3_FILE_EXT)
-                val voizy = Voizy(name)
-                voizy.localFilePath = path
-                voizy
-            }
     }
 
     fun deleteFile(filePath: String) {
