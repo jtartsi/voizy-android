@@ -11,8 +11,6 @@ class VoizysCollection(private val firestore: FirebaseFirestore) {
     companion object {
         private val TAG = VoizysCollection::class.java.simpleName
         private val VOIZYS_COLLECTION = "voizys"
-        private val VOIZYS_DEV_COLLECTION =
-            "voizys-dev" // TODO search go back to production version
     }
 
     fun saveVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy?>> {
@@ -24,5 +22,5 @@ class VoizysCollection(private val firestore: FirebaseFirestore) {
             .withErrorHandling(TAG, "Failed to save Voizy to Firestore")
     }
 
-    private fun FirebaseFirestore.voizysCollection() = collection(VOIZYS_DEV_COLLECTION)
+    private fun FirebaseFirestore.voizysCollection() = collection(VOIZYS_COLLECTION)
 }

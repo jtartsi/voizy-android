@@ -17,7 +17,7 @@ class VoizyFirebaseStorage(
 
     companion object {
         private val TAG = VoizyFirebaseStorage::class.java.simpleName
-        private const val VOIZYS_PATH = "voizys-dev"
+        private const val VOIZYS_PATH = "voizys"
     }
 
     fun uploadVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy>> {
