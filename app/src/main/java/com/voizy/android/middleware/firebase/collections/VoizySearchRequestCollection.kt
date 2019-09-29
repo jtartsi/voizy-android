@@ -20,15 +20,9 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
             .add(FirestoreVoizySearchRequest(searchKeyword = searchKeyword))
             .toObservable()
     }
-
-    fun getVoizyResults(): Observable<String> {
-        return Observable.just("")
-    }
 }
 
 fun FirebaseFirestore.voizySearchRequestCollection() =
     collection(VoizySearchRequestCollection.VOIZYS_SEARCH_COLLECTION)
 
 fun DocumentReference.result() = collection(VoizySearchRequestCollection.RESULT)
-
-fun DocumentReference.resultDoc(uid: String) = result().document(uid)
