@@ -3,8 +3,6 @@ package com.voizy.android.utils
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -21,21 +19,6 @@ fun <T> Task<T>.toObservable(): Observable<T> {
             Observable.empty()
         } else {
             throw it
-        }
-    }
-}
-
-fun Observable<DocumentReference>.snapshotChange(): Observable<DocumentSnapshot> {
-    return this.flatMap { documentRef ->
-        Observable.create<DocumentSnapshot> { emitter ->
-            documentRef.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                Timber.d("snapshotChange")
-                if (documentSnapshot != null && firebaseFirestoreException == null) {
-                    emitter.onNext(documentSnapshot)
-                } else {
-                    emitter.onError(Throwable(firebaseFirestoreException))
-                }
-            }
         }
     }
 }
