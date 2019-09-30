@@ -44,7 +44,7 @@ class RecordPlayButtonViewModel(
 
     fun startPreviewVoizyPlayback() {
         Observable.fromCallable { voizyPlayer.playLocal(voizyRepository.getTempFilePath()) }
-            .withErrorHandling(TAG, "Failed to play local voizy")
+            .withErrorHandling(TAG, "Failed to playVoizy local voizy")
             .subscribeOn(Schedulers.io())
             .subscribe()
             .autoDispose()

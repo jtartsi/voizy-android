@@ -16,7 +16,7 @@ import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
 import com.voizy.android.ui.adapter.VoizySwipeCallback
-import com.voizy.android.ui.listener.OnItemClickListener
+import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
@@ -30,7 +30,7 @@ import timber.log.Timber
 class MainFragment :
     BaseFragment(),
     VoizySwipeCallback.VoizySwipeListener,
-    OnItemClickListener<VoizyRecyclerViewAdapter.VoizyViewHolder, Voizy>,
+    VoizyActionListener,
     TextWatcher {
 
     private val viewModel: MainFragmentViewModel by inject()
@@ -58,38 +58,47 @@ class MainFragment :
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        val voizy = voizyListAdapter.items[position]
-        when (direction) {
-            ItemTouchHelper.LEFT -> {
-
-                Snackbar.make(
-                    view!!,
-                    getString(R.string.voizy_deleted, voizy.name),
-                    Snackbar.LENGTH_LONG
-                ).setAction(R.string.undo) {
-                    voizyListAdapter.cancelDelete()
-                    deleteHandler.removeCallbacksAndMessages(null)
-                }.show()
-
-                voizyListAdapter.cancellableDelete(position)
-                deleteHandler.postDelayed({
-                    viewModel.deleteVoizy(voizy)
-                }, 3500)
-            }
-            ItemTouchHelper.RIGHT -> {
-                voizyListAdapter.notifyItemChanged(position)
-                shareRequests.onNext(voizy)
-                Snackbar.make(
-                    view!!,
-                    getString(R.string.voizy_sharing, voizy.name),
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
+        // val position = viewHolder.adapterPosition
+        // val voizy = voizyListAdapter.items[position]
+        // when (direction) {
+        //     ItemTouchHelper.LEFT -> {
+        //
+        //         Snackbar.make(
+        //             view!!,
+        //             getString(R.string.voizy_deleted, voizy.name),
+        //             Snackbar.LENGTH_LONG
+        //         ).setAction(R.string.undo) {
+        //             voizyListAdapter.cancelDelete()
+        //             deleteHandler.removeCallbacksAndMessages(null)
+        //         }.show()
+        //
+        //         voizyListAdapter.cancellableDelete(position)
+        //         deleteHandler.postDelayed({
+        //             viewModel.deleteVoizy(voizy)
+        //         }, 3500)
+        //     }
+        //     ItemTouchHelper.RIGHT -> {
+        //         voizyListAdapter.notifyItemChanged(position)
+        //         shareRequests.onNext(voizy)
+        //         Snackbar.make(
+        //             view!!,
+        //             getString(R.string.voizy_sharing, voizy.name),
+        //             Snackbar.LENGTH_LONG
+        //         ).show()
+        //     }
+        // }
     }
 
-    override fun onClick(
+    override fun shareVoizy(voizy: Voizy) {
+        shareRequests.onNext(voizy)
+        Snackbar.make(
+            view!!,
+            getString(R.string.voizy_sharing, voizy.name),
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+    override fun playVoizy(
         viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder,
         position: Int,
         voizy: Voizy
@@ -97,10 +106,7 @@ class MainFragment :
         viewModel.playVoizy(voizy)
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                viewHolder.animateProgress(it)
-                voizyListAdapter.animateProgress(position, it)
-            }
+            .subscribe { viewHolder.animateProgress(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
