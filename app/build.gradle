@@ -3,6 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "org.jlleitschuh.gradle.ktlint"
 apply plugin: 'com.google.gms.google-services'
+apply from: '../versioning.gradle'
+
+def appVersionName = "v0.4.1"
 
 android {
     compileSdkVersion 28
@@ -10,8 +13,8 @@ android {
         applicationId "com.voizy.android"
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 4
-        versionName "v0.4.0"
+        versionName appVersionName
+        versionCode buildVersionCode(appVersionName)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

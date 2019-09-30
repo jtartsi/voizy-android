@@ -1,0 +1,86 @@
+
+ext {
+    /**
+     * Builds an Android version code from the version of the project.
+     * This is designed to handle the -SNAPSHOT and -RC format and expects this format:
+     * v[X]X.[Y]Y.[ZZ]Z[-SNAPSHOT/RC1..RC98]
+     * e.g. v0.10.0 < v0.10.1-SNAPSHOT < v0.10.1-RC1 < v0.10.1-RC98 < v0.10.1
+     * The min, max version names are v0.0.0-rc0 and v214.748.36-rc46
+     *
+     * I.e. during development the version ends with -SNAPSHOT. As the code stabilizes and release nears
+     * one or many Release Candidates are tagged. These all end with "-RC1", "-RC2" etc.
+     * And the final release is without any suffix.
+     *
+     * The rules is as follows:
+     *  -SNAPSHOT counts as 0
+     *  -RC* counts as the RC number, i.e. 1 to 98
+     *  final release counts as 99.
+     *
+     * Thus you can only have 98 Release Candidates, which ought to be enough for everyone
+     *
+     * @return Integer version number
+     */
+    buildVersionCode = { String version ->
+
+        if (version[0] != "v") {
+            throw new RuntimeException("Version names are excected to follow syntax: vXX.YY.ZZ[-SNAPSHOT/RC1..RC98]")
+        }
+
+        def dotCount = version.count(".");
+        if (dotCount > 2) {
+            throw new RuntimeException("Too many dots in version name: " + dotCount);
+        }
+
+        def dashCount = version.count("-");
+        if (dashCount > 1) {
+            throw new RuntimeException("Too many dashes in version name: " + dashCount);
+        }
+
+        def candidate = "99"
+
+        def (major, minor, patch, _candidate) = version.substring(1, version.size()).toLowerCase().replaceAll('-', '.').tokenize('.')
+
+        if (_candidate == "snapshot") {
+            candidate = "0"
+        } else if (_candidate != null) {
+            if (_candidate.startsWith("rc")) {
+                def rc
+                (rc) = _candidate.tokenize("rc")
+                if (rc) {
+                    candidate = rc
+                }
+            } else {
+                throw new RuntimeException("Candidate " + _candidate + " contains some shit, should be SANPSHOT OR RC1..98");
+            }
+
+        }
+
+        (major, minor, patch, candidate) = [[major, "major"], [minor, "minor"], [patch, "patch"], [candidate, "candidate"]].collect {
+            (value, componentName) = it
+            if (value.replaceAll("\\D", "").length() != value.length()) {
+                throw new RuntimeException(componentName + " " + value + " contains some shit, should be pure numeric");
+            }
+            value.toInteger();
+        }
+
+        if (candidate > 99) {
+            throw new RuntimeException("Candidate level too high, max value is 99")
+        }
+        if (patch > 99) {
+            throw new RuntimeException("Patch level too high, max value is 99")
+        }
+        if (minor > 999) {
+            throw new RuntimeException("Minor level too high, max value is 999")
+        }
+        if (major > 214) { //max integer integer is 2147483647, so we cannot go higher.
+            throw new RuntimeException("Major level too high, max value is 214")
+        }
+        def versionNumber = (major * 10000000l) + (minor * 10000) + (patch * 100) + candidate;
+
+        if (versionNumber > Integer.MAX_VALUE) {
+            throw new RuntimeException("versionNumber: " + versionNumber + " is larger that Integer.MAX_VALUE: " + Integer.MAX_VALUE)
+        }
+
+        (Integer) versionNumber
+    }
+}
