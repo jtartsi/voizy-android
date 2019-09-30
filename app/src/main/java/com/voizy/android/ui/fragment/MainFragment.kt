@@ -1,21 +1,18 @@
 package com.voizy.android.ui.fragment
 
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
-import com.voizy.android.ui.adapter.VoizySwipeCallback
 import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.ShareUtils
@@ -29,14 +26,12 @@ import timber.log.Timber
 
 class MainFragment :
     BaseFragment(),
-    VoizySwipeCallback.VoizySwipeListener,
     VoizyActionListener,
     TextWatcher {
 
     private val viewModel: MainFragmentViewModel by inject()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
-    private val deleteHandler = Handler()
     private val shareRequests = PublishSubject.create<Voizy>()
 
     companion object {
@@ -55,38 +50,6 @@ class MainFragment :
 
     override fun onTextChanged(searchText: CharSequence?, start: Int, before: Int, count: Int) {
         viewModel.searchVoizys(searchText.toString())
-    }
-
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        // val position = viewHolder.adapterPosition
-        // val voizy = voizyListAdapter.items[position]
-        // when (direction) {
-        //     ItemTouchHelper.LEFT -> {
-        //
-        //         Snackbar.make(
-        //             view!!,
-        //             getString(R.string.voizy_deleted, voizy.name),
-        //             Snackbar.LENGTH_LONG
-        //         ).setAction(R.string.undo) {
-        //             voizyListAdapter.cancelDelete()
-        //             deleteHandler.removeCallbacksAndMessages(null)
-        //         }.show()
-        //
-        //         voizyListAdapter.cancellableDelete(position)
-        //         deleteHandler.postDelayed({
-        //             viewModel.deleteVoizy(voizy)
-        //         }, 3500)
-        //     }
-        //     ItemTouchHelper.RIGHT -> {
-        //         voizyListAdapter.notifyItemChanged(position)
-        //         shareRequests.onNext(voizy)
-        //         Snackbar.make(
-        //             view!!,
-        //             getString(R.string.voizy_sharing, voizy.name),
-        //             Snackbar.LENGTH_LONG
-        //         ).show()
-        //     }
-        // }
     }
 
     override fun shareVoizy(voizy: Voizy) {
@@ -136,7 +99,6 @@ class MainFragment :
             layoutManager = LinearLayoutManager(context!!)
             adapter = voizyListAdapter
         }
-        ItemTouchHelper(VoizySwipeCallback(context!!, this)).attachToRecyclerView(voizyList)
 
         setObservables()
 
