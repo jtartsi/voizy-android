@@ -85,22 +85,6 @@ class VoizyRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 
-    /**
-     * Remove, but do not delete from dataset
-     */
-    fun cancellableDelete(position: Int) {
-        cancellableDeletedItem = Pair(position, items[position])
-        dataset.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    fun cancelDelete() {
-        cancellableDeletedItem?.let {
-            dataset.add(it.first, it.second)
-            notifyItemInserted(it.first)
-        }
-    }
-
     private fun getHashTags(tags: List<String>): String {
         return tags.joinToString(separator = " #", prefix = "#")
     }
