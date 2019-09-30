@@ -53,45 +53,45 @@ class RecordPlayButtonFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    Event.START_RECORD -> {
-                        startRecording()
-                    }
-                    Event.STOP_RECORD -> {
-                        stopRecording()
-                    }
-                    Event.PLAY -> {
-                        viewModel.startPreviewVoizyPlayback()
-                    }
+                    Event.START_RECORD -> startRecording()
+                    Event.STOP_RECORD -> stopRecording()
+                    Event.PLAY -> viewModel.startPreviewVoizyPlayback()
                 }
             }
 
-        mainFragmentLaunched()
+        mainFragmentOnTop()
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                Timber.d("record-button-state RECORD")
                 recordPlayButton.state = RecordPlayButton.State.RECORD
             }
 
         viewModel.getRecordingEvents()
+            .doOnNext { Timber.d("record-button-state recordingEvents $it") }
             .filter { it == VoizyRecorder.RecordingEvent.FINISHED }
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                Timber.d("record-button-state PLAY")
                 recordPlayButton.state = RecordPlayButton.State.PLAY
             }
     }
 
-    private fun mainFragmentLaunched(): Observable<BaseFragment> {
+    private fun mainFragmentOnTop(): Observable<BaseFragment> {
         val backstackSubject = PublishSubject.create<Fragment>()
 
         fragmentManager!!.addOnBackStackChangedListener {
             val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
+            Timber.d("record-button-state $topFragment")
             if (topFragment != null) {
                 backstackSubject.onNext(topFragment)
             }
         }
         return backstackSubject
+            .doOnNext { Timber.d("record-button-state before filter $it") }
             .filter { it is BaseFragment }
+            .doOnNext { Timber.d("record-button-state after filter $it") }
             .map { it as BaseFragment }
             .filter { it.getBackstackTag() == MainFragment.TAG }
     }
