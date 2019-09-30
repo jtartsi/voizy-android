@@ -44,10 +44,6 @@ class VoizyRepository(
         saveVoizyQueue.onNext(voizy)
     }
 
-    fun deleteLocalVoizy(localFilePath: String) {
-        localFileManager.deleteFile(localFilePath)
-    }
-
     fun searchVoizys(searchKeyword: String): Observable<List<Voizy>> {
         return voizysSearch.find(searchKeyword)
             .map { it.result() }

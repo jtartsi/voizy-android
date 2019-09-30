@@ -1,13 +1,11 @@
 package com.voizy.android.viewmodels
 
 import android.content.Context
-import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.withErrorHandling
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -51,25 +49,11 @@ class MainFragmentViewModel(
         searchVoizysRequest.onNext(searchKeyword)
     }
 
-    // TODO launch v0.4.0 remove this
-    fun deleteVoizy(voizy: Voizy) {
-        val completable = Completable.fromAction {
-            voizyRepository.deleteLocalVoizy(voizy.filePath!!)
-        }
-            .onErrorComplete()
-            .subscribeOn(Schedulers.io())
-
-        completable.apply {
-            autoDisposable(this)
-            subscribe()
-        }
-    }
-
     fun playVoizy(voizy: Voizy): Observable<Int> {
         return voizyRepository.getFileUrl(voizy.filePath!!)
             .map { voizyPlayer.playRemote(it) }
             .subscribeOn(Schedulers.io())
-            .withErrorHandling(TAG, "Failed to play Voizy")
+            .withErrorHandling(TAG, "Failed to playVoizy Voizy")
     }
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<File> {
