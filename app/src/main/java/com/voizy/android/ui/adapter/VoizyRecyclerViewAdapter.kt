@@ -80,9 +80,6 @@ class VoizyRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 
-    fun animateProgress(position: Int, durationInMillis: Int) {
-    }
-
     /**
      * Remove, but do not delete from dataset
      */
