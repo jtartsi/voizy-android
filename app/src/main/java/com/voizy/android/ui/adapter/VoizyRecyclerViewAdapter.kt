@@ -19,7 +19,6 @@ class VoizyRecyclerViewAdapter(
 ) : RecyclerView.Adapter<VoizyRecyclerViewAdapter.VoizyViewHolder>() {
 
     private val dataset = mutableListOf<Voizy>()
-    private var cancellableDeletedItem: Pair<Int, Voizy>? = null
 
     val items: List<Voizy>
         get() = dataset
