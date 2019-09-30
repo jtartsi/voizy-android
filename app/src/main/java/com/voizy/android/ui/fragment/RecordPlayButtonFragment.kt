@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
@@ -22,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 @SuppressWarnings("ClickableViewAccessibility")
 class RecordPlayButtonFragment : Fragment() {
@@ -100,6 +103,7 @@ class RecordPlayButtonFragment : Fragment() {
 
             var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
             if (recFragment == null) {
+                Timber.d("startRecording()")
                 addRecordingFragment()
             }
         } else {
@@ -110,20 +114,25 @@ class RecordPlayButtonFragment : Fragment() {
     private fun stopRecording() {
         recordPlayButton.handleStopRecording()
         stopTimer.removeCallbacksAndMessages(null)
-        viewModel.stopRecording()
+        val recordingOverMinimumTime = viewModel.stopRecording()
+        Timber.d("stopRecording()")
+        if (!recordingOverMinimumTime) {
+            fragmentManager!!.popBackStackImmediate(
+                RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+            Snackbar.make(this.view!!, R.string.hold_to_record_guide, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     private fun addRecordingFragment() {
-        Handler().postDelayed({
-            fragmentManager!!.beginTransaction()
-                .replace(
-                    R.id.fragment_container,
-                    RecordingFragment(),
-                    RecordingFragment.TAG
-                )
-                .addToBackStack(RecordingFragment.TAG)
-                .commit()
-        }, 200)
+        fragmentManager!!.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                RecordingFragment(),
+                RecordingFragment.TAG
+            )
+            .addToBackStack(RecordingFragment.TAG)
+            .commit()
     }
 
     private fun hasAudioRecordPermission(): Boolean {

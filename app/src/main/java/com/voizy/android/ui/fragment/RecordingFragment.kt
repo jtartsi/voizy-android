@@ -59,7 +59,6 @@ class RecordingFragment : BaseFragment() {
                     et_voizy_tags.getTags()
                 )
                 viewModel.saveVoizy(voizyToSave)
-                // activity!!.showProgressBar(true) // TODO progressbar
                 hideSoftKeyboard(view)
                 fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             } else {
