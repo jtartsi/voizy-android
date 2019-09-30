@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 class RecordPlayButton : FloatingActionButton {
-
+    
     companion object {
         private const val ANIMATION_DELAY = 200L
     }
@@ -22,7 +22,6 @@ class RecordPlayButton : FloatingActionButton {
     enum class Event { START_RECORD, STOP_RECORD, PLAY }
 
     private val events = PublishSubject.create<Event>()
-    private val stopTimer = Handler()
 
     var state: State = State.RECORD
         set(value) {
@@ -70,23 +69,21 @@ class RecordPlayButton : FloatingActionButton {
         return events
     }
 
-    private fun handleStartRecording() {
+    fun handleStartRecording() {
         setImageResource(R.drawable.sound_waves_white)
         val colorStateList = ColorStateList.valueOf(context.getColor(R.color.voizy_orange))
         backgroundTintList = colorStateList
 
-        stopTimer.postDelayed({ handleStopRecording() }, 15500)
         delayedVibrate()
         animateButtonOnStart()
         events.onNext(Event.START_RECORD)
     }
 
-    private fun handleStopRecording() {
+    fun handleStopRecording() {
         setImageResource(R.drawable.sound_waves_orange_dark)
         val colorStateList = ColorStateList.valueOf(context.getColor(android.R.color.white))
         backgroundTintList = colorStateList
 
-        stopTimer.removeCallbacksAndMessages(null)
         delayedVibrate()
         animateButtonOnStop()
         events.onNext(Event.STOP_RECORD)

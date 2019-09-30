@@ -27,7 +27,8 @@ import org.koin.android.ext.android.inject
 class RecordPlayButtonFragment : Fragment() {
 
     private val viewModel: RecordPlayButtonViewModel by inject<RecordPlayButtonViewModel>()
-    private lateinit var recordButton: RecordPlayButton
+    private lateinit var recordPlayButton: RecordPlayButton
+    private val stopTimer = Handler()
 
     companion object {
         public val TAG = RecordPlayButtonFragment::class.java.simpleName
@@ -44,8 +45,8 @@ class RecordPlayButtonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recordButton = view.findViewById(R.id.button_record)
-        recordButton.getButtonEvents()
+        recordPlayButton = view.findViewById(R.id.button_record)
+        recordPlayButton.getButtonEvents()
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
@@ -53,7 +54,7 @@ class RecordPlayButtonFragment : Fragment() {
                         startRecording()
                     }
                     Event.STOP_RECORD -> {
-                        viewModel.stopRecording()
+                        stopRecording()
                     }
                     Event.PLAY -> {
                         viewModel.startPreviewVoizyPlayback()
@@ -65,7 +66,7 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                recordButton.state = RecordPlayButton.State.RECORD
+                recordPlayButton.state = RecordPlayButton.State.RECORD
             }
 
         viewModel.getRecordingEvents()
@@ -73,7 +74,7 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                recordButton.state = RecordPlayButton.State.PLAY
+                recordPlayButton.state = RecordPlayButton.State.PLAY
             }
     }
 
@@ -94,6 +95,7 @@ class RecordPlayButtonFragment : Fragment() {
 
     private fun startRecording() {
         if (hasAudioRecordPermission()) {
+            stopTimer.postDelayed({ stopRecording() }, 15000)
             viewModel.startRecording()
 
             var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
@@ -103,6 +105,12 @@ class RecordPlayButtonFragment : Fragment() {
         } else {
             requestAudioRecordingPermission()
         }
+    }
+
+    private fun stopRecording() {
+        recordPlayButton.handleStopRecording()
+        stopTimer.removeCallbacksAndMessages(null)
+        viewModel.stopRecording()
     }
 
     private fun addRecordingFragment() {
