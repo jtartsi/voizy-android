@@ -48,16 +48,10 @@ class RecordPlayButton : FloatingActionButton {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         handleStartRecording()
-                        setImageResource(R.drawable.sound_waves_white)
-                        val colorStateList = ColorStateList.valueOf(context.getColor(R.color.voizy_orange))
-                        backgroundTintList = colorStateList
                         true
                     }
                     MotionEvent.ACTION_UP -> {
                         handleStopRecording()
-                        setImageResource(R.drawable.sound_waves_orange_dark)
-                        val colorStateList = ColorStateList.valueOf(context.getColor(android.R.color.white))
-                        backgroundTintList = colorStateList
                         true
                     }
                 }
@@ -77,6 +71,10 @@ class RecordPlayButton : FloatingActionButton {
     }
 
     private fun handleStartRecording() {
+        setImageResource(R.drawable.sound_waves_white)
+        val colorStateList = ColorStateList.valueOf(context.getColor(R.color.voizy_orange))
+        backgroundTintList = colorStateList
+
         stopTimer.postDelayed({ handleStopRecording() }, 15500)
         delayedVibrate()
         animateButtonOnStart()
@@ -84,6 +82,10 @@ class RecordPlayButton : FloatingActionButton {
     }
 
     private fun handleStopRecording() {
+        setImageResource(R.drawable.sound_waves_orange_dark)
+        val colorStateList = ColorStateList.valueOf(context.getColor(android.R.color.white))
+        backgroundTintList = colorStateList
+
         stopTimer.removeCallbacksAndMessages(null)
         delayedVibrate()
         animateButtonOnStop()
