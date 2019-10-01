@@ -10,7 +10,6 @@ import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import java.util.Date
 
 class RecordPlayButtonViewModel(
     private val context: Context,
@@ -19,8 +18,6 @@ class RecordPlayButtonViewModel(
     private val voizyRepository: VoizyRepository
 ) : DisposingViewModel() {
 
-    private var recordStartTime: Long = 0L
-
     companion object {
         private val TAG = RecordPlayButtonViewModel::class.java.simpleName
     }
@@ -28,7 +25,6 @@ class RecordPlayButtonViewModel(
     fun startRecording() {
         val completable = Completable.fromAction {
             val filename = "${context.filesDir}/".plus(LocalFileManager.TMP_VOIZY_FILE_NAME)
-            recordStartTime = Date().time
             voizyRecorder.startRecording(filename)
         }.subscribeOn(Schedulers.io())
 
@@ -38,15 +34,12 @@ class RecordPlayButtonViewModel(
         }
     }
 
-    fun stopRecording(): Boolean {
-        val recordingLength = recordStartTime - Date().time
-        recordStartTime = 0
+    fun stopRecording() {
         voizyRecorder.stopRecording()
-        return recordingLength > 1000
     }
 
     fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvent> {
-        return voizyRecorder.recordingEvents()
+        return voizyRecorder.getRecordingEvents()
     }
 
     fun startPreviewVoizyPlayback() {

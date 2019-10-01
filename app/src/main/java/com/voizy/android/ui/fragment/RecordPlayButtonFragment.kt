@@ -63,20 +63,30 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("record-button-state RECORD")
                 recordPlayButton.state = RecordPlayButton.State.RECORD
             }
 
         viewModel.getRecordingEvents()
-            .doOnNext {
-                Timber.d("record-button-state getRecordingEvents $it")
-            }
-            .filter { it == VoizyRecorder.RecordingEvent.STOP }
-            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("record-button-state PLAY")
-                recordPlayButton.state = RecordPlayButton.State.PLAY
+                when (it) {
+                    VoizyRecorder.RecordingEvent.STOP -> {
+                        recordPlayButton.state = RecordPlayButton.State.PLAY
+                    }
+                    VoizyRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME -> {
+                        recordPlayButton.state = RecordPlayButton.State.RECORD
+                        fragmentManager!!.popBackStackImmediate(
+                            RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        )
+                        Snackbar.make(
+                            this.view!!,
+                            R.string.hold_to_record_guide,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
     }
 
@@ -113,14 +123,7 @@ class RecordPlayButtonFragment : Fragment() {
     private fun stopRecording() {
         recordPlayButton.handleStopRecording()
         stopTimer.removeCallbacksAndMessages(null)
-        val recordingOverMinimumTime = viewModel.stopRecording()
-        Timber.d("stopRecording()")
-        if (!recordingOverMinimumTime) {
-            fragmentManager!!.popBackStackImmediate(
-                RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
-            Snackbar.make(this.view!!, R.string.hold_to_record_guide, Snackbar.LENGTH_SHORT).show()
-        }
+        viewModel.stopRecording()
     }
 
     private fun addRecordingFragment() {
