@@ -79,7 +79,7 @@ class RecordingFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    VoizyRecorder.RecordingEvent.FINISHED -> {
+                    VoizyRecorder.RecordingEvent.STOP -> {
                         timerDisposable?.let {
                             it.dispose()
                         }
@@ -90,7 +90,7 @@ class RecordingFragment : BaseFragment() {
                     VoizyRecorder.RecordingEvent.START_FAILED -> {
                         Timber.e("Failed to start recording")
                     }
-                    VoizyRecorder.RecordingEvent.CLOSE_FAILED -> {
+                    VoizyRecorder.RecordingEvent.STOP_FAILED -> {
                         Timber.e("Failed to close recording")
                     }
                 }

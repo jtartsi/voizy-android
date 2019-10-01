@@ -11,7 +11,7 @@ class VoizyRecorder {
     private var mediaRecorder: MediaRecorder? = null
 
     enum class RecordingEvent {
-        START_FAILED, STARTED, FINISHED, CLOSE_FAILED
+        START_FAILED, STARTED, STOP, STOP_FAILED
     }
 
     private val startRecordingQueue: BehaviorSubject<String> = BehaviorSubject.create()
@@ -23,6 +23,7 @@ class VoizyRecorder {
             record(it)
             RecordingEvent.STARTED
         }
+        .doOnNext { Timber.d("record-button-state startRecordingEvents after record()") }
         .onErrorReturn {
             Timber.e(it, "Starting recording failed")
             RecordingEvent.START_FAILED
@@ -32,19 +33,22 @@ class VoizyRecorder {
         .observeOn(Schedulers.io())
         .map {
             finish()
-            RecordingEvent.FINISHED
+            RecordingEvent.STOP
         }
-        .onErrorReturn { RecordingEvent.CLOSE_FAILED }
+        .doOnNext { Timber.d("record-button-state startRecordingEvents after finish()") }
+        .onErrorReturn { RecordingEvent.STOP_FAILED }
 
     fun recordingEvents(): Observable<RecordingEvent> {
         return startRecordingEvents.mergeWith(stopRecordingEvents)
     }
 
     fun startRecording(fileName: String) {
+        Timber.d("record-button-state startRecording()")
         startRecordingQueue.onNext(fileName)
     }
 
     fun stopRecording() {
+        Timber.d("record-button-state stopRecording()")
         stopRecordingQueue.onNext(true)
     }
 

@@ -68,8 +68,10 @@ class RecordPlayButtonFragment : Fragment() {
             }
 
         viewModel.getRecordingEvents()
-            .doOnNext { Timber.d("record-button-state recordingEvents $it") }
-            .filter { it == VoizyRecorder.RecordingEvent.FINISHED }
+            .doOnNext {
+                Timber.d("record-button-state getRecordingEvents $it")
+            }
+            .filter { it == VoizyRecorder.RecordingEvent.STOP }
             .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
@@ -83,15 +85,12 @@ class RecordPlayButtonFragment : Fragment() {
 
         fragmentManager!!.addOnBackStackChangedListener {
             val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
-            Timber.d("record-button-state $topFragment")
             if (topFragment != null) {
                 backstackSubject.onNext(topFragment)
             }
         }
         return backstackSubject
-            .doOnNext { Timber.d("record-button-state before filter $it") }
             .filter { it is BaseFragment }
-            .doOnNext { Timber.d("record-button-state after filter $it") }
             .map { it as BaseFragment }
             .filter { it.getBackstackTag() == MainFragment.TAG }
     }
