@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 class RecordPlayButton : FloatingActionButton {
-    
+
     companion object {
         private const val ANIMATION_DELAY = 200L
     }
