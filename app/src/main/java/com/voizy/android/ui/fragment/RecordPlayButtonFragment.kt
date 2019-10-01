@@ -64,19 +64,23 @@ class RecordPlayButtonFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 recordPlayButton.state = RecordPlayButton.State.RECORD
+                Timber.d("button-state mainFragmentTop() STATE <- RECORD")
             }
 
         viewModel.getRecordingEvents()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext { Timber.d("button-state getRecordings() $it") }
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
                     VoizyRecorder.RecordingEvent.STOP -> {
                         recordPlayButton.state = RecordPlayButton.State.PLAY
+                        Timber.d("button-state getRecordings() STATE <- PLAY")
                     }
                     VoizyRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME -> {
                         recordPlayButton.state = RecordPlayButton.State.RECORD
+                        Timber.d("button-state getRecordings() STATE <- RECORD")
                         fragmentManager!!.popBackStackImmediate(
                             RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
                         )
