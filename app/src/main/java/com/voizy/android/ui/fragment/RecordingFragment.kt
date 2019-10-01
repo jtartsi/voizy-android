@@ -59,7 +59,6 @@ class RecordingFragment : BaseFragment() {
                     et_voizy_tags.getTags()
                 )
                 viewModel.saveVoizy(voizyToSave)
-                // activity!!.showProgressBar(true) // TODO progressbar
                 hideSoftKeyboard(view)
                 fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             } else {
@@ -80,7 +79,7 @@ class RecordingFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    VoizyRecorder.RecordingEvent.FINISHED -> {
+                    VoizyRecorder.RecordingEvent.STOP -> {
                         timerDisposable?.let {
                             it.dispose()
                         }
@@ -91,7 +90,7 @@ class RecordingFragment : BaseFragment() {
                     VoizyRecorder.RecordingEvent.START_FAILED -> {
                         Timber.e("Failed to start recording")
                     }
-                    VoizyRecorder.RecordingEvent.CLOSE_FAILED -> {
+                    VoizyRecorder.RecordingEvent.STOP_FAILED -> {
                         Timber.e("Failed to close recording")
                     }
                 }

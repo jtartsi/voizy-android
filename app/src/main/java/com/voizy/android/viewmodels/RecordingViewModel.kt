@@ -16,7 +16,7 @@ class RecordingViewModel(
     }
 
     fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvent> {
-        return voizyRecorder.recordingEvents()
+        return voizyRecorder.getRecordingEvents()
             .withErrorHandling(TAG, "recordingEvents error")
     }
 

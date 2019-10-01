@@ -39,7 +39,7 @@ class RecordPlayButtonViewModel(
     }
 
     fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvent> {
-        return voizyRecorder.recordingEvents()
+        return voizyRecorder.getRecordingEvents()
     }
 
     fun startPreviewVoizyPlayback() {
