@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
+import com.uber.autodispose.android.lifecycle.autoDisposable
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
@@ -17,6 +18,7 @@ import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -26,17 +28,23 @@ class RecordingFragment : BaseFragment() {
 
     private val viewModel: RecordingViewModel by inject()
     private var timerDisposable: Disposable? = null
+    private val backPressEvent = PublishSubject.create<String>()
 
     companion object {
         public val TAG = RecordingFragment::class.java.simpleName
+        private const val ACCEPT_BACK_THRESHOLD = 3000
     }
 
-    override fun doubleBackPress(): Boolean {
+    override fun doubleBackPressNeeded(): Boolean {
         return true
     }
 
     override fun getBackstackTag(): String {
         return TAG
+    }
+
+    override fun onBackPressed() {
+        backPressEvent.onNext(TAG)
     }
 
     override fun onCreateView(
@@ -73,6 +81,26 @@ class RecordingFragment : BaseFragment() {
         super.onStart()
 
         startTimer()
+
+        backPressEvent
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .timeInterval(TimeUnit.MILLISECONDS)
+            .filter {
+                if (it.time() < ACCEPT_BACK_THRESHOLD) {
+                    true
+                } else {
+                    Snackbar.make(
+                        this.view!!,
+                        resources.getText(R.string.press_back_again_discard_voizy),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    false
+                }
+            }
+            .autoDisposable(this)
+            .subscribe {
+                // TODO analytics send event here
+            }
 
         viewModel.getRecordingEvents()
             .observeOn(AndroidSchedulers.mainThread())

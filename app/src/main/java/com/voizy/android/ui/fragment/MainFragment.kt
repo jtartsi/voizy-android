@@ -30,6 +30,9 @@ class MainFragment :
     VoizyActionListener,
     TextWatcher {
 
+    override fun onBackPressed() {
+    }
+
     private val viewModel: MainFragmentViewModel by inject()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
