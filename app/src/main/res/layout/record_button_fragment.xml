@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
@@ -20,6 +19,6 @@
         app:maxImageSize="45dp"
         app:backgroundTint="@android:color/white"
         android:scaleType="center"
-        android:src="@drawable/sound_waves_orange_dark"/>
+        android:src="@drawable/sound_waves" />
     <!-- TODO launch rights for icon replace icon -->
 </LinearLayout>
