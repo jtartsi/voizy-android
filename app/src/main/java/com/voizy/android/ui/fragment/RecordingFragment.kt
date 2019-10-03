@@ -12,6 +12,7 @@ import com.uber.autodispose.android.lifecycle.autoDisposable
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingViewModel
@@ -20,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.recording_overlay_fragment.*
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -29,6 +31,7 @@ class RecordingFragment : BaseFragment() {
     private val viewModel: RecordingViewModel by inject()
     private var timerDisposable: Disposable? = null
     private val backPressEvent = PublishSubject.create<String>()
+    private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics = get()
 
     companion object {
         public val TAG = RecordingFragment::class.java.simpleName
@@ -97,9 +100,14 @@ class RecordingFragment : BaseFragment() {
                     false
                 }
             }
+            .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(this)
             .subscribe {
-                // TODO analytics send event here
+                voizyFirebaseAnalytics.logRecordingCancel()
+                fragmentManager!!.popBackStackImmediate(
+                    it.value(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
             }
 
         viewModel.getRecordingEvents()
