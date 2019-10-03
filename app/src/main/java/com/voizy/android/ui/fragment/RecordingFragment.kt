@@ -58,8 +58,8 @@ class RecordingFragment : BaseFragment() {
 
             if (!voizyName.isNullOrEmpty()) {
                 val voizyToSave = Voizy(
-                    et_voizy_name.text.toString(),
-                    et_voizy_tags.getTags()
+                    name = et_voizy_name.text.toString(),
+                    tags = et_voizy_tags.getTags()
                 )
                 viewModel.saveVoizy(voizyToSave)
                 voizyFirebaseAnalytics.logRecordingSave()

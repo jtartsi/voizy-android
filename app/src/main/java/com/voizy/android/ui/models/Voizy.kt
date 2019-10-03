@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 
 data class Voizy(
+    val id: String = "",
     val name: String = "",
     val tags: List<String> = emptyList(),
     val filePath: String = "",

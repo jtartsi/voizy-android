@@ -2,6 +2,7 @@ package com.voizy.android.viewmodels
 
 import android.content.Context
 import com.voizy.android.audio.VoizyPlayer
+import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.models.Voizy
@@ -15,7 +16,8 @@ import java.util.concurrent.TimeUnit
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
-    private val voizyPlayer: VoizyPlayer
+    private val voizyPlayer: VoizyPlayer,
+    private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics
 ) : DisposingViewModel() {
 
     companion object {
@@ -52,15 +54,16 @@ class MainFragmentViewModel(
     }
 
     fun playVoizy(voizy: Voizy): Observable<Int> {
+        voizyFirebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
         return voizyRepository.getFileUrl(voizy.filePath)
             .map { voizyPlayer.playRemote(it) }
             .subscribeOn(Schedulers.io())
-            .withErrorHandling(TAG, "Failed to playVoizy Voizy")
+            .withErrorHandling(TAG, "Failed to play Voizy ${voizy.name}")
     }
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<File> {
         val destinationFile = File(LocalFileManager(context).getTempFilePath())
-        return voizyRepository.downloadVoizy(voizy.filePath!!, destinationFile)
+        return voizyRepository.downloadVoizy(voizy.filePath, destinationFile)
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to download Voizy")
     }
