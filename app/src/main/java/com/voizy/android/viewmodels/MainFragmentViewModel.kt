@@ -29,6 +29,7 @@ class MainFragmentViewModel(
     private val searchVoizysRequest = PublishSubject.create<String>()
     private val voizysStream = searchVoizysRequest
         .debounce(500, TimeUnit.MILLISECONDS)
+        .doOnNext { voizyFirebaseAnalytics.logSearch(it) }
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.searchVoizys(it) }
         .withErrorHandling(TAG, "Searching voizys failed")
