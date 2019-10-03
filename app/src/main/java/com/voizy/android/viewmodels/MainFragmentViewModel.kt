@@ -52,7 +52,7 @@ class MainFragmentViewModel(
     }
 
     fun playVoizy(voizy: Voizy): Observable<Int> {
-        return voizyRepository.getFileUrl(voizy.filePath!!)
+        return voizyRepository.getFileUrl(voizy.filePath)
             .map { voizyPlayer.playRemote(it) }
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to playVoizy Voizy")

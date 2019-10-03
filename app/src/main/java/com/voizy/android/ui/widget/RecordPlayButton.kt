@@ -27,7 +27,7 @@ class RecordPlayButton : FloatingActionButton {
         set(value) {
             field = value
             if (value == State.RECORD) {
-                setImageResource(R.drawable.sound_waves_orange_dark)
+                setImageResource(R.drawable.sound_waves)
             } else {
                 setImageResource(R.drawable.play_orange_dark)
             }
@@ -70,7 +70,7 @@ class RecordPlayButton : FloatingActionButton {
     }
 
     fun handleStartRecording() {
-        setImageResource(R.drawable.sound_waves_white)
+        setImageResource(R.drawable.sound_waves)
         val colorStateList = ColorStateList.valueOf(context.getColor(R.color.voizy_orange))
         backgroundTintList = colorStateList
 
@@ -80,7 +80,7 @@ class RecordPlayButton : FloatingActionButton {
     }
 
     fun handleStopRecording() {
-        setImageResource(R.drawable.sound_waves_orange_dark)
+        setImageResource(R.drawable.sound_waves)
         val colorStateList = ColorStateList.valueOf(context.getColor(android.R.color.white))
         backgroundTintList = colorStateList
 
