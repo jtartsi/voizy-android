@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
@@ -22,7 +23,7 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class RecordingFragment : BaseFragment() {
+class RecordingFragment(private val firebaseAnalytics: FirebaseAnalytics) : BaseFragment() {
 
     private val viewModel: RecordingViewModel by inject<RecordingViewModel>()
     private var timerDisposable: Disposable? = null
