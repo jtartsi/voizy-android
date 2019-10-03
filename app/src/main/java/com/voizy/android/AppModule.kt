@@ -1,5 +1,6 @@
 package com.voizy.android
 
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.voizy.android.audio.VoizyPlayer
@@ -24,6 +25,7 @@ val repositoryModule = module {
     single { VoizyFirebaseStorage(get()) }
     single { FirebaseFirestore.getInstance() }
     single { FirebaseStorage.getInstance().reference }
+    single { FirebaseAnalytics.getInstance(get()) }
     single { VoizysCollection(get()) }
     single { VoizySearchRequestCollection(get()) }
     single { VoizyRepository(get(), get(), get(), get()) }
