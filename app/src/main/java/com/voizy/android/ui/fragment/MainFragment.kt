@@ -1,5 +1,6 @@
 package com.voizy.android.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -103,6 +104,13 @@ class MainFragment :
         setObservables()
 
         viewModel.searchVoizys()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Timber.d("onActivityResult requestCode $requestCode")
+        Timber.d("onActivityResult resultCode $resultCode")
+        Timber.d("onActivityResult data $data")
     }
 
     private fun setObservables() {

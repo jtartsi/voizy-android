@@ -10,7 +10,6 @@ class VoizyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        
         FirebaseAnalytics.getInstance(this)
             .logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
 
