@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
@@ -25,6 +26,7 @@ class MainFragmentViewModel(
 
     private val searchVoizysRequest = PublishSubject.create<String>()
     private val voizysStream = searchVoizysRequest
+        .debounce(500, TimeUnit.MILLISECONDS)
         .observeOn(Schedulers.io())
         .flatMap { voizyRepository.searchVoizys(it) }
         .withErrorHandling(TAG, "Searching voizys failed")
