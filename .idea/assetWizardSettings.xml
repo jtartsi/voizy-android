@@ -132,7 +132,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="foregroundAssetType" value="CLIP_ART" />
+                                      <entry key="backgroundColor" value="ff8800" />
+                                      <entry key="foregroundAssetType" value="TEXT" />
                                       <entry key="outputName" value="voizy_launcher" />
                                     </map>
                                   </option>
@@ -192,11 +193,6 @@
                                 </PersistentState>
                               </value>
                             </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>
