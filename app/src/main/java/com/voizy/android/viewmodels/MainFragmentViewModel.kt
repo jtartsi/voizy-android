@@ -62,9 +62,11 @@ class MainFragmentViewModel(
             .withErrorHandling(TAG, "Failed to play Voizy ${voizy.name}")
     }
 
-    fun downloadVoizy(context: Context, voizy: Voizy): Observable<File> {
+    fun downloadVoizy(context: Context, voizy: Voizy): Observable<Pair<Voizy, File>> {
         val destinationFile = File(LocalFileManager(context).getTempFilePath())
-        return voizyRepository.downloadVoizy(voizy.filePath, destinationFile)
+        return voizyRepository
+            .downloadVoizy(voizy.filePath, destinationFile)
+            .map { Pair(voizy, it) }
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to download Voizy")
     }

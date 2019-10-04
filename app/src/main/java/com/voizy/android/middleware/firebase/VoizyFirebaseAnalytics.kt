@@ -9,6 +9,7 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
         private const val RECORDING_SAVE = "recording_save"
         private const val RECORDING_CANCEL = "recording_cancel"
         private const val PLAY_VOIZY = "play_voizy"
+        private const val SHARE_TO = "choose_share_location"
     }
 
     fun logAppOpen() {
@@ -27,21 +28,26 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
         val params = Bundle()
         params.putString(FirebaseAnalytics.Param.ITEM_ID, id)
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
-        firebaseAnalytics.logEvent(PLAY_VOIZY, Bundle())
+        firebaseAnalytics.logEvent(PLAY_VOIZY, params)
     }
 
-    fun logShareVoizyEvent(id: String, name: String, method: String) {
+    fun logShareVoizyEvent(id: String, name: String) {
         val params = Bundle()
         params.putString(FirebaseAnalytics.Param.ITEM_ID, id)
         params.putString(FirebaseAnalytics.Param.CONTENT_TYPE, id)
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, params)
+    }
+
+    fun logChooseShareApplication(method: String) {
+        val params = Bundle()
         params.putString(FirebaseAnalytics.Param.METHOD, method)
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, Bundle())
+        firebaseAnalytics.logEvent(SHARE_TO, params)
     }
 
     fun logSearch(searchTerm: String) {
         val params = Bundle()
         params.putString(FirebaseAnalytics.Param.SEARCH_TERM, searchTerm)
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, Bundle())
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, params)
     }
 }

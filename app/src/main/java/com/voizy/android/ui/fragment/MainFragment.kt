@@ -1,6 +1,5 @@
 package com.voizy.android.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -109,19 +108,12 @@ class MainFragment :
         viewModel.searchVoizys()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Timber.d("onActivityResult requestCode $requestCode")
-        Timber.d("onActivityResult resultCode $resultCode")
-        Timber.d("onActivityResult data $data")
-    }
-
     private fun setObservables() {
         shareRequests
             .switchMap { viewModel.downloadVoizy(context!!, it) }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { ShareUtils.shareVoizy(context!!, it) }
+            .subscribe { ShareUtils.shareVoizyIntent(it.first, context!!, it.second) }
 
         viewModel.getSaveVoizyEvents()
             .observeOn(AndroidSchedulers.mainThread())
@@ -132,7 +124,6 @@ class MainFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("search-voizys RESULT")
                 voizyListAdapter.clear()
                 voizyListAdapter.addAll(it)
             }
