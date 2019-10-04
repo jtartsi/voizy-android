@@ -29,6 +29,9 @@ class MainFragment :
     VoizyActionListener,
     TextWatcher {
 
+    override fun onBackPressed() {
+    }
+
     private val viewModel: MainFragmentViewModel by inject()
     private lateinit var voizyList: RecyclerView
     private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
@@ -110,7 +113,7 @@ class MainFragment :
             .switchMap { viewModel.downloadVoizy(context!!, it) }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { ShareUtils.shareVoizy(context!!, it) }
+            .subscribe { ShareUtils.shareVoizy(it.first, context!!, it.second) }
 
         viewModel.getSaveVoizyEvents()
             .observeOn(AndroidSchedulers.mainThread())
@@ -121,7 +124,6 @@ class MainFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("search-voizys RESULT")
                 voizyListAdapter.clear()
                 voizyListAdapter.addAll(it)
             }

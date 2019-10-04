@@ -6,7 +6,7 @@ import com.voizy.android.ui.models.Voizy
 data class FirestoreVoizySearchResult(val hits: Hits = Hits()) {
 
     fun getVoizys(): List<Voizy> {
-        return this.hits.hits.map { it.source.toVoizy() }
+        return this.hits.hits.map { it.toVoizy() }
     }
 }
 
@@ -27,12 +27,12 @@ data class FirestoreElasticVoizy(
     @get:PropertyName("_source")
     @set:PropertyName("_source")
     var source: Source = Source()
-)
+) {
+    fun toVoizy() = Voizy(this.id, this.source.name, this.source.tags, this.source.filePath)
+}
 
 data class Source(
     val name: String = "",
     val tags: List<String> = emptyList(),
     val filePath: String = ""
-) {
-    fun toVoizy() = Voizy(this.name, this.tags, this.filePath)
-}
+)
