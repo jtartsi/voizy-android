@@ -19,26 +19,10 @@ class ShareUtils {
 
         private const val AUTHORITY = "com.voizy.android.fileprovider"
 
-        fun shareVoizy(context: Context, file: File) {
+        fun shareVoizy(voizy: Voizy, context: Context, file: File) {
             val fileUri: Uri? = getFileUri(context, file)
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                this.putExtra(Intent.EXTRA_STREAM, fileUri)
-                type = "audio/*"
-            }
-            context.startActivity(
-                Intent.createChooser(
-                    sendIntent,
-                    context.getString(R.string.share_voizy)
-                )
-            )
-        }
-
-        fun shareVoizyIntent(voizy: Voizy, context: Context, file: File) {
-            val fileUri: Uri? = getFileUri(context, file)
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TITLE, "Title field")
                 putExtra(Intent.EXTRA_STREAM, fileUri)
                 type = "audio/*"
             }

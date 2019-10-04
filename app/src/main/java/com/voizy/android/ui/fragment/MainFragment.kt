@@ -113,7 +113,7 @@ class MainFragment :
             .switchMap { viewModel.downloadVoizy(context!!, it) }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { ShareUtils.shareVoizyIntent(it.first, context!!, it.second) }
+            .subscribe { ShareUtils.shareVoizy(it.first, context!!, it.second) }
 
         viewModel.getSaveVoizyEvents()
             .observeOn(AndroidSchedulers.mainThread())
