@@ -14,11 +14,13 @@ import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import com.voizy.android.viewmodels.RecordPlayButtonViewModel
 import com.voizy.android.viewmodels.RecordingViewModel
+import io.reactivex.disposables.CompositeDisposable
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appLogicsModule = module {
     factory { VoizyPlayer() }
+    factory { CompositeDisposable() }
     single { VoizyRecorder() }
 }
 
@@ -30,12 +32,12 @@ val repositoryModule = module {
     single { VoizyFirebaseAnalytics(get()) }
     single { VoizysCollection(get()) }
     single { VoizySearchRequestCollection(get()) }
-    single { VoizyRepository(get(), get(), get(), get()) }
+    single { VoizyRepository(get(), get(), get(), get(), get()) }
     single { LocalFileManager(get()) }
 }
 
 val viewModels = module {
-    viewModel { MainFragmentViewModel(get(), get(), get()) }
+    viewModel { MainFragmentViewModel(get(), get(), get(), get()) }
     viewModel { RecordingViewModel(get(), get(), get()) }
     viewModel { RecordPlayButtonViewModel(get(), get(), get(), get()) }
 }
