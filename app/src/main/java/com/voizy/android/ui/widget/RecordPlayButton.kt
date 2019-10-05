@@ -10,6 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.voizy.android.R
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 
 class RecordPlayButton : FloatingActionButton {
 
@@ -25,6 +26,7 @@ class RecordPlayButton : FloatingActionButton {
 
     var state: State = State.RECORD
         set(value) {
+            Timber.d("setRecordPlayButton state $value")
             field = value
             if (value == State.RECORD) {
                 setImageResource(R.drawable.sound_waves)

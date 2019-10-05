@@ -29,6 +29,10 @@ class MainFragment :
     VoizyActionListener,
     TextWatcher {
 
+    override fun getFragmentTag(): String {
+        return TAG
+    }
+
     override fun onBackPressed() {
     }
 
@@ -39,10 +43,6 @@ class MainFragment :
 
     companion object {
         public val TAG = MainFragment::class.java.simpleName
-    }
-
-    override fun getBackstackTag(): String {
-        return TAG
     }
 
     override fun afterTextChanged(s: Editable?) {
