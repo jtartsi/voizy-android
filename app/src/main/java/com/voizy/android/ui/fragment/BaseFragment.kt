@@ -8,7 +8,7 @@ abstract class BaseFragment : Fragment() {
         return false
     }
 
-    abstract fun getBackstackTag(): String
+    abstract fun getFragmentTag(): String
 
     abstract fun onBackPressed()
 }

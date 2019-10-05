@@ -17,12 +17,12 @@ import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.ui.widget.RecordPlayButton
 import com.voizy.android.ui.widget.RecordPlayButton.Event
 import com.voizy.android.utils.getScopeProvider
+import com.voizy.android.utils.toPair
 import com.voizy.android.viewmodels.RecordPlayButtonViewModel
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -59,54 +59,83 @@ class RecordPlayButtonFragment : Fragment() {
                 }
             }
 
-        mainFragmentOnTop()
-            .observeOn(Schedulers.io())
+        fragmentChangeListener()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                recordPlayButton.state = RecordPlayButton.State.RECORD
-                Timber.d("button-state mainFragmentTop() STATE <- RECORD")
+                if (it.getFragmentTag() == MainFragment.TAG) {
+                    Timber.d("frag-rec-event set RECORD")
+                    recordPlayButton.state = RecordPlayButton.State.RECORD
+                }
             }
 
         viewModel.getRecordingEvents()
+            .withLatestFrom(fragmentChangeListener(), toPair())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { Timber.d("button-state getRecordings() $it") }
             .autoDisposable(getScopeProvider())
             .subscribe {
-                when (it) {
-                    VoizyRecorder.RecordingEvent.STOP -> {
-                        recordPlayButton.state = RecordPlayButton.State.PLAY
-                        Timber.d("button-state getRecordings() STATE <- PLAY")
-                    }
-                    VoizyRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME -> {
-                        recordPlayButton.state = RecordPlayButton.State.RECORD
-                        Timber.d("button-state getRecordings() STATE <- RECORD")
-                        fragmentManager!!.popBackStackImmediate(
-                            RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                        )
-                        Snackbar.make(
-                            this.view!!,
-                            R.string.hold_to_record_guide,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
+                if (it.first == VoizyRecorder.RecordingEvent.STOP &&
+                    it.second.getFragmentTag() == RecordingFragment.TAG
+                ) {
+                    Timber.d("frag-rec-event set PLAY")
+                    recordPlayButton.state = RecordPlayButton.State.PLAY
+                } else if (it.first == VoizyRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME) {
+                    Timber.d("frag-rec-event under minimum time")
+                    fragmentManager!!.popBackStackImmediate(
+                        RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    )
+                    Snackbar.make(
+                        this.view!!,
+                        R.string.hold_to_record_guide,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
+
+        // Observable.combineLatest(
+        //     fragmentChangeListener(),
+        //     viewModel.getRecordingEvents(),
+        //     com.voizy.android.utils.toPair()
+        // )
+        //     .subscribeOn(Schedulers.io())
+        //     .observeOn(AndroidSchedulers.mainThread())
+        //     .autoDisposable(getScopeProvider())
+        //     .subscribe {
+        //         Timber.d("frag-rec-event frag: ${it.first.getFragmentTag()}, event: ${it.second.name}")
+        //         if (it.first.getFragmentTag() == MainFragment.TAG) {
+        //             Timber.d("frag-rec-event set RECORD")
+        //             recordPlayButton.state = RecordPlayButton.State.RECORD
+        //         } else if (it.first.getFragmentTag() == RecordingFragment.TAG &&
+        //             it.second == VoizyRecorder.RecordingEvent.STOP
+        //         ) {
+        //             Timber.d("frag-rec-event set PLAY")
+        //             recordPlayButton.state = RecordPlayButton.State.PLAY
+        //         } else if (it.second == VoizyRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME) {
+        //             Timber.d("frag-rec-event under minimum time")
+        //             fragmentManager!!.popBackStackImmediate(
+        //                 RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        //             )
+        //             Snackbar.make(
+        //                 this.view!!,
+        //                 R.string.hold_to_record_guide,
+        //                 Snackbar.LENGTH_SHORT
+        //             ).show()
+        //         }
+        //     }
     }
 
-    private fun mainFragmentOnTop(): Observable<BaseFragment> {
-        val backstackSubject = PublishSubject.create<Fragment>()
-
-        fragmentManager!!.addOnBackStackChangedListener {
-            val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
-            if (topFragment != null) {
-                backstackSubject.onNext(topFragment)
+    private fun fragmentChangeListener(): Observable<BaseFragment> {
+        return Observable.create { emitter ->
+            fragmentManager!!.addOnBackStackChangedListener {
+                val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
+                Timber.d("frag-rec-event topFragment $topFragment")
+                if (topFragment != null && topFragment is BaseFragment) {
+                    emitter.onNext(topFragment)
+                }
             }
         }
-        return backstackSubject
-            .filter { it is BaseFragment }
-            .map { it as BaseFragment }
-            .filter { it.getBackstackTag() == MainFragment.TAG }
     }
 
     private fun startRecording() {

@@ -42,7 +42,7 @@ class RecordingFragment : BaseFragment() {
         return true
     }
 
-    override fun getBackstackTag(): String {
+    override fun getFragmentTag(): String {
         return TAG
     }
 
