@@ -6,5 +6,6 @@ import io.reactivex.Observable
 
 data class Listing<T>(
     val pagedListObservable: Observable<PagedList<T>>,
-    val networkSate: Observable<NetworkState>
+    val networkSate: Observable<NetworkState>,
+    val initialLoading: Observable<NetworkState>
 )

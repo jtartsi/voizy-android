@@ -25,13 +25,11 @@ class VoizyRepository(
     companion object {
 
         private val TAG = VoizyRepository::class.java.simpleName
-
-        private const val INITIAL_PAGE_SIZE: Int = 10
-        private val PAGE_SIZE: Int = 2
+        private val PAGE_SIZE: Int = 30
 
         private val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
-            .setInitialLoadSizeHint(INITIAL_PAGE_SIZE)
+            .setInitialLoadSizeHint(PAGE_SIZE)
             .setPageSize(PAGE_SIZE)
             .build()
     }
@@ -68,10 +66,13 @@ class VoizyRepository(
             .setNotifyScheduler(AndroidSchedulers.mainThread())
             .buildObservable()
 
-        val networkStateObservable = sourceFactory
+        val networkState = sourceFactory
             .dataSource.flatMap { it.networkState }
 
-        return Listing(voizysPagedList, networkStateObservable)
+        val initialLoading = sourceFactory
+            .dataSource.flatMap { it.initialLoading }
+
+        return Listing(voizysPagedList, networkState, initialLoading)
     }
 
     fun getFileUrl(firestorePath: String): Observable<String> {

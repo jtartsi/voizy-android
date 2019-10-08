@@ -10,7 +10,7 @@ data class FirestoreVoizySearchResult(
 data class ResultsInfo(
     val itemsCount: Long = 0,
     val totalCount: Long = 0,
-    val pageSize: Long = 0,
-    val page: Long = 0,
+    val size: Long = 0,
+    val from: Long = 0,
     val hasMore: Boolean = false
 )

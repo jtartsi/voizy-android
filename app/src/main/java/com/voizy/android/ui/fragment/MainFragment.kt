@@ -15,6 +15,7 @@ import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
 import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.ui.models.Voizy
+import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
@@ -131,7 +132,13 @@ class MainFragment :
             .autoDisposable(getScopeProvider())
             .subscribe { voizyAdapter.submitList(it) }
 
-        viewModel.init
+        viewModel.initialLoading
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                initial_loader.visibility =
+                    if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
+            }
 
         viewModel.networkState
             .observeOn(AndroidSchedulers.mainThread())

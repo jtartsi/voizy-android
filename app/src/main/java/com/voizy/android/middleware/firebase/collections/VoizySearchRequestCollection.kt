@@ -19,7 +19,7 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
 
     fun voizys(
         searchKeyword: String,
-        page: Int,
+        from: Int,
         pageSize: Int
     ): Observable<FirestoreVoizySearchResult> {
         return firestore
@@ -27,7 +27,7 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
             .add(
                 FirestoreVoizySearchRequest(
                     searchKeyword = searchKeyword,
-                    page = page,
+                    from = from,
                     size = pageSize
                 )
             )

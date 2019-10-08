@@ -14,7 +14,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -42,6 +41,8 @@ class MainFragmentViewModel(
         .flatMap { it.pagedListObservable }
     val networkState: Observable<NetworkState> = voizyResults
         .flatMap { it.networkSate }
+    val initialLoading: Observable<NetworkState> = voizyResults
+        .flatMap { it.initialLoading }
 
     override fun onCleared() {
         super.onCleared()
@@ -53,10 +54,6 @@ class MainFragmentViewModel(
             .withErrorHandling(TAG, "save voizy events error")
             .subscribe { saveVoizyEventsBehaviorSubject.onNext(it) }
             .autoDispose()
-
-        networkState.subscribe {
-            Timber.d("pagination networkstate changed $it")
-        }
     }
 
     fun loadVoizys(searchParam: String = "") {

@@ -36,10 +36,14 @@ class VoizyDataSource(
         ).subscribe(
             {
                 Timber.d(
-                    "pagination loadInitial result.page ${it.resultsInfo.page}, itemsCount ${it.resultsInfo.itemsCount}" +
+                    "pagination loadInitial result.from ${it.resultsInfo.from}, itemsCount ${it.resultsInfo.itemsCount}" +
                         ", hasMore ${it.resultsInfo.hasMore}, totalCount ${it.resultsInfo.totalCount}"
                 )
-                val nextKey = if (it.resultsInfo.hasMore) 1 else null
+                val nextKey = if (it.resultsInfo.hasMore) {
+                    params.requestedLoadSize
+                } else {
+                    null
+                }
                 callback.onResult(it.items, null, nextKey)
                 initialLoading.onNext(NetworkState.LOADED)
                 networkState.onNext(NetworkState.LOADED)
@@ -56,7 +60,7 @@ class VoizyDataSource(
         params: LoadParams<Int>,
         callback: LoadCallback<Int, Voizy>
     ) {
-        Timber.d("pagination loadAfter page ${params.key}, count ${params.requestedLoadSize}")
+        Timber.d("pagination loadAfter requested from ${params.key}, pageSize ${params.requestedLoadSize}")
         Timber.i("Loading page ${params.key}, count ${params.requestedLoadSize}")
         networkState.onNext(NetworkState.LOADING)
 
@@ -67,12 +71,16 @@ class VoizyDataSource(
         ).subscribe(
             {
                 Timber.d(
-                    "pagination loadAfter result.page ${it.resultsInfo.page}, itemsCount ${it.resultsInfo.itemsCount}" +
+                    "pagination loadAfter result.from ${it.resultsInfo.from}, itemsCount ${it.resultsInfo.itemsCount}" +
                         ", hasMore ${it.resultsInfo.hasMore}, totalCount ${it.resultsInfo.totalCount}"
                 )
 
-                Timber.i("pagination loadAfter result.page ${it.resultsInfo.page}")
-                val nextKey = if (it.resultsInfo.hasMore) (params.key + 1) else null
+                Timber.i("pagination loadAfter result.from ${it.resultsInfo.from}")
+                val nextKey = if (it.resultsInfo.hasMore) {
+                    (params.key + params.requestedLoadSize)
+                } else {
+                    null
+                }
                 callback.onResult(it.items, nextKey)
                 networkState.onNext(NetworkState.LOADED)
             },
