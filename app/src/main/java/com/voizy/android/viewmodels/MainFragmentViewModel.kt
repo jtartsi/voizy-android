@@ -14,13 +14,14 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: VoizyPlayer,
-    private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics,
+    private val firebaseAnalytics: VoizyFirebaseAnalytics,
     private val compositeDisposable: CompositeDisposable
 ) : DisposingViewModel() {
 
@@ -33,7 +34,11 @@ class MainFragmentViewModel(
     private val searchKeyword = PublishSubject.create<String>()
 
     private val voizyResults = searchKeyword
+        .doOnNext { Timber.d("search before debounce") }
         .debounce(500, TimeUnit.MILLISECONDS)
+        .doOnNext { Timber.d("search before debounce") }
+        .doOnNext { firebaseAnalytics.logSearch(it) }
+        .doOnNext { Timber.d("search after analytics") }
         .map { voizyRepository.voizys(it) }
         .share()
 
@@ -66,7 +71,7 @@ class MainFragmentViewModel(
     }
 
     fun playVoizy(voizy: Voizy): Observable<Int> {
-        voizyFirebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+        firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
         return voizyRepository.getFileUrl(voizy.filePath)
             .map { voizyPlayer.playRemote(it) }
             .subscribeOn(Schedulers.io())
