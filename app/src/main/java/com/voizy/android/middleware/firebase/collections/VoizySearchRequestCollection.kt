@@ -12,8 +12,7 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
 
     companion object {
         private val TAG = VoizySearchRequestCollection::class.java.simpleName
-        // const val VOIZYS_SEARCH_COLLECTION = "voizySearchRequests"
-        const val VOIZYS_SEARCH_COLLECTION = "voizySearchRequestsv2"
+        const val VOIZYS_SEARCH_COLLECTION = "voizySearchRequests"
         const val RESULT = "result"
     }
 
