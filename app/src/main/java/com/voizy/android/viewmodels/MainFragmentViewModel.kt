@@ -14,7 +14,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -34,11 +33,8 @@ class MainFragmentViewModel(
     private val searchKeyword = PublishSubject.create<String>()
 
     private val voizyResults = searchKeyword
-        .doOnNext { Timber.d("search before debounce") }
         .debounce(500, TimeUnit.MILLISECONDS)
-        .doOnNext { Timber.d("search before debounce") }
         .doOnNext { firebaseAnalytics.logSearch(it) }
-        .doOnNext { Timber.d("search after analytics") }
         .map { voizyRepository.voizys(it) }
         .share()
 
