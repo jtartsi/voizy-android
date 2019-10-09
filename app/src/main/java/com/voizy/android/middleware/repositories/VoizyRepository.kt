@@ -25,11 +25,12 @@ class VoizyRepository(
     companion object {
 
         private val TAG = VoizyRepository::class.java.simpleName
-        private val PAGE_SIZE: Int = 30
+        private val PAGE_SIZE: Int = 25
+        private val INITIAL_LOADING = PAGE_SIZE * 2
 
         private val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
-            .setInitialLoadSizeHint(PAGE_SIZE)
+            .setInitialLoadSizeHint(INITIAL_LOADING)
             .setPageSize(PAGE_SIZE)
             .build()
     }
