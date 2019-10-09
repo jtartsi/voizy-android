@@ -1,13 +1,16 @@
 package com.voizy.android.viewmodels
 
 import android.content.Context
+import androidx.paging.PagedList
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.models.Voizy
+import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -17,7 +20,8 @@ import java.util.concurrent.TimeUnit
 class MainFragmentViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: VoizyPlayer,
-    private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics
+    private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics,
+    private val compositeDisposable: CompositeDisposable
 ) : DisposingViewModel() {
 
     companion object {
@@ -26,13 +30,24 @@ class MainFragmentViewModel(
 
     private val saveVoizyEventsBehaviorSubject = BehaviorSubject.create<Pair<Boolean, Voizy?>>()
 
-    private val searchVoizysRequest = PublishSubject.create<String>()
-    private val voizysStream = searchVoizysRequest
+    private val searchKeyword = PublishSubject.create<String>()
+
+    private val voizyResults = searchKeyword
         .debounce(500, TimeUnit.MILLISECONDS)
-        .doOnNext { voizyFirebaseAnalytics.logSearch(it) }
-        .observeOn(Schedulers.io())
-        .flatMap { voizyRepository.searchVoizys(it) }
-        .withErrorHandling(TAG, "Searching voizys failed")
+        .map { voizyRepository.voizys(it) }
+        .share()
+
+    val voizys: Observable<PagedList<Voizy>> = voizyResults
+        .flatMap { it.pagedListObservable }
+    val networkState: Observable<NetworkState> = voizyResults
+        .flatMap { it.networkSate }
+    val initialLoading: Observable<NetworkState> = voizyResults
+        .flatMap { it.initialLoading }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 
     init {
         voizyRepository.getSaveVoizyEvents()
@@ -41,17 +56,13 @@ class MainFragmentViewModel(
             .autoDispose()
     }
 
+    fun loadVoizys(searchParam: String = "") {
+        searchKeyword.onNext(searchParam)
+    }
+
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return saveVoizyEventsBehaviorSubject
             .withErrorHandling(TAG, "save voizy events error")
-    }
-
-    fun getVoizyStream(): Observable<List<Voizy>> {
-        return voizysStream.map { it }
-    }
-
-    fun searchVoizys(searchKeyword: String = "") {
-        searchVoizysRequest.onNext(searchKeyword)
     }
 
     fun playVoizy(voizy: Voizy): Observable<Int> {

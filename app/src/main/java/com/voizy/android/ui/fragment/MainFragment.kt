@@ -6,21 +6,23 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
-import com.voizy.android.ui.adapter.VoizyRecyclerViewAdapter
+import com.voizy.android.ui.adapter.VoizyListAdapter
+import com.voizy.android.ui.adapter.VoizyViewHolder
 import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.ui.models.Voizy
+import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -37,12 +39,12 @@ class MainFragment :
     }
 
     private val viewModel: MainFragmentViewModel by inject()
-    private lateinit var voizyList: RecyclerView
-    private lateinit var voizyListAdapter: VoizyRecyclerViewAdapter
+    private lateinit var voizyRecyclerView: RecyclerView
+    private lateinit var voizyAdapter: VoizyListAdapter
     private val shareRequests = PublishSubject.create<Voizy>()
 
     companion object {
-        public val TAG = MainFragment::class.java.simpleName
+        val TAG = MainFragment::class.java.simpleName
     }
 
     override fun afterTextChanged(s: Editable?) {
@@ -52,7 +54,9 @@ class MainFragment :
     }
 
     override fun onTextChanged(searchText: CharSequence?, start: Int, before: Int, count: Int) {
-        viewModel.searchVoizys(searchText.toString())
+        voizyRecyclerView.scrollToPosition(0)
+        voizyAdapter.submitList(null)
+        viewModel.loadVoizys(searchText.toString())
     }
 
     override fun shareVoizy(voizy: Voizy) {
@@ -64,11 +68,7 @@ class MainFragment :
         ).show()
     }
 
-    override fun playVoizy(
-        viewHolder: VoizyRecyclerViewAdapter.VoizyViewHolder,
-        position: Int,
-        voizy: Voizy
-    ) {
+    override fun playVoizy(viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) {
         viewModel.playVoizy(voizy)
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -92,20 +92,27 @@ class MainFragment :
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated()")
 
-        val editTextSearch = view.findViewById<EditText>(R.id.et_search)
-        editTextSearch.addTextChangedListener(this)
+        et_search.addTextChangedListener(this)
 
-        voizyListAdapter = VoizyRecyclerViewAdapter(this)
-        voizyList = view.findViewById<RecyclerView>(R.id.rv_voizy_list).apply {
-            setHasFixedSize(true)
-            // use a linear layout manager
-            layoutManager = LinearLayoutManager(context!!)
-            adapter = voizyListAdapter
-        }
+        voizyRecyclerView = view.findViewById(R.id.rv_voizy_list)
+
+        initListAdapter()
 
         setObservables()
 
-        viewModel.searchVoizys()
+        viewModel.loadVoizys()
+    }
+
+    private fun initListAdapter() {
+
+        voizyAdapter = VoizyListAdapter(this)
+
+        voizyRecyclerView.layoutManager = LinearLayoutManager(
+            this.context!!,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        voizyRecyclerView.adapter = voizyAdapter
     }
 
     private fun setObservables() {
@@ -120,13 +127,23 @@ class MainFragment :
             .autoDisposable(getScopeProvider())
             .subscribe(saveEventObserver())
 
-        viewModel.getVoizyStream()
+        viewModel.voizys
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { voizyAdapter.submitList(it) }
+
+        viewModel.initialLoading
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                voizyListAdapter.clear()
-                voizyListAdapter.addAll(it)
+                initial_loader.visibility =
+                    if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             }
+
+        viewModel.networkState
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { voizyAdapter.networkState = it }
     }
 
     private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
