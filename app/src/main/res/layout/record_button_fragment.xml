@@ -20,5 +20,4 @@
         app:backgroundTint="@android:color/white"
         android:scaleType="center"
         android:src="@drawable/sound_waves" />
-    <!-- TODO launch rights for icon replace icon -->
 </LinearLayout>
