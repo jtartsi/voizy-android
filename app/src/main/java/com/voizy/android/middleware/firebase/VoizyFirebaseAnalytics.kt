@@ -34,7 +34,7 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
     fun logShareVoizyEvent(id: String, name: String) {
         val params = Bundle()
         params.putString(FirebaseAnalytics.Param.ITEM_ID, id)
-        params.putString(FirebaseAnalytics.Param.CONTENT_TYPE, id)
+        params.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "voizy")
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, params)
     }
