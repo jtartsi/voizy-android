@@ -2,7 +2,7 @@ package com.voizy.android.middleware.repositories
 
 import androidx.paging.PageKeyedDataSource
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
-import com.voizy.android.ui.models.Voizy
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.NetworkState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject

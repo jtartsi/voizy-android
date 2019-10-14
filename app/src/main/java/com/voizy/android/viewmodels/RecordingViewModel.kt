@@ -2,8 +2,8 @@ package com.voizy.android.viewmodels
 
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.repositories.VoizyRepository
-import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 

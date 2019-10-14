@@ -13,7 +13,7 @@ import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
-import com.voizy.android.ui.models.Voizy
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
