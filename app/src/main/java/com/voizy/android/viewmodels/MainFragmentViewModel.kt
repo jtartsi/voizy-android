@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.paging.PagedList
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
-import com.voizy.android.ui.models.Voizy
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable

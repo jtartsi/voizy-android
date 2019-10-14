@@ -4,13 +4,14 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.ui.listener.VoizyActionListener
-import com.voizy.android.ui.models.Voizy
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.NetworkState
 
 class VoizyListAdapter(
     private val listener: VoizyActionListener
 ) :
-    PagedListAdapter<Voizy, RecyclerView.ViewHolder>(Voizy.DIFF_CALLBACK) {
+    PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
+        Voizy.DIFF_CALLBACK) {
 
     companion object {
         private const val TYPE_PROGRESS = 0

@@ -1,7 +1,7 @@
 package com.voizy.android.ui.listener
 
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.adapter.VoizyViewHolder
-import com.voizy.android.ui.models.Voizy
 
 interface VoizyActionListener {
 

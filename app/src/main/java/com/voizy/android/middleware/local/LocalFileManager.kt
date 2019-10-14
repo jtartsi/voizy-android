@@ -1,7 +1,7 @@
 package com.voizy.android.middleware.local
 
 import android.content.Context
-import com.voizy.android.ui.models.Voizy
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import timber.log.Timber

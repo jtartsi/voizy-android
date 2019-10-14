@@ -1,7 +1,7 @@
 package com.voizy.android.middleware.firebase.collections
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.voizy.android.ui.models.Voizy
+import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.toObservable
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable

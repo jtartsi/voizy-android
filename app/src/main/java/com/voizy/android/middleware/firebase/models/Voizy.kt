@@ -1,4 +1,4 @@
-package com.voizy.android.ui.models
+package com.voizy.android.middleware.firebase.models
 
 import androidx.recyclerview.widget.DiffUtil
 import com.google.firebase.Timestamp

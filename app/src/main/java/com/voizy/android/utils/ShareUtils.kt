@@ -9,7 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.voizy.android.R
 import com.voizy.android.ShareBroadcastReceiver
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
-import com.voizy.android.ui.models.Voizy
+import com.voizy.android.middleware.firebase.models.Voizy
 import timber.log.Timber
 import java.io.File
 
