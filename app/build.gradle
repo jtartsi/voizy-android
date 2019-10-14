@@ -12,7 +12,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.voizy.android"
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 28
         versionName appVersionName
         versionCode buildVersionCode(appVersionName)
