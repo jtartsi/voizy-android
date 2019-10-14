@@ -29,13 +29,22 @@ android {
         }
     }
 
+    flavorDimensions "env"
+
+    productFlavors {
+        envPro {
+            dimension "env"
+        }
+        envDev {
+            dimension "env"
+        }
+    }
+
     ktlint {
         ignoreFailures = false
     }
-    tasks.whenTaskAdded { task ->
-        task.dependsOn ktlintCheck
-        task.mustRunAfter ktlintCheck
-    }
+    preBuild.dependsOn(ktlintCheck)
+
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
