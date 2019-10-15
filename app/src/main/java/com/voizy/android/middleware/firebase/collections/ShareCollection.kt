@@ -2,8 +2,6 @@ package com.voizy.android.middleware.firebase.collections
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.voizy.android.middleware.firebase.models.FirestoreVoizyShare
-import com.voizy.android.utils.toObservable
-import io.reactivex.Observable
 import timber.log.Timber
 
 class ShareCollection(private val firestore: FirebaseFirestore) {
@@ -13,14 +11,14 @@ class ShareCollection(private val firestore: FirebaseFirestore) {
         private val SHARE_COLLECTION = "share"
     }
 
-    fun share(id: String): Observable<Boolean> {
-        return firestore.shareCollection()
+    fun share(id: String) {
+        firestore.shareCollection()
             .add(FirestoreVoizyShare(id))
-            .toObservable()
-            .map { true }
-            .onErrorReturn {
+            .addOnSuccessListener {
+                Timber.d("Sharing Voizy success")
+            }
+            .addOnFailureListener {
                 Timber.e(it, "Sharing Voizy failed")
-                false
             }
     }
 

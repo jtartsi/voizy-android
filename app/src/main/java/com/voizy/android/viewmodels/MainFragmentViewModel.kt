@@ -85,4 +85,8 @@ class MainFragmentViewModel(
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to download Voizy")
     }
+
+    fun sendShareEvent(id: String) {
+        voizyRepository.sendShareVoizyEvent(id)
+    }
 }
