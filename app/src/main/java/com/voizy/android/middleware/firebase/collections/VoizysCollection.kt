@@ -18,9 +18,7 @@ class VoizysCollection(private val firestore: FirebaseFirestore) {
             .voizysCollection()
             .add(voizy)
             .toObservable()
-            .map {
-                Pair<Boolean, Voizy?>(true, voizy)
-            }
+            .map { Pair<Boolean, Voizy?>(true, voizy) }
             .withErrorHandling(TAG, "Failed to save Voizy to Firestore")
     }
 
