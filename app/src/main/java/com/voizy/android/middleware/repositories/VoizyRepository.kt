@@ -3,10 +3,11 @@ package com.voizy.android.middleware.repositories
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
+import com.voizy.android.middleware.firebase.collections.ShareCollection
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
-import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.middleware.local.LocalFileManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,6 +17,7 @@ import java.io.File
 
 class VoizyRepository(
     private val voizys: VoizysCollection,
+    private val shareCollection: ShareCollection,
     private val compositeDisposable: CompositeDisposable,
     private val voizySearchRequestCollection: VoizySearchRequestCollection,
     private val localFileManager: LocalFileManager,
@@ -84,5 +86,9 @@ class VoizyRepository(
     fun downloadVoizy(firestorePath: String, destinationFile: File): Observable<File> {
         return voizyStorage.getFile(firestorePath, destinationFile)
             .map { destinationFile }
+    }
+
+    fun sendShareVoizyEvent(id: String) {
+        return shareCollection.share(id)
     }
 }
