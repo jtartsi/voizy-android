@@ -6,12 +6,20 @@ import android.content.Context
 import android.content.Intent
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
+import com.voizy.android.utils.ShareController
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
-class ShareBroadcastReceiver : BroadcastReceiver() {
+class ShareBroadcastReceiver : BroadcastReceiver(), KoinComponent {
+
+    val shareController: ShareController by inject()
 
     override fun onReceive(context: Context?, intent: Intent) {
-        Timber.d("ShareBroadcastReceiver.onReceive()")
+        Timber.d(
+            "ShareBroadcastReceiver.onReceive() voizy name " +
+                "${shareController.lastSharedVoizy}"
+        )
 
         val clickedComponent: ComponentName? =
             intent.getParcelableExtra(Intent.EXTRA_CHOSEN_COMPONENT)

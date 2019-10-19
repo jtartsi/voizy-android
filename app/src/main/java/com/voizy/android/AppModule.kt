@@ -12,6 +12,7 @@ import com.voizy.android.middleware.firebase.collections.VoizySearchRequestColle
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
+import com.voizy.android.utils.ShareController
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import com.voizy.android.viewmodels.RecordPlayButtonViewModel
 import com.voizy.android.viewmodels.RecordingViewModel
@@ -23,6 +24,7 @@ val appLogicsModule = module {
     factory { VoizyPlayer() }
     factory { CompositeDisposable() }
     single { VoizyRecorder() }
+    single { ShareController() }
 }
 
 val repositoryModule = module {

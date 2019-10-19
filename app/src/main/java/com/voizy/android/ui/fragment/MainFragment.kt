@@ -16,7 +16,7 @@ import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
 import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.utils.NetworkState
-import com.voizy.android.utils.ShareUtils
+import com.voizy.android.utils.ShareController
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,6 +39,7 @@ class MainFragment :
     }
 
     private val viewModel: MainFragmentViewModel by inject()
+    private val shareController: ShareController by inject()
     private lateinit var voizyRecyclerView: RecyclerView
     private lateinit var voizyAdapter: VoizyListAdapter
     private val shareRequests = PublishSubject.create<Voizy>()
@@ -122,7 +123,7 @@ class MainFragment :
             .autoDisposable(getScopeProvider())
             .subscribe {
                 viewModel.sendShareEvent(it.first.id)
-                ShareUtils.shareVoizy(it.first, context!!, it.second)
+                shareController.shareVoizy(it.first, context!!, it.second)
             }
 
         viewModel.getSaveVoizyEvents()

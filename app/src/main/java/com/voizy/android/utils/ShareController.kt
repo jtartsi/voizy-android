@@ -13,38 +13,14 @@ import com.voizy.android.middleware.firebase.models.Voizy
 import timber.log.Timber
 import java.io.File
 
-class ShareUtils {
+class ShareController {
+
+    var lastSharedVoizy: Voizy? = null
+        private set
 
     companion object {
 
         private const val AUTHORITY = "com.voizy.android.fileprovider"
-
-        fun shareVoizy(voizy: Voizy, context: Context, file: File) {
-            val fileUri: Uri? = getFileUri(context, file)
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, fileUri)
-                type = "audio/*"
-            }
-
-            val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                100,
-                Intent(context, ShareBroadcastReceiver::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-            VoizyFirebaseAnalytics(FirebaseAnalytics.getInstance(context))
-                .logShareVoizyEvent(voizy.id, voizy.name)
-
-            context.startActivity(
-                Intent.createChooser(
-                    sendIntent,
-                    context.getString(R.string.share_voizy),
-                    pendingIntent.intentSender
-                )
-            )
-        }
 
         private fun getFileUri(context: Context, file: File): Uri? {
             return try {
@@ -56,5 +32,34 @@ class ShareUtils {
                 null
             }
         }
+    }
+
+    fun shareVoizy(voizy: Voizy, context: Context, file: File) {
+        val fileUri: Uri? = getFileUri(context, file)
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, fileUri)
+            type = "audio/*"
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            100,
+            Intent(context, ShareBroadcastReceiver::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        VoizyFirebaseAnalytics(FirebaseAnalytics.getInstance(context))
+            .logShareVoizyEvent(voizy.id, voizy.name)
+
+        lastSharedVoizy = voizy
+
+        context.startActivity(
+            Intent.createChooser(
+                sendIntent,
+                context.getString(R.string.share_voizy),
+                pendingIntent.intentSender
+            )
+        )
     }
 }
