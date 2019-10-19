@@ -8,17 +8,17 @@ class ShareCollection(private val firestore: FirebaseFirestore) {
 
     companion object {
         private val TAG = ShareCollection::class.java.simpleName
-        private val SHARE_COLLECTION = "share"
+        private const val SHARE_COLLECTION = "share"
     }
 
-    fun share(id: String) {
+    fun sendShareEvent(voizyId: String) {
         firestore.shareCollection()
-            .add(FirestoreVoizyShare(id))
+            .add(FirestoreVoizyShare(voizyId))
             .addOnSuccessListener {
                 Timber.d("Sharing Voizy success")
             }
             .addOnFailureListener {
-                Timber.e(it, "Sharing Voizy failed")
+                Timber.e("Sharing Voizy failed $it")
             }
     }
 
