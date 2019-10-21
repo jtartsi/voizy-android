@@ -137,9 +137,4 @@ class MainFragmentViewModel(
             )
         )
     }
-
-    // TODO sendShareEvent remove this and
-    fun sendShareEvent(id: String) {
-        voizyRepository.sendShareVoizyEvent(id)
-    }
 }
