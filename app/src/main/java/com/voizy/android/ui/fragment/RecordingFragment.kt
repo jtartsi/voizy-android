@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class RecordingFragment : BaseFragment() {
@@ -64,11 +65,17 @@ class RecordingFragment : BaseFragment() {
         btn_save_voizy.setOnClickListener {
             val voizyName = et_voizy_name.text.toString()
 
+            val locale = Locale.getDefault()
+
             if (!voizyName.isNullOrEmpty()) {
                 val voizyToSave = Voizy(
                     name = et_voizy_name.text.toString(),
-                    tags = et_voizy_tags.getTags()
+                    tags = et_voizy_tags.getTags(),
+                    locale = locale.toString(),
+                    localeLang = locale.language,
+                    localeCountry = locale.country
                 )
+
                 viewModel.saveVoizy(voizyToSave)
                 hideSoftKeyboard(view)
                 fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)

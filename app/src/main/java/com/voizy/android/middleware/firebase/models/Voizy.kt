@@ -11,7 +11,9 @@ data class Voizy(
     val filePath: String = "",
     @ServerTimestamp
     val createdAt: Timestamp = Timestamp.now(), // For uploading to Firestore
-    val creationTimeInSec: Long = 0 // For retrieving data
+    val locale: String = "",
+    val localeLang: String = "",
+    val localeCountry: String = ""
 ) {
     companion object {
         var DIFF_CALLBACK: DiffUtil.ItemCallback<Voizy> = object : DiffUtil.ItemCallback<Voizy>() {
