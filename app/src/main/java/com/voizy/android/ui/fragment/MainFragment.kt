@@ -24,6 +24,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.Locale
 
 class MainFragment :
     BaseFragment(),
@@ -82,6 +83,16 @@ class MainFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate()")
+
+        Timber.d("lang-filter language: ${Locale.getDefault()}")
+
+        Timber.d("lang-filter language: ${Locale.getDefault().language}")
+        Timber.d("lang-filter displayLanguage: ${Locale.getDefault().displayLanguage}")
+        Timber.d("lang-filter isO3Language: ${Locale.getDefault().isO3Language}")
+
+        Timber.d("lang-filter country: ${Locale.getDefault().country}")
+        Timber.d("lang-filter displayCountry: ${Locale.getDefault().displayCountry}")
+        Timber.d("lang-filter isO3Country: ${Locale.getDefault().isO3Country}")
     }
 
     override fun onCreateView(
