@@ -20,6 +20,7 @@ import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.android.ext.android.inject
@@ -41,6 +42,7 @@ class MainFragment :
     private lateinit var voizyRecyclerView: RecyclerView
     private lateinit var voizyAdapter: VoizyListAdapter
     private val shareRequests = PublishSubject.create<Voizy>()
+    private val clipBoardRequests = PublishSubject.create<Voizy>()
 
     companion object {
         val TAG = MainFragment::class.java.simpleName
@@ -72,6 +74,10 @@ class MainFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { viewHolder.animateProgress(it) }
+    }
+
+    override fun onVoizyLongPress(voizy: Voizy) {
+        clipBoardRequests.onNext(voizy)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,6 +149,16 @@ class MainFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { voizyAdapter.networkState = it }
+
+        clipBoardRequests.switchMap { viewModel.downloadUrlToClipboard(context!!, it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                Snackbar.make(
+                    view!!, getString(R.string.url_copied_to_clipboard), Snackbar.LENGTH_SHORT
+                ).show()
+            }
     }
 
     private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {

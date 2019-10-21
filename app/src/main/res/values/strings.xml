@@ -18,4 +18,5 @@
     <string name="press_back_again_discard_voizy">"Press back again to discard Voizy"</string>
     <string name="audio_file_not_found">"Audio file not found"</string>
     <string name="hold_to_record_guide">"Hold to record, release to finish"</string>
+    <string name="url_copied_to_clipboard">"Voizy url copied to clipboard"</string>
 </resources>

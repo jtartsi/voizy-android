@@ -8,4 +8,6 @@ interface VoizyActionListener {
     fun playVoizy(viewHolder: VoizyViewHolder, position: Int, voizy: Voizy)
 
     fun shareVoizy(voizy: Voizy)
+
+    fun onVoizyLongPress(voizy: Voizy)
 }
