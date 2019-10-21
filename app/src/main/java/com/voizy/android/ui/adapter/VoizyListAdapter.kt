@@ -3,15 +3,16 @@ package com.voizy.android.ui.adapter
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.utils.NetworkState
 
 class VoizyListAdapter(
     private val listener: VoizyActionListener
 ) :
     PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
-        Voizy.DIFF_CALLBACK) {
+        Voizy.DIFF_CALLBACK
+    ) {
 
     companion object {
         private const val TYPE_PROGRESS = 0
@@ -53,6 +54,10 @@ class VoizyListAdapter(
                 }
                 holder.btnShare.setOnClickListener {
                     listener.shareVoizy(getItem(position)!!)
+                }
+                holder.itemView.setOnLongClickListener {
+                    listener.onVoizyLongPress(getItem(position)!!)
+                    true
                 }
             }
             is LoadingViewHolder -> holder.bindTo(networkState!!)

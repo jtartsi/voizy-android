@@ -1,6 +1,8 @@
 package com.voizy.android.viewmodels
 
 import android.app.PendingIntent
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -94,7 +96,7 @@ class MainFragmentViewModel(
 
     fun playVoizy(voizy: Voizy): Observable<Int> {
         firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-        return voizyRepository.getFileUrl(voizy.filePath)
+        return voizyRepository.getDownloadUrl(voizy.filePath)
             .map { voizyPlayer.playRemote(it) }
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to play Voizy ${voizy.name}")
@@ -136,5 +138,16 @@ class MainFragmentViewModel(
                 pendingIntent.intentSender
             )
         )
+    }
+
+    fun downloadUrlToClipboard(context: Context, voizy: Voizy): Observable<String> {
+        return voizyRepository.getDownloadUrl(voizy.filePath)
+            .subscribeOn(Schedulers.io())
+            .doOnNext {
+                val clipBoard =
+                    context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipBoard.primaryClip = ClipData.newPlainText("voizy url", it)
+            }
+            .withErrorHandling(TAG, "Failed to copy download url")
     }
 }

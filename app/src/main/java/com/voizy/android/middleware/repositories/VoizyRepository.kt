@@ -78,7 +78,7 @@ class VoizyRepository(
         return Listing(voizysPagedList, networkState, initialLoading)
     }
 
-    fun getFileUrl(firestorePath: String): Observable<String> {
+    fun getDownloadUrl(firestorePath: String): Observable<String> {
         return voizyStorage.getDownloadUri(firestorePath)
             .map { it.toString() }
     }
@@ -86,9 +86,5 @@ class VoizyRepository(
     fun downloadVoizy(firestorePath: String, destinationFile: File): Observable<File> {
         return voizyStorage.getFile(firestorePath, destinationFile)
             .map { destinationFile }
-    }
-
-    fun sendShareVoizyEvent(id: String) {
-        return shareCollection.sendShareEvent(id)
     }
 }
