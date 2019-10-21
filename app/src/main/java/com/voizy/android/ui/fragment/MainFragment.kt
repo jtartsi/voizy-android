@@ -20,7 +20,6 @@ import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.android.ext.android.inject
@@ -151,7 +150,6 @@ class MainFragment :
             .subscribe { voizyAdapter.networkState = it }
 
         clipBoardRequests.switchMap { viewModel.downloadUrlToClipboard(context!!, it) }
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {

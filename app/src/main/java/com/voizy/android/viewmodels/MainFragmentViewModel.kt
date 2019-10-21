@@ -142,10 +142,12 @@ class MainFragmentViewModel(
 
     fun downloadUrlToClipboard(context: Context, voizy: Voizy): Observable<String> {
         return voizyRepository.getDownloadUrl(voizy.filePath)
+            .subscribeOn(Schedulers.io())
             .doOnNext {
                 val clipBoard =
                     context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 clipBoard.primaryClip = ClipData.newPlainText("voizy url", it)
             }
+            .withErrorHandling(TAG, "Failed to copy download url")
     }
 }
