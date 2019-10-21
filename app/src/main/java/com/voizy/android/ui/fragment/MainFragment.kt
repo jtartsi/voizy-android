@@ -16,7 +16,6 @@ import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
 import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.utils.NetworkState
-import com.voizy.android.utils.ShareUtils
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -120,10 +119,7 @@ class MainFragment :
             .switchMap { viewModel.downloadVoizy(context!!, it) }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                viewModel.sendShareEvent(it.first.id)
-                ShareUtils.shareVoizy(it.first, context!!, it.second)
-            }
+            .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
 
         viewModel.getSaveVoizyEvents()
             .observeOn(AndroidSchedulers.mainThread())

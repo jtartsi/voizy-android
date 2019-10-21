@@ -89,6 +89,6 @@ class VoizyRepository(
     }
 
     fun sendShareVoizyEvent(id: String) {
-        return shareCollection.share(id)
+        return shareCollection.sendShareEvent(id)
     }
 }
