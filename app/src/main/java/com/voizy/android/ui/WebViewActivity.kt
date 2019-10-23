@@ -14,6 +14,6 @@ class WebViewActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview)
         webview.webViewClient = WebViewClient()
-        webview.loadUrl("https://voizy-public.s3-eu-west-1.amazonaws.com/voizy_privacy_policy.html")
+        webview.loadUrl("https://voizy-public.s3-eu-west-1.amazonaws.com/index.html")
     }
 }
