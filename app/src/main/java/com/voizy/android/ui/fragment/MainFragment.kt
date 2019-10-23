@@ -1,5 +1,6 @@
 package com.voizy.android.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.ui.WebViewActivity
 import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
 import com.voizy.android.ui.listener.VoizyActionListener
@@ -97,6 +99,11 @@ class MainFragment :
         Timber.d("onViewCreated()")
 
         et_search.addTextChangedListener(this)
+        btn_privacy_policy.setOnClickListener {
+            Timber.d("onClick")
+            val intent = Intent(context, WebViewActivity::class.java)
+            startActivity(intent)
+        }
 
         voizyRecyclerView = view.findViewById(R.id.rv_voizy_list)
 

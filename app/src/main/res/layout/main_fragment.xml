@@ -12,7 +12,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_more"
+        app:layout_constraintEnd_toStartOf="@+id/btn_privacy_policy"
         app:layout_constraintTop_toTopOf="parent"
         android:drawablePadding="8dp"
         android:foregroundTintMode="@android:color/white"
@@ -21,7 +21,7 @@
         android:background="@drawable/border_background" />
 
     <ImageButton
-        android:id="@+id/btn_more"
+        android:id="@+id/btn_privacy_policy"
         android:layout_width="45dp"
         android:layout_height="45dp"
         app:layout_constraintEnd_toEndOf="parent"
