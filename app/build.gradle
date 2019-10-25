@@ -37,6 +37,9 @@ android {
         envPro {
             dimension "env"
         }
+        envOldPro {
+            dimension "env"
+        }
         envDev {
             dimension "env"
         }

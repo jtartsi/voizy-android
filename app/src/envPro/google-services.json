@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "613168510864",
-    "firebase_url": "https://voizystorage.firebaseio.com",
-    "project_id": "voizystorage",
-    "storage_bucket": "voizystorage.appspot.com"
+    "project_number": "472016030398",
+    "firebase_url": "https://voizy-production.firebaseio.com",
+    "project_id": "voizy-production",
+    "storage_bucket": "voizy-production.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:613168510864:android:f8cc92a3e9c5f742",
+        "mobilesdk_app_id": "1:472016030398:android:4fda7869f0b136ae516cef",
         "android_client_info": {
           "package_name": "com.voizy.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "613168510864-caqijk1pbukrs8ntt3k7jhnfec77jr5r.apps.googleusercontent.com",
+          "client_id": "472016030398-qnsk4p8723voaa1d4j9a5re1113tk3lu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAhNiZlYJCPldwxTYDX5gRTM5OoPuzj-Sg"
+          "current_key": "AIzaSyAUPBt_4AzXqUY2L-lHvuFpVDW8Sa7z4j4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "613168510864-caqijk1pbukrs8ntt3k7jhnfec77jr5r.apps.googleusercontent.com",
+              "client_id": "472016030398-qnsk4p8723voaa1d4j9a5re1113tk3lu.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
