@@ -4,7 +4,10 @@ data class FirestoreVoizySearchRequest(
     val defaultOperator: SearchOperator = SearchOperator.AND,
     val searchKeyword: String = "",
     val size: Int = 50,
-    val from: Int = 0
+    val from: Int = 0,
+    val locale: String = "",
+    val localeLang: String = "",
+    val localeCountry: String = ""
 ) {
 
     enum class SearchOperator(var value: String) {

@@ -7,6 +7,7 @@ import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchResult
 import com.voizy.android.utils.collectionChange
 import com.voizy.android.utils.toObservable
 import io.reactivex.Observable
+import java.util.Locale
 
 class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
 
@@ -21,13 +22,19 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
         from: Int,
         pageSize: Int
     ): Observable<FirestoreVoizySearchResult> {
+
+        val locale = Locale.getDefault()
+
         return firestore
             .voizySearchRequestCollection()
             .add(
                 FirestoreVoizySearchRequest(
                     searchKeyword = searchKeyword,
                     from = from,
-                    size = pageSize
+                    size = pageSize,
+                    locale = locale.toString(),
+                    localeLang = locale.language,
+                    localeCountry = locale.country
                 )
             )
             .toObservable()
