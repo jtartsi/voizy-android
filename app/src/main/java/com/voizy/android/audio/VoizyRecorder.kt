@@ -48,6 +48,9 @@ class VoizyRecorder {
                     setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
                     setOutputFile(fileName)
                     setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                    setAudioSamplingRate(96000)
+                    setAudioEncodingBitRate(128000)
+                    setAudioChannels(2)
 
                     prepare()
                     start()
