@@ -8,7 +8,6 @@ import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.ui.fragment.LibraryFragment
 import com.voizy.android.ui.fragment.RecordingFragment
-import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -16,15 +15,14 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Timber.d("file-upload intent $intent")
-        Timber.d("file-upload intent extras ${intent.extras}")
-
+        // TODO file-upload validate data here
         if (intent.action == Intent.ACTION_SEND) {
             val recordingFragment = RecordingFragment()
 
             val bundle = Bundle()
             bundle.putString(VoizyApp.KEY_ACTION, Intent.ACTION_SEND)
-            bundle.putParcelable(VoizyApp.KEY_DATA, intent.clipData)
+            val uri = intent.clipData?.getItemAt(0)?.uri
+            bundle.putParcelable(VoizyApp.KEY_DATA, uri)
 
             recordingFragment.arguments = bundle
 

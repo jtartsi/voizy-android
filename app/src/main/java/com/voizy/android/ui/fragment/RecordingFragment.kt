@@ -1,8 +1,8 @@
 package com.voizy.android.ui.fragment
 
 import android.app.Activity
-import android.content.ClipData
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
-import com.uber.autodispose.android.lifecycle.autoDisposable
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.VoizyApp
@@ -22,6 +21,9 @@ import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.Timed
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.get
@@ -36,6 +38,11 @@ class RecordingFragment : BaseFragment() {
     private var timerDisposable: Disposable? = null
     private val backPressEvent = PublishSubject.create<String>()
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics = get()
+
+    // TODO cleaning move analytics to ViewModel
+    // TODO cleaning use RxClicks and RxView updates
+    // TODO cleaning get data for specific views
+    // TODO cleaning move data validation etc. logic to ViewModel side.
 
     companion object {
         public val TAG = RecordingFragment::class.java.simpleName
@@ -70,7 +77,9 @@ class RecordingFragment : BaseFragment() {
 
             val locale = Locale.getDefault()
 
+            Timber.d("save-voizy onClick()")
             if (!voizyName.isNullOrEmpty()) {
+                Timber.d("save-voizy onClick() name ok")
                 val voizyToSave = Voizy(
                     name = et_voizy_name.text.toString(),
                     tags = et_voizy_tags.getTags(),
@@ -79,10 +88,16 @@ class RecordingFragment : BaseFragment() {
                     localeCountry = locale.country
                 )
 
+                Timber.d("save-voizy voizy $voizyToSave")
                 viewModel.saveVoizy(voizyToSave)
+                Timber.d("save-voizy viewModel called")
+
                 hideSoftKeyboard(view)
+                Timber.d("save-voizy hidesoftKeyboard")
                 fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                Timber.d("save-voizy popBackstack")
             } else {
+                Timber.d("save-voizy else")
                 Snackbar.make(
                     view, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT
                 ).show()
@@ -95,12 +110,26 @@ class RecordingFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
 
-        if (isFileReceived()) {
-            handleFileReceive()
+        if (isFileSendAction()) {
+            showSaveLayout()
+
+            val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
+            viewModel.saveReceivedFileToTempLocation(fileUri)
+                .switchMap { viewModel.getAudioFileLengthInSeconds(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .autoDisposable(getScopeProvider())
+                .subscribe {
+                    showTimeText(it)
+                }
         } else {
             startTimer()
         }
 
+        setObservables()
+    }
+
+    private fun setObservables() {
         backPressEvent
             .debounce(100, TimeUnit.MILLISECONDS)
             .timeInterval(TimeUnit.MILLISECONDS)
@@ -117,73 +146,95 @@ class RecordingFragment : BaseFragment() {
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(this)
-            .subscribe {
+            .autoDisposable(getScopeProvider())
+            .subscribe(backPressConsumer())
+
+        viewModel.getSaveVoizyEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(saveEventConsumer())
+
+        viewModel.getRecordingEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(recordingEventConsumer())
+    }
+
+    private fun backPressConsumer(): Consumer<Timed<String>> {
+        return Consumer {
+            if (isFileSendAction()) {
+                this.activity!!.finish()
+            } else {
                 voizyFirebaseAnalytics.logRecordingCancel()
                 fragmentManager!!.popBackStackImmediate(
                     it.value(),
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
             }
+        }
+    }
 
-        viewModel.getRecordingEvents()
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                when (it) {
-                    VoizyRecorder.RecordingEvent.STOP -> {
-                        timerDisposable?.let {
-                            it.dispose()
-                        }
-                        showSaveLayout()
+    private fun saveEventConsumer(): Consumer<Pair<Boolean, Voizy?>> {
+        return Consumer {
+            if (it.first) {
+                Snackbar.make(
+                    view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
+                ).show()
+            } else {
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_save_failed),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun recordingEventConsumer(): Consumer<VoizyRecorder.RecordingEvent> {
+        return Consumer {
+            when (it) {
+                VoizyRecorder.RecordingEvent.STOP -> {
+                    timerDisposable?.let {
+                        it.dispose()
                     }
-                    VoizyRecorder.RecordingEvent.START_FAILED -> {
-                        Timber.e("Failed to start recording")
-                    }
-                    VoizyRecorder.RecordingEvent.STOP_FAILED -> {
-                        Timber.e("Failed to close recording")
-                    }
-                    else -> {
-                    }
+                    showSaveLayout()
+                }
+                VoizyRecorder.RecordingEvent.START_FAILED -> {
+                    Timber.e("Failed to start recording")
+                }
+                VoizyRecorder.RecordingEvent.STOP_FAILED -> {
+                    Timber.e("Failed to close recording")
+                }
+                else -> {
                 }
             }
+        }
     }
 
     private fun startTimer() {
-        tv_recording_time.text = "00:00 / 00:15"
+        showTimeText(0)
         timerDisposable = Observable.intervalRange(
             1L, 15, 1L, 1L,
             TimeUnit.SECONDS, AndroidSchedulers.mainThread()
         )
-            .map {
-                if (it < 10) {
-                    "0$it"
-                } else {
-                    it.toString()
-                }
-            }
-            .map { "00:$it / 00:15" }
             .autoDisposable(getScopeProvider())
             .subscribe {
-                tv_recording_time.text = it
+                showTimeText(it.toInt())
             }
     }
 
-    private fun isFileReceived(): Boolean {
-        return arguments != null &&
-            arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND
+    private fun showTimeText(timeInSeconds: Int) {
+        val secondsString = if (timeInSeconds < 10) {
+            "0$timeInSeconds"
+        } else {
+            timeInSeconds.toString()
+        }
+        tv_recording_time.text = "00:".plus(secondsString).plus(" / 00:15")
     }
 
-    private fun handleFileReceive() {
-        showSaveLayout()
-        tv_recording_time.visibility = View.GONE
-
-        viewModel.audioFileReceived()
-        val clipData = arguments!!.get(VoizyApp.KEY_DATA) as ClipData
-        Timber.d("file-upload description: ${clipData.description}")
-        Timber.d("file-upload item: ${clipData.getItemAt(0)}")
-        val uri = clipData.getItemAt(0).uri
-        Timber.d("file-upload uri: $uri")
+    private fun isFileSendAction(): Boolean {
+        return arguments != null &&
+            arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND
     }
 
     private fun showSaveLayout() {
