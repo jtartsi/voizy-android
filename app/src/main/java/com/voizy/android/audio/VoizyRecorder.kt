@@ -12,7 +12,7 @@ class VoizyRecorder {
     private var mediaRecorder: MediaRecorder? = null
 
     enum class RecordingEvent {
-        START_FAILED, STARTED, RECORDING_READY, STOP_FAILED, STOP_UNDER_MINIMUM_TIME
+        START_FAILED, STARTED, STOP, STOP_FAILED, STOP_UNDER_MINIMUM_TIME, FILE_RECEIVED
     }
 
     private val fileReceivedEvents: PublishSubject<RecordingEvent> = PublishSubject.create()
@@ -30,7 +30,7 @@ class VoizyRecorder {
         .share()
 
     fun audioFileReceived() {
-        fileReceivedEvents.onNext(RecordingEvent.RECORDING_READY)
+        fileReceivedEvents.onNext(RecordingEvent.FILE_RECEIVED)
     }
 
     fun startRecording(filename: String) {
@@ -44,9 +44,6 @@ class VoizyRecorder {
     fun getRecordingEvents(): Observable<RecordingEvent> {
         return recordingEventsStream
             .mergeWith(fileReceivedEvents)
-            .doOnNext {
-                Timber.d("file-upload events $it")
-            }
     }
 
     private fun record(fileName: String): Observable<RecordingEvent> {
@@ -83,7 +80,7 @@ class VoizyRecorder {
                     mediaRecorder = null
 
                     val event = if (isOverMinimumTime()) {
-                        RecordingEvent.RECORDING_READY
+                        RecordingEvent.STOP
                     } else {
                         RecordingEvent.STOP_UNDER_MINIMUM_TIME
                     }

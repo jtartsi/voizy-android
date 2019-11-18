@@ -1,9 +1,9 @@
 package com.voizy.android.ui.fragment
 
 import android.app.Activity
+import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -95,7 +95,7 @@ class RecordingFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
 
-        if (arguments != null && arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND) {
+        if (isFileReceived()) {
             handleFileReceive()
         } else {
             startTimer()
@@ -131,7 +131,7 @@ class RecordingFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    VoizyRecorder.RecordingEvent.RECORDING_READY -> {
+                    VoizyRecorder.RecordingEvent.STOP -> {
                         timerDisposable?.let {
                             it.dispose()
                         }
@@ -169,13 +169,21 @@ class RecordingFragment : BaseFragment() {
             }
     }
 
+    private fun isFileReceived(): Boolean {
+        return arguments != null &&
+            arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND
+    }
+
     private fun handleFileReceive() {
         showSaveLayout()
         tv_recording_time.visibility = View.GONE
 
-        Handler().postDelayed({
-            viewModel.audioFileReceived()
-        }, 2500)
+        viewModel.audioFileReceived()
+        val clipData = arguments!!.get(VoizyApp.KEY_DATA) as ClipData
+        Timber.d("file-upload description: ${clipData.description}")
+        Timber.d("file-upload item: ${clipData.getItemAt(0)}")
+        val uri = clipData.getItemAt(0).uri
+        Timber.d("file-upload uri: $uri")
     }
 
     private fun showSaveLayout() {
