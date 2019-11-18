@@ -64,7 +64,7 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                if (it.getFragmentTag() == MainFragment.TAG) {
+                if (it.getFragmentTag() == LibraryFragment.TAG) {
                     Timber.d("frag-rec-event set RECORD")
                     recordPlayButton.state = RecordPlayButton.State.RECORD
                 }

@@ -19,15 +19,15 @@ import com.voizy.android.ui.adapter.VoizyViewHolder
 import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.viewmodels.MainFragmentViewModel
+import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class MainFragment :
+class LibraryFragment :
     BaseFragment(),
     VoizyActionListener,
     TextWatcher {
@@ -39,14 +39,14 @@ class MainFragment :
     override fun onBackPressed() {
     }
 
-    private val viewModel: MainFragmentViewModel by inject()
+    private val viewModel: LibraryFragmentViewModel by inject()
     private lateinit var voizyRecyclerView: RecyclerView
     private lateinit var voizyAdapter: VoizyListAdapter
     private val shareRequests = PublishSubject.create<Voizy>()
     private val clipBoardRequests = PublishSubject.create<Voizy>()
 
     companion object {
-        val TAG = MainFragment::class.java.simpleName
+        val TAG = LibraryFragment::class.java.simpleName
     }
 
     override fun afterTextChanged(s: Editable?) {
@@ -91,7 +91,7 @@ class MainFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        return inflater.inflate(R.layout.library_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,10 +1,12 @@
 package com.voizy.android.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.voizy.android.R
-import com.voizy.android.ui.fragment.MainFragment
+import com.voizy.android.ui.fragment.LibraryFragment
+import com.voizy.android.ui.fragment.RecordingFragment
 
 class MainActivity : BaseActivity() {
 
@@ -12,11 +14,15 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // appBarProgressBar = findViewById(R.id.pb_app_bar)
-
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, MainFragment())
-            .commit()
+        if (intent.action == Intent.ACTION_SEND) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, RecordingFragment())
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, LibraryFragment())
+                .commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

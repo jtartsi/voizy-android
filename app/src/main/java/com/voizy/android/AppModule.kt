@@ -13,7 +13,7 @@ import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.ShareRepository
 import com.voizy.android.middleware.repositories.VoizyRepository
-import com.voizy.android.viewmodels.MainFragmentViewModel
+import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import com.voizy.android.viewmodels.RecordPlayButtonViewModel
 import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.disposables.CompositeDisposable
@@ -41,7 +41,7 @@ val repositoryModule = module {
 }
 
 val viewModels = module {
-    viewModel { MainFragmentViewModel(get(), get(), get(), get(), get()) }
+    viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
     viewModel { RecordingViewModel(get(), get(), get()) }
     viewModel { RecordPlayButtonViewModel(get(), get(), get(), get()) }
 }

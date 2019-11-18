@@ -28,7 +28,7 @@ import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-class MainFragmentViewModel(
+class LibraryFragmentViewModel(
     private val voizyRepository: VoizyRepository,
     private val shareRepository: ShareRepository,
     private val voizyPlayer: VoizyPlayer,
@@ -37,7 +37,7 @@ class MainFragmentViewModel(
 ) : DisposingViewModel() {
 
     companion object {
-        private val TAG = MainFragmentViewModel::class.java.simpleName
+        private val TAG = LibraryFragmentViewModel::class.java.simpleName
 
         private const val AUTHORITY = "com.voizy.android.fileprovider"
 
