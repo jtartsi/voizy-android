@@ -8,6 +8,11 @@ import timber.log.Timber
 
 class VoizyApp : Application() {
 
+    companion object {
+        const val KEY_ACTION = "action"
+        const val KEY_DATA = "data"
+    }
+
     override fun onCreate() {
         super.onCreate()
         FirebaseAnalytics.getInstance(this)

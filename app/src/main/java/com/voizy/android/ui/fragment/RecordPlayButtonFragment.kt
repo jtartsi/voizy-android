@@ -72,11 +72,15 @@ class RecordPlayButtonFragment : Fragment() {
 
         viewModel.getRecordingEvents()
             .withLatestFrom(fragmentChangeListener(), toPair())
+            .doOnNext {
+                Timber.d("file-upload buttonStates event ${it.first}")
+                Timber.d("file-upload buttonStates fragment ${it.second}")
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                if (it.first == VoizyRecorder.RecordingEvent.STOP &&
+                if (it.first == VoizyRecorder.RecordingEvent.RECORDING_READY &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
                     recordPlayButton.state = RecordPlayButton.State.PLAY

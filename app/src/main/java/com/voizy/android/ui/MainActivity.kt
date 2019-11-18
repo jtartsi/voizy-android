@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.voizy.android.R
+import com.voizy.android.VoizyApp
 import com.voizy.android.ui.fragment.LibraryFragment
 import com.voizy.android.ui.fragment.RecordingFragment
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -14,9 +16,20 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Timber.d("file-upload intent $intent")
+        Timber.d("file-upload intent extras ${intent.extras}")
+
         if (intent.action == Intent.ACTION_SEND) {
+            val recordingFragment = RecordingFragment()
+
+            val bundle = Bundle()
+            bundle.putString(VoizyApp.KEY_ACTION, Intent.ACTION_SEND)
+            bundle.putParcelable(VoizyApp.KEY_DATA, intent.clipData)
+
+            recordingFragment.arguments = bundle
+
             supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, RecordingFragment())
+                .add(R.id.fragment_container, recordingFragment)
                 .commit()
         } else {
             supportFragmentManager.beginTransaction()

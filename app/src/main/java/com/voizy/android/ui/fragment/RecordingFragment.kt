@@ -1,7 +1,9 @@
 package com.voizy.android.ui.fragment
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.android.lifecycle.autoDisposable
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.VoizyApp
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
@@ -85,12 +88,18 @@ class RecordingFragment : BaseFragment() {
                 ).show()
             }
         }
+
+        Timber.d("file-upload arguments $arguments")
     }
 
     override fun onStart() {
         super.onStart()
 
-        startTimer()
+        if (arguments != null && arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND) {
+            handleFileReceive()
+        } else {
+            startTimer()
+        }
 
         backPressEvent
             .debounce(100, TimeUnit.MILLISECONDS)
@@ -122,13 +131,11 @@ class RecordingFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    VoizyRecorder.RecordingEvent.STOP -> {
+                    VoizyRecorder.RecordingEvent.RECORDING_READY -> {
                         timerDisposable?.let {
                             it.dispose()
                         }
-                        et_voizy_name.visibility = View.VISIBLE
-                        et_voizy_tags.visibility = View.VISIBLE
-                        btn_save_voizy.visibility = View.VISIBLE
+                        showSaveLayout()
                     }
                     VoizyRecorder.RecordingEvent.START_FAILED -> {
                         Timber.e("Failed to start recording")
@@ -160,6 +167,21 @@ class RecordingFragment : BaseFragment() {
             .subscribe {
                 tv_recording_time.text = it
             }
+    }
+
+    private fun handleFileReceive() {
+        showSaveLayout()
+        tv_recording_time.visibility = View.GONE
+
+        Handler().postDelayed({
+            viewModel.audioFileReceived()
+        }, 2500)
+    }
+
+    private fun showSaveLayout() {
+        et_voizy_name.visibility = View.VISIBLE
+        et_voizy_tags.visibility = View.VISIBLE
+        btn_save_voizy.visibility = View.VISIBLE
     }
 
     private fun hideSoftKeyboard(view: View) {

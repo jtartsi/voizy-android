@@ -26,4 +26,8 @@ class RecordingViewModel(
         voizyFirebaseAnalytics.logRecordingSave()
         voizyRepository.saveVoizy(voizy)
     }
+
+    fun audioFileReceived() {
+        voizyRecorder.audioFileReceived()
+    }
 }
