@@ -1,11 +1,16 @@
 package com.voizy.android.middleware.local
 
 import android.content.Context
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.nio.channels.FileChannel
 
 class LocalFileManager(private val context: Context) {
 
@@ -25,6 +30,39 @@ class LocalFileManager(private val context: Context) {
 
     fun getTempFilePath(): String {
         return "${context.filesDir}/".plus(TMP_VOIZY_FILE_NAME)
+    }
+
+    fun saveUriContentToFile(uri: Uri, newPath: String): String {
+        val destinationFile = File(newPath)
+        deleteFile(destinationFile.path)
+        destinationFile.createNewFile()
+
+        lateinit var sourceChannel: FileChannel
+        lateinit var destinationChannel: FileChannel
+        return try {
+            sourceChannel = FileInputStream(
+                context.contentResolver
+                    .openFileDescriptor(uri, "r")!!
+                    .fileDescriptor
+            ).channel
+            destinationChannel = FileOutputStream(destinationFile).channel
+            destinationChannel.transferFrom(sourceChannel, 0, sourceChannel.size())
+            destinationFile.path
+        } catch (e: Exception) {
+            Timber.e("saveUriToContentFile catch $e")
+            ""
+        } finally {
+            sourceChannel.close()
+            destinationChannel.close()
+        }
+    }
+
+    fun getAudioFileLengthInMillis(path: String): Long {
+        val mediaDataRetriever = MediaMetadataRetriever()
+        mediaDataRetriever.setDataSource(path)
+        return mediaDataRetriever
+            .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            .toLong()
     }
 
     /**

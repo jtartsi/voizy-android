@@ -1,22 +1,38 @@
 package com.voizy.android.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.voizy.android.R
-import com.voizy.android.ui.fragment.MainFragment
+import com.voizy.android.VoizyApp
+import com.voizy.android.ui.fragment.LibraryFragment
+import com.voizy.android.ui.fragment.RecordingFragment
 
 class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        
+        if (intent.action == Intent.ACTION_SEND) {
+            val recordingFragment = RecordingFragment()
 
-        // appBarProgressBar = findViewById(R.id.pb_app_bar)
+            val bundle = Bundle()
+            bundle.putString(VoizyApp.KEY_ACTION, Intent.ACTION_SEND)
+            val uri = intent.clipData?.getItemAt(0)?.uri
+            bundle.putParcelable(VoizyApp.KEY_DATA, uri)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, MainFragment())
-            .commit()
+            recordingFragment.arguments = bundle
+
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, recordingFragment)
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, LibraryFragment())
+                .commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

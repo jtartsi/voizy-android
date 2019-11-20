@@ -1,6 +1,8 @@
 package com.voizy.android.ui.fragment
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +10,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
-import com.uber.autodispose.android.lifecycle.autoDisposable
+import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.VoizyApp
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
@@ -19,6 +22,9 @@ import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.Timed
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.get
@@ -32,6 +38,7 @@ class RecordingFragment : BaseFragment() {
     private val viewModel: RecordingViewModel by inject()
     private var timerDisposable: Disposable? = null
     private val backPressEvent = PublishSubject.create<String>()
+    private val shareRequests = PublishSubject.create<Voizy>()
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics = get()
 
     companion object {
@@ -62,24 +69,62 @@ class RecordingFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btn_save_voizy.setOnClickListener {
-            val voizyName = et_voizy_name.text.toString()
+        initSave()
+        initFileInput()
+        initBackPress()
+        initRecordEvents()
+        initShare()
 
-            val locale = Locale.getDefault()
+        if (!isFileSendAction()) {
+            startTimer()
+        } else {
+            showSaveLayout()
+        }
+    }
 
-            if (!voizyName.isNullOrEmpty()) {
-                val voizyToSave = Voizy(
-                    name = et_voizy_name.text.toString(),
-                    tags = et_voizy_tags.getTags(),
-                    locale = locale.toString(),
-                    localeLang = locale.language,
-                    localeCountry = locale.country
-                )
+    private fun initSave() {
+        RxView.clicks(btn_save_voizy)
+            .map { btn_save_voizy }
+            .autoDisposable(getScopeProvider())
+            .subscribe(saveClickConsumer())
 
-                viewModel.saveVoizy(voizyToSave)
-                hideSoftKeyboard(view)
-                fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        viewModel.getSaveVoizyEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(saveEventConsumer())
+    }
+
+    private fun initShare() {
+        shareRequests
+            .doOnNext {
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_sharing, it.name),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+            .switchMap { viewModel.downloadVoizy(context!!, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
+    }
+
+    private fun saveClickConsumer(): Consumer<View> {
+        return Consumer { view ->
+
+            if (!et_voizy_name.text.toString().isNullOrEmpty()) {
+                viewModel.saveVoizy(getVoizyFromUserInputs())
+
+                if (!isFileSendAction()) {
+                    hideSoftKeyboard(view)
+                    fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                } else {
+                    Snackbar.make(
+                        view, getString(R.string.voizy_saving), Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             } else {
+
                 Snackbar.make(
                     view, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT
                 ).show()
@@ -87,11 +132,39 @@ class RecordingFragment : BaseFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun saveEventConsumer(): Consumer<Pair<Boolean, Voizy?>> {
+        return Consumer { pair ->
+            if (pair.first) {
+                Snackbar.make(
+                    view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
+                ).setAction(R.string.share) {
+                    shareRequests.onNext(pair.second!!)
+                }.show()
+            } else {
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_save_failed),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 
-        startTimer()
+    private fun initFileInput() {
+        Observable.just(isFileSendAction())
+            .filter { it }
+            .flatMap {
+                val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
+                viewModel.saveReceivedFileToTempLocation(fileUri)
+            }
+            .switchMap { viewModel.getAudioFileLengthInSeconds(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(fileInputConsumer())
+    }
 
+    private fun initBackPress() {
         backPressEvent
             .debounce(100, TimeUnit.MILLISECONDS)
             .timeInterval(TimeUnit.MILLISECONDS)
@@ -108,63 +181,108 @@ class RecordingFragment : BaseFragment() {
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(this)
-            .subscribe {
+            .autoDisposable(getScopeProvider())
+            .subscribe(backPressConsumer())
+    }
+
+    private fun backPressConsumer(): Consumer<Timed<String>> {
+        return Consumer {
+            if (isFileSendAction()) {
+                this.activity!!.finish()
+            } else {
                 voizyFirebaseAnalytics.logRecordingCancel()
                 fragmentManager!!.popBackStackImmediate(
                     it.value(),
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
             }
+        }
+    }
 
+    private fun initRecordEvents() {
         viewModel.getRecordingEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                when (it) {
-                    VoizyRecorder.RecordingEvent.STOP -> {
-                        timerDisposable?.let {
-                            it.dispose()
-                        }
-                        et_voizy_name.visibility = View.VISIBLE
-                        et_voizy_tags.visibility = View.VISIBLE
-                        btn_save_voizy.visibility = View.VISIBLE
+            .subscribe(recordingEventConsumer())
+    }
+
+    private fun recordingEventConsumer(): Consumer<VoizyRecorder.RecordingEvent> {
+        return Consumer {
+            when (it) {
+                VoizyRecorder.RecordingEvent.STOP -> {
+                    timerDisposable?.let {
+                        it.dispose()
                     }
-                    VoizyRecorder.RecordingEvent.START_FAILED -> {
-                        Timber.e("Failed to start recording")
-                    }
-                    VoizyRecorder.RecordingEvent.STOP_FAILED -> {
-                        Timber.e("Failed to close recording")
-                    }
-                    else -> {
-                    }
+                    showSaveLayout()
+                }
+                VoizyRecorder.RecordingEvent.START_FAILED -> {
+                    Timber.e("Failed to start recording")
+                }
+                VoizyRecorder.RecordingEvent.STOP_FAILED -> {
+                    Timber.e("Failed to close recording")
+                }
+                else -> {
                 }
             }
+        }
+    }
+
+    private fun fileInputConsumer(): Consumer<Int> {
+        return Consumer {
+            if (it > 15) {
+                text_voizy_save_error.visibility = View.VISIBLE
+                btn_save_voizy.isEnabled = false
+            }
+            showTimeText(it)
+        }
     }
 
     private fun startTimer() {
-        tv_recording_time.text = "00:00 / 00:15"
+        showTimeText(0)
         timerDisposable = Observable.intervalRange(
             1L, 15, 1L, 1L,
             TimeUnit.SECONDS, AndroidSchedulers.mainThread()
         )
-            .map {
-                if (it < 10) {
-                    "0$it"
-                } else {
-                    it.toString()
-                }
-            }
-            .map { "00:$it / 00:15" }
             .autoDisposable(getScopeProvider())
             .subscribe {
-                tv_recording_time.text = it
+                showTimeText(it.toInt())
             }
+    }
+
+    private fun showTimeText(timeInSeconds: Int) {
+        val secondsString = if (timeInSeconds < 10) {
+            "0$timeInSeconds"
+        } else {
+            timeInSeconds.toString()
+        }
+        tv_recording_time.text = "00:".plus(secondsString).plus(" / 00:15")
+    }
+
+    private fun isFileSendAction(): Boolean {
+        return arguments != null &&
+            arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND
+    }
+
+    private fun showSaveLayout() {
+        et_voizy_name.visibility = View.VISIBLE
+        et_voizy_tags.visibility = View.VISIBLE
+        btn_save_voizy.visibility = View.VISIBLE
     }
 
     private fun hideSoftKeyboard(view: View) {
         val inputMethodManager: InputMethodManager = context!!
             .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.rootView.windowToken, 0, null)
+    }
+
+    private fun getVoizyFromUserInputs(): Voizy {
+        val locale = Locale.getDefault()
+        return Voizy(
+            name = et_voizy_name.text.toString(),
+            tags = et_voizy_tags.getTags(),
+            locale = locale.toString(),
+            localeLang = locale.language,
+            localeCountry = locale.country
+        )
     }
 }

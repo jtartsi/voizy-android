@@ -64,8 +64,7 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                if (it.getFragmentTag() == MainFragment.TAG) {
-                    Timber.d("frag-rec-event set RECORD")
+                if (it.getFragmentTag() == LibraryFragment.TAG) {
                     recordPlayButton.state = RecordPlayButton.State.RECORD
                 }
             }
@@ -90,6 +89,15 @@ class RecordPlayButtonFragment : Fragment() {
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }
+            }
+
+        viewModel.getRecordingEvents()
+            .filter { it == VoizyRecorder.RecordingEvent.FILE_RECEIVED }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                recordPlayButton.state = RecordPlayButton.State.PLAY
             }
     }
 
