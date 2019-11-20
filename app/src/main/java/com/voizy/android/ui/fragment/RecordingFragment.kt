@@ -38,6 +38,7 @@ class RecordingFragment : BaseFragment() {
     private val viewModel: RecordingViewModel by inject()
     private var timerDisposable: Disposable? = null
     private val backPressEvent = PublishSubject.create<String>()
+    private val shareRequests = PublishSubject.create<Voizy>()
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics = get()
 
     companion object {
@@ -72,6 +73,7 @@ class RecordingFragment : BaseFragment() {
         initFileInput()
         initBackPress()
         initRecordEvents()
+        initShare()
 
         if (!isFileSendAction()) {
             startTimer()
@@ -90,6 +92,21 @@ class RecordingFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe(saveEventConsumer())
+    }
+
+    private fun initShare() {
+        shareRequests
+            .doOnNext {
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_sharing, it.name),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+            .switchMap { viewModel.downloadVoizy(context!!, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
     }
 
     private fun saveClickConsumer(): Consumer<View> {
@@ -116,11 +133,13 @@ class RecordingFragment : BaseFragment() {
     }
 
     private fun saveEventConsumer(): Consumer<Pair<Boolean, Voizy?>> {
-        return Consumer {
-            if (it.first) {
+        return Consumer { pair ->
+            if (pair.first) {
                 Snackbar.make(
                     view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
-                ).show()
+                ).setAction(R.string.share) {
+                    shareRequests.onNext(pair.second!!)
+                }.show()
             } else {
                 Snackbar.make(
                     view!!,

@@ -63,11 +63,6 @@ class LibraryFragment :
 
     override fun shareVoizy(voizy: Voizy) {
         shareRequests.onNext(voizy)
-        Snackbar.make(
-            view!!,
-            getString(R.string.voizy_sharing, voizy.name),
-            Snackbar.LENGTH_LONG
-        ).show()
     }
 
     override fun playVoizy(viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) {
@@ -128,6 +123,13 @@ class LibraryFragment :
 
     private fun setObservables() {
         shareRequests
+            .doOnNext {
+                Snackbar.make(
+                    view!!,
+                    getString(R.string.voizy_sharing, it.name),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
             .switchMap { viewModel.downloadVoizy(context!!, it) }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
