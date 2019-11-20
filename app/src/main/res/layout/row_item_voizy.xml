@@ -84,11 +84,10 @@
 
     <ImageButton
         android:id="@+id/btn_share"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="24dp"
         android:src="@drawable/share_orange_dark"
         android:background="@android:color/transparent" />
 
