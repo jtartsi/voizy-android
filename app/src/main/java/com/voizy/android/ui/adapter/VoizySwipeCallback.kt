@@ -21,9 +21,11 @@ class VoizySwipeCallback(
 ) {
 
     private val clearPaint = Paint()
-    private var deleteDrawable: Drawable = context.getDrawable(R.drawable.ic_delete_sweep_white)
+    private var deleteDrawable: Drawable = context.getDrawable(R.drawable.ic_mic_white_48dp)
+    // private var deleteDrawable: Drawable = context.getDrawable(R.drawable.ic_delete_sweep_white)
     private var shareDrawable: Drawable = context.getDrawable(R.drawable.ic_send_orange_dark)
-    private var background: ColorDrawable = ColorDrawable(context.getColor(android.R.color.holo_orange_light))
+    private var background: ColorDrawable =
+        ColorDrawable(context.getColor(android.R.color.holo_orange_light))
     private val intrinsicWidth: Int
     private val intrinsicHeight: Int
 
@@ -79,11 +81,13 @@ class VoizySwipeCallback(
         if (dX.absoluteValue < (itemView.width * 0.3f)) {
             background = ColorDrawable(context.getColor(android.R.color.white))
             shareDrawable = context.getDrawable(R.drawable.ic_send_orange_dark)
-            deleteDrawable = context.getDrawable(R.drawable.ic_delete_sweep_orange_dark)
+            deleteDrawable = context.getDrawable(R.drawable.ic_mic_white_48dp)
+            // deleteDrawable = context.getDrawable(R.drawable.ic_delete_sweep_orange_dark)
         } else {
             background = ColorDrawable(context.getColor(android.R.color.holo_orange_dark))
             shareDrawable = context.getDrawable(R.drawable.ic_send_white)
-            deleteDrawable = context.getDrawable(R.drawable.ic_delete_sweep_white)
+            deleteDrawable = context.getDrawable(R.drawable.ic_mic_white_48dp)
+            // deleteDrawable = context.getDrawable(R.drawable.ic_delete_sweep_white)
         }
 
         when {
@@ -94,9 +98,19 @@ class VoizySwipeCallback(
                 val shareIconRight = itemView.left + shareIconMargin + intrinsicWidth
                 val shareIconBottom = shareIconTop + intrinsicHeight
 
-                background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                background.setBounds(
+                    itemView.left,
+                    itemView.top,
+                    itemView.left + dX.toInt(),
+                    itemView.bottom
+                )
                 background.draw(c)
-                shareDrawable.setBounds(shareIconLeft, shareIconTop, shareIconRight, shareIconBottom)
+                shareDrawable.setBounds(
+                    shareIconLeft,
+                    shareIconTop,
+                    shareIconRight,
+                    shareIconBottom
+                )
                 shareDrawable.draw(c)
             }
             dX < 0 -> { // Swiping to left
@@ -106,9 +120,19 @@ class VoizySwipeCallback(
                 val deleteIconRight = itemView.right - deleteIconMargin
                 val deleteIconBottom = deleteIconTop + intrinsicHeight
 
-                background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                background.setBounds(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
                 background.draw(c)
-                deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                deleteDrawable.setBounds(
+                    deleteIconLeft,
+                    deleteIconTop,
+                    deleteIconRight,
+                    deleteIconBottom
+                )
                 deleteDrawable.draw(c)
             }
         }
