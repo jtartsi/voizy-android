@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/voizy_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/VoizyTheme">
+        android:theme="@style/AppTheme.Launcher">
 
         <activity
             android:name=".ui.MainActivity"
