@@ -3,6 +3,8 @@ package com.voizy.android
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.voizy.android.audio.FFmpegBuilder
+import com.voizy.android.audio.FFmpegManager
 import com.voizy.android.audio.VoizyPlayer
 import com.voizy.android.audio.VoizyRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
@@ -24,9 +26,11 @@ import org.koin.dsl.module
 val appLogicsModule = module {
     factory { VoizyPlayer() }
     factory { CompositeDisposable() }
-    single { VoizyRecorder() }
     factory { ShareManager(get()) }
+    factory { FFmpegManager(get()) }
+    single { VoizyRecorder() }
     single { LocalFileManager(get()) }
+    single { FFmpegBuilder.getInstance(get()) }
 }
 
 val repositoryModule = module {
