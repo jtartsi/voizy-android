@@ -7,29 +7,27 @@ import timber.log.Timber
 
 class FFmpegBuilder {
     companion object {
-        public fun getInstance(context: Context): FFmpeg {
-            Timber.d("ffmpeg-build buildFFmpeg()")
+        fun getInstance(context: Context): FFmpeg {
             val ffmpeg = FFmpeg.getInstance(context)
-            Timber.d("ffmpeg-build buildFFmpeg()")
             ffmpeg.loadBinary(object : LoadBinaryResponseHandler() {
                 override fun onFinish() {
                     super.onFinish()
-                    Timber.d("ffmpeg-build onFinish")
+                    Timber.d("FFmpegBuilder.onFinish")
                 }
 
                 override fun onSuccess() {
                     super.onSuccess()
-                    Timber.d("ffmpeg-build onSuccess")
+                    Timber.d("FFmpegBuilder.onSuccess")
                 }
 
                 override fun onFailure() {
                     super.onFailure()
-                    Timber.d("ffmpeg-build onFailure")
+                    Timber.d("FFmpegBuilder.onFailure")
                 }
 
                 override fun onStart() {
                     super.onStart()
-                    Timber.d("ffmpeg-build onStart")
+                    Timber.d("FFmpegBuilder.onStart")
                 }
             })
             return ffmpeg

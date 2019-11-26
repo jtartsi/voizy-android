@@ -6,7 +6,7 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.util.Date
 
-class VoizyRecorder {
+class AudioRecorder {
 
     private var recordStartTime: Long = 0L
     private var mediaRecorder: MediaRecorder? = null

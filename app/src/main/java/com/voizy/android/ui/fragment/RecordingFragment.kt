@@ -14,7 +14,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.VoizyApp
-import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.getScopeProvider
@@ -155,7 +155,7 @@ class RecordingFragment : BaseFragment() {
             .filter { it }
             .flatMap {
                 val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
-                viewModel.saveReceivedFileToTempLocation(fileUri)
+                viewModel.saveReceivedFile(fileUri)
             }
             .switchMap { viewModel.getAudioFileLengthInSeconds(it) }
             .subscribeOn(Schedulers.io())
@@ -206,19 +206,19 @@ class RecordingFragment : BaseFragment() {
             .subscribe(recordingEventConsumer())
     }
 
-    private fun recordingEventConsumer(): Consumer<VoizyRecorder.RecordingEvent> {
+    private fun recordingEventConsumer(): Consumer<AudioRecorder.RecordingEvent> {
         return Consumer {
             when (it) {
-                VoizyRecorder.RecordingEvent.STOP -> {
+                AudioRecorder.RecordingEvent.STOP -> {
                     timerDisposable?.let {
                         it.dispose()
                     }
                     showSaveLayout()
                 }
-                VoizyRecorder.RecordingEvent.START_FAILED -> {
+                AudioRecorder.RecordingEvent.START_FAILED -> {
                     Timber.e("Failed to start recording")
                 }
-                VoizyRecorder.RecordingEvent.STOP_FAILED -> {
+                AudioRecorder.RecordingEvent.STOP_FAILED -> {
                     Timber.e("Failed to close recording")
                 }
                 else -> {

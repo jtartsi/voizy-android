@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
-import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.ui.widget.RecordPlayButton
 import com.voizy.android.ui.widget.RecordPlayButton.Event
 import com.voizy.android.utils.getScopeProvider
@@ -75,11 +75,11 @@ class RecordPlayButtonFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                if (it.first == VoizyRecorder.RecordingEvent.STOP &&
+                if (it.first == AudioRecorder.RecordingEvent.STOP &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
                     recordPlayButton.state = RecordPlayButton.State.PLAY
-                } else if (it.first == VoizyRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME) {
+                } else if (it.first == AudioRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME) {
                     fragmentManager!!.popBackStackImmediate(
                         RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
                     )
@@ -92,7 +92,7 @@ class RecordPlayButtonFragment : Fragment() {
             }
 
         viewModel.getRecordingEvents()
-            .filter { it == VoizyRecorder.RecordingEvent.FILE_RECEIVED }
+            .filter { it == AudioRecorder.RecordingEvent.FILE_RECEIVED }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
