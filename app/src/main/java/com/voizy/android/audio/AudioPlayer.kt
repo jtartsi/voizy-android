@@ -3,7 +3,7 @@ package com.voizy.android.audio
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 
-class VoizyPlayer {
+class AudioPlayer {
 
     fun playLocal(filepath: String): Int {
         var durationInMillis: Int = -1

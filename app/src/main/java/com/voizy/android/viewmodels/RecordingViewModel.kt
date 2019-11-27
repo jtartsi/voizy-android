@@ -2,7 +2,8 @@ package com.voizy.android.viewmodels
 
 import android.content.Context
 import android.net.Uri
-import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.audio.AudioRecorder
+import com.voizy.android.audio.MediaEditor
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
@@ -15,17 +16,19 @@ import java.io.File
 
 class RecordingViewModel(
     private val voizyRepository: VoizyRepository,
-    private val voizyRecorder: VoizyRecorder,
+    private val voizyRecorder: AudioRecorder,
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics,
     private val localFileManager: LocalFileManager,
-    private val shareManager: ShareManager
+    private val shareManager: ShareManager,
+    private val mediaEditor: MediaEditor
 ) : DisposingViewModel() {
 
     companion object {
         private val TAG = RecordingViewModel::class.java.simpleName
+        private const val MAX_AUDIO_LENGTH_MS = 15000
     }
 
-    fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvent> {
+    fun getRecordingEvents(): Observable<AudioRecorder.RecordingEvent> {
         return voizyRecorder.getRecordingEvents()
             .withErrorHandling(TAG, "recordingEvents error")
     }
@@ -35,15 +38,36 @@ class RecordingViewModel(
         voizyRepository.saveVoizy(voizy)
     }
 
-    fun saveReceivedFileToTempLocation(uri: Uri): Observable<String> {
+    fun saveReceivedFile(uri: Uri): Observable<String> {
         return Observable
             .defer {
-                Observable.fromCallable {
-                    localFileManager.saveUriContentToFile(uri, localFileManager.getTempFilePath())
-                }
+                Observable
+                    .fromCallable {
+                        localFileManager.saveUriContentToFile(
+                            uri,
+                            localFileManager.getImportFilePath()
+                        )
+                    }
+                    .flatMap { finalizeImportedAudio(it) }
+                    .doOnNext { voizyRecorder.audioFileReceived() }
             }
-            .doOnNext { voizyRecorder.audioFileReceived() }
+
             .withErrorHandling(TAG, "Failed to save received file")
+    }
+
+    /**
+     * Clips to 15s and renames file
+     */
+    fun finalizeImportedAudio(sourcePath: String): Observable<String> {
+        val outputPath = localFileManager.getTempFilePath()
+        localFileManager.deleteFile(outputPath)
+
+        val audioLength = localFileManager.getAudioFileLengthInMillis(sourcePath)
+        return if (isAudioTrackWithinLimit(audioLength)) {
+            localFileManager.renameToTempFile(sourcePath)
+        } else {
+            mediaEditor.clip(sourcePath, outputPath)
+        }
     }
 
     fun getAudioFileLengthInSeconds(path: String): Observable<Int> {
@@ -71,5 +95,9 @@ class RecordingViewModel(
 
     fun startVoizyShare(context: Context, voizy: Voizy, file: File) {
         shareManager.startVoizyShare(context, voizy, file)
+    }
+
+    fun isAudioTrackWithinLimit(audioLength: Long): Boolean {
+        return audioLength < MAX_AUDIO_LENGTH_MS
     }
 }

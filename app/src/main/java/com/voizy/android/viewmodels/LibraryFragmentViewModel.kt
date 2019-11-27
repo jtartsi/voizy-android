@@ -4,7 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.paging.PagedList
-import com.voizy.android.audio.VoizyPlayer
+import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 
 class LibraryFragmentViewModel(
     private val voizyRepository: VoizyRepository,
-    private val voizyPlayer: VoizyPlayer,
+    private val voizyPlayer: AudioPlayer,
     private val firebaseAnalytics: VoizyFirebaseAnalytics,
     private val compositeDisposable: CompositeDisposable,
     private val shareManager: ShareManager

@@ -17,6 +17,7 @@ class LocalFileManager(private val context: Context) {
     companion object {
         private val TAG = LocalFileManager::class.java.simpleName
 
+        const val TMP_IMPORT_FILE_NAME = "source.mp3"
         const val TMP_VOIZY_FILE_NAME = "voizy_tmp.mp3"
         const val VOIZY_FILE_PREFIX = "voizy_"
         const val MP3_FILE_EXT = ".mp3"
@@ -28,8 +29,20 @@ class LocalFileManager(private val context: Context) {
             .withErrorHandling(TAG, "Failed to save voizy locally")
     }
 
+    fun getImportFilePath(): String {
+        return "${context.filesDir}/".plus(TMP_IMPORT_FILE_NAME)
+    }
+
     fun getTempFilePath(): String {
         return "${context.filesDir}/".plus(TMP_VOIZY_FILE_NAME)
+    }
+
+    fun renameToTempFile(sourceFile: String): Observable<String> {
+        return Observable.just(sourceFile)
+            .map {
+                File(it).renameTo(File(getTempFilePath()))
+                getTempFilePath()
+            }
     }
 
     fun saveUriContentToFile(uri: Uri, newPath: String): String {

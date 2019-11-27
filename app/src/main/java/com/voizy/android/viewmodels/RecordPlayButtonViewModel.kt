@@ -2,8 +2,8 @@ package com.voizy.android.viewmodels
 
 import android.content.Context
 import com.uber.autodispose.autoDisposable
-import com.voizy.android.audio.VoizyPlayer
-import com.voizy.android.audio.VoizyRecorder
+import com.voizy.android.audio.AudioPlayer
+import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.withErrorHandling
@@ -13,8 +13,8 @@ import io.reactivex.schedulers.Schedulers
 
 class RecordPlayButtonViewModel(
     private val context: Context,
-    private val voizyRecorder: VoizyRecorder,
-    private val voizyPlayer: VoizyPlayer,
+    private val voizyRecorder: AudioRecorder,
+    private val voizyPlayer: AudioPlayer,
     private val voizyRepository: VoizyRepository
 ) : DisposingViewModel() {
 
@@ -38,7 +38,7 @@ class RecordPlayButtonViewModel(
         voizyRecorder.stopRecording()
     }
 
-    fun getRecordingEvents(): Observable<VoizyRecorder.RecordingEvent> {
+    fun getRecordingEvents(): Observable<AudioRecorder.RecordingEvent> {
         return voizyRecorder.getRecordingEvents()
     }
 

@@ -18,6 +18,9 @@ class VoizyApp : Application() {
         FirebaseAnalytics.getInstance(this)
             .logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
 
+        // val ffmpeg = FFmpegBuilder.getInstance(this)
+        // Timber.d("ffmpeg-build onCreate() $ffmpeg")
+
         startKoin {
             androidContext(this@VoizyApp)
             modules(allModules)
