@@ -3,7 +3,6 @@ package com.voizy.android.viewmodels
 import android.content.Context
 import android.net.Uri
 import com.voizy.android.audio.AudioRecorder
-import com.voizy.android.audio.MediaEditor
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
@@ -19,8 +18,7 @@ class RecordingViewModel(
     private val voizyRecorder: AudioRecorder,
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics,
     private val localFileManager: LocalFileManager,
-    private val shareManager: ShareManager,
-    private val mediaEditor: MediaEditor
+    private val shareManager: ShareManager
 ) : DisposingViewModel() {
 
     companion object {
@@ -61,13 +59,17 @@ class RecordingViewModel(
     fun finalizeImportedAudio(sourcePath: String): Observable<String> {
         val outputPath = localFileManager.getTempFilePath()
         localFileManager.deleteFile(outputPath)
+        return localFileManager.renameToTempFile(sourcePath)
 
-        val audioLength = localFileManager.getAudioFileLengthInMillis(sourcePath)
-        return if (isAudioTrackWithinLimit(audioLength)) {
-            localFileManager.renameToTempFile(sourcePath)
-        } else {
-            mediaEditor.clip(sourcePath, outputPath)
-        }
+        // val audioLength = localFileManager.getAudioFileLengthInMillis(sourcePath)
+
+        // TODO FFmpeg implement clipping and remove rename logics
+        // return if (isAudioTrackWithinLimit(audioLength)) {
+        //     localFileManager.renameToTempFile(sourcePath)
+        // } else {
+        //     ffmpegManager.clip(sourcePath, outputPath)
+        //
+        // }
     }
 
     fun getAudioFileLengthInSeconds(path: String): Observable<Int> {
