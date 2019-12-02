@@ -6,20 +6,24 @@
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
         <item name="colorAccent">@color/voizy_orange</item>
-        <item name="android:statusBarColor">@android:color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/voizy_orange</item>
+        <item name="actionBarStyle">@style/VoizyAppBar</item>
     </style>
 
-    <style name="AppTheme.Launcher" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/splash_screen_drawable</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+    <style name="VoizyAppBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/voizy_orange</item>
     </style>
 
     <style name="VoizyTheme.BorderButton" parent="android:Widget.Material.Button.Borderless">
         <item name="android:background">@drawable/voizy_button_ripples</item>
         <item name="android:textColor">@color/voizy_orange</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="AppTheme.Launcher" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_screen_drawable</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
 </resources>
