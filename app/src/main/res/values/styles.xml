@@ -7,11 +7,12 @@
         <item name="colorPrimaryDark">@android:color/white</item>
         <item name="colorAccent">@color/voizy_orange</item>
         <item name="android:statusBarColor">@color/voizy_orange</item>
-        <item name="actionBarStyle">@style/VoizyAppBar</item>
+        <item name="actionBarStyle">@style/VoizyAppBarTheme</item>
     </style>
 
-    <style name="VoizyAppBar" parent="@style/Widget.AppCompat.ActionBar">
+    <style name="VoizyAppBarTheme" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:background">@color/voizy_orange</item>
+        <item name="android:icon">@drawable/splash_screen_image</item>
     </style>
 
     <style name="VoizyTheme.BorderButton" parent="android:Widget.Material.Button.Borderless">

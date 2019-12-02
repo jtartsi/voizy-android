@@ -17,8 +17,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"
-            android:icon="@drawable/splash_screen_image">
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +31,7 @@
                 <data android:mimeType="audio/*" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            
+
         </activity>
         <activity android:name=".ui.WebViewActivity" />
 
