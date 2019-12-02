@@ -5,8 +5,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.AudioRecorder
-import com.voizy.android.audio.FFmpegBuilder
-import com.voizy.android.audio.MediaEditor
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.ShareCollection
@@ -27,10 +25,8 @@ val appLogicsModule = module {
     factory { AudioPlayer() }
     factory { CompositeDisposable() }
     factory { ShareManager(get()) }
-    factory { MediaEditor(get()) }
     single { AudioRecorder() }
     single { LocalFileManager(get()) }
-    single { FFmpegBuilder.getInstance(get()) }
 }
 
 val repositoryModule = module {
@@ -48,7 +44,7 @@ val repositoryModule = module {
 
 val viewModels = module {
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
-    viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { RecordingViewModel(get(), get(), get(), get(), get()) }
     viewModel { RecordPlayButtonViewModel(get(), get(), get(), get()) }
 }
 
