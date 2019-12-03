@@ -19,11 +19,11 @@
             android:elevation="4dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="21dp"
-                android:layout_marginBottom="21dp"
+                android:layout_width="142.5dp"
+                android:layout_height="32.5dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="11.5dp"
                 android:src="@drawable/voizy_logo" />
 
             <ImageButton
