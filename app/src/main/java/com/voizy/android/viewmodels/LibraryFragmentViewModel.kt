@@ -84,6 +84,10 @@ class LibraryFragmentViewModel(
         }
     }
 
+    fun newTogglePlay() {
+        voizyPlayer.togglePlay()
+    }
+
     // TODO play-pause remove this
     fun togglePlay(voizy: Voizy): Observable<Int> {
         val toggleObservable: Observable<Int> =
