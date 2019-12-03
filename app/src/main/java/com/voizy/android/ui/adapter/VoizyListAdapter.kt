@@ -20,8 +20,12 @@ class VoizyListAdapter(
     }
 
     private lateinit var onPlayEvent: (
-        viewHolder: VoizyViewHolder, position: Int, voizy: Voizy
+        viewHolder: VoizyViewHolder,
+        position: Int,
+        voizy: Voizy
     ) -> Unit
+
+    private var playingViewHolder: VoizyViewHolder? = null
 
     var networkState: NetworkState? = null
         set(value) {
@@ -81,6 +85,17 @@ class VoizyListAdapter(
             (viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) -> Unit
     ) {
         this.onPlayEvent = onPlayEvent
+    }
+
+    fun showPlayingIndicator(viewHolder: VoizyViewHolder, audioLengthInMillis: Int) {
+        viewHolder.animateProgress(audioLengthInMillis)
+        playingViewHolder = viewHolder
+    }
+
+    fun clearPlayingState() {
+        playingViewHolder?.let {
+            it.animateProgress(0)
+        }
     }
 
     private fun hasExtraRow(): Boolean {

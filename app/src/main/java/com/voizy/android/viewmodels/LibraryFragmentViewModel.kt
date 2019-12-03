@@ -80,24 +80,9 @@ class LibraryFragmentViewModel(
         return voizyPlayer.getPlaybackEvents()
     }
 
-    // TODO play-pause remove this
-    fun togglePlay(voizy: Voizy) {
-        voizyPlayer.togglePlay(voizy)
-        // val toggleObservable: Observable<Int> =
-        //     if (!voizyPlayer.isPlaying) {
-        //         firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-        //
-        //         voizyRepository.getDownloadUrl(voizy.filePath)
-        //             .map { voizyPlayer.playRemote(it) }
-        //     } else {
-        //         Observable.defer {
-        //             Observable.fromCallable { voizyPlayer.stop() }
-        //         }
-        //     }
-        //
-        // return toggleObservable
-        //     .subscribeOn(Schedulers.io())
-        //     .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
+    fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
+        return voizyPlayer.togglePlay(voizy)
+            .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
     }
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<Pair<Voizy, File>> {

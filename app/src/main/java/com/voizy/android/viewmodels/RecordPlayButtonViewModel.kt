@@ -6,7 +6,6 @@ import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
-import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -43,10 +42,13 @@ class RecordPlayButtonViewModel(
     }
 
     fun startPreviewVoizyPlayback() {
-        Observable.fromCallable { voizyPlayer.playLocal(voizyRepository.getTempFilePath()) }
-            .withErrorHandling(TAG, "Failed to togglePlay local voizy")
-            .subscribeOn(Schedulers.io())
-            .subscribe()
-            .autoDispose()
+        // TODO play-pause, check this...
+        // Observable.fromCallable {
+        //     voizyPlayer.toggl(voizyRepository.getTempFilePath())
+        // }
+        //     .withErrorHandling(TAG, "Failed to togglePlay local voizy")
+        //     .subscribeOn(Schedulers.io())
+        //     .subscribe()
+        //     .autoDispose()
     }
 }

@@ -6,6 +6,7 @@ import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 
 class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
 
@@ -20,15 +21,45 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
         return playbackEvents
     }
 
-    fun togglePlay(voizy: Voizy) {
-        if (isPlaying) {
-            val audioLength = stop()
-            playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, audioLength))
-        }
-        if (currentTrackPath != voizy.filePath) {
-            val audioLength = play(voizy.filePath)
-            firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-            playbackEvents.onNext(PlaybackInfo(PlaybackEvent.START, audioLength))
+    // fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
+    //     return if (isPlaying && currentTrackPath == voizy.filePath) {
+    //         val audioLength = stop()
+    //         Observable.just(PlaybackInfo(PlaybackEvent.STOP, audioLength))
+    //     } else if (isPlaying) {
+    //         stop()
+    //         val audioLength = play(voizy.filePath)
+    //         firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+    //         Observable.just(PlaybackInfo(PlaybackEvent.SWITCH, audioLength))
+    //     } else if (!isPlaying) {
+    //         val audioLength = play(voizy.filePath)
+    //         // TODO play-pause remove analytics for the preview playback
+    //         // maybe still move that part to the viewmodel with .doOnNext pattern...
+    //         firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+    //         Observable.just(PlaybackInfo(PlaybackEvent.START, audioLength))
+    //     } else {
+    //         Observable.empty()
+    //     }
+    // }
+
+    fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
+        return Observable.defer {
+            if (isPlaying && currentTrackPath == voizy.filePath) {
+                val audioLength = stop()
+                Observable.just(PlaybackInfo(PlaybackEvent.STOP, audioLength))
+            } else if (isPlaying) {
+                stop()
+                val audioLength = play(voizy.filePath)
+                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+                Observable.just(PlaybackInfo(PlaybackEvent.SWITCH, audioLength))
+            } else if (!isPlaying) {
+                val audioLength = play(voizy.filePath)
+                // TODO play-pause remove analytics for the preview playback
+                // maybe still move that part to the viewmodel with .doOnNext pattern...
+                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+                Observable.just(PlaybackInfo(PlaybackEvent.START, audioLength))
+            } else {
+                Observable.empty()
+            }
         }
     }
 
@@ -44,6 +75,7 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
 
         mediaPlayer = MediaPlayer()
 
+        Timber.d("play-pause play $filePath")
         mediaPlayer?.apply {
             setDataSource(filePath)
             setAudioAttributes(audioAttributes)
