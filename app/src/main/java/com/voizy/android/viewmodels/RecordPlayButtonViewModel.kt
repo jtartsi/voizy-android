@@ -43,10 +43,7 @@ class RecordPlayButtonViewModel(
     }
 
     fun startPreviewVoizyPlayback() {
-        // TODO play-pause this is now broken.. fix!
-        Observable.fromCallable {
-            voizyPlayer.togglePlay(voizyRepository.getTempFilePath())
-        }
+        voizyPlayer.togglePlay(voizyRepository.getTempFilePath())
             .withErrorHandling(TAG, "Failed to togglePlay local voizy")
             .subscribeOn(Schedulers.io())
             .subscribe()
