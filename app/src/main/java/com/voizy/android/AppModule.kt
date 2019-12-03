@@ -22,9 +22,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appLogicsModule = module {
-    factory { AudioPlayer() }
     factory { CompositeDisposable() }
     factory { ShareManager(get()) }
+    single { AudioPlayer() }
     single { AudioRecorder() }
     single { LocalFileManager(get()) }
 }
