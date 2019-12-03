@@ -19,6 +19,10 @@ class VoizyListAdapter(
         private const val TYPE_ITEM = 1
     }
 
+    private lateinit var onPlayEvent: (
+        viewHolder: VoizyViewHolder, position: Int, voizy: Voizy
+    ) -> Unit
+
     var networkState: NetworkState? = null
         set(value) {
             val previousState = field
@@ -50,7 +54,7 @@ class VoizyListAdapter(
 
                 holder.bindTo(getItem(position)!!)
                 holder.itemView.setOnClickListener {
-                    listener.playVoizy(holder, position, getItem(position)!!)
+                    onPlayEvent(holder, position, getItem(position)!!)
                 }
                 holder.btnShare.setOnClickListener {
                     listener.shareVoizy(getItem(position)!!)
@@ -70,6 +74,13 @@ class VoizyListAdapter(
         } else {
             TYPE_ITEM
         }
+    }
+
+    fun setPlayEventListener(
+        onPlayEvent:
+            (viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) -> Unit
+    ) {
+        this.onPlayEvent = onPlayEvent
     }
 
     private fun hasExtraRow(): Boolean {

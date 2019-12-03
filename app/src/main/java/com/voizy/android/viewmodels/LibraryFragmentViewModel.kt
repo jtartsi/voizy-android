@@ -75,6 +75,16 @@ class LibraryFragmentViewModel(
             .withErrorHandling(TAG, "save voizy events error")
     }
 
+    fun newTogglePlay(voizy: Voizy) {
+        if (voizyPlayer.isPlaying) {
+            voizyPlayer.stop()
+        } else {
+            firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+            voizyPlayer.playRemote(voizy)
+        }
+    }
+
+    // TODO play-pause remove this
     fun togglePlay(voizy: Voizy): Observable<Int> {
         val toggleObservable: Observable<Int> =
             if (!voizyPlayer.isPlaying) {

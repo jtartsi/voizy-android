@@ -2,6 +2,7 @@ package com.voizy.android.audio
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import com.voizy.android.middleware.firebase.models.Voizy
 
 class AudioPlayer {
 
@@ -28,6 +29,31 @@ class AudioPlayer {
         return durationInMillis
     }
 
+    fun playRemote(voizy: Voizy): Int {
+        var durationInMillis: Int = -1
+
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build()
+
+        mediaPlayer = MediaPlayer()
+
+        mediaPlayer?.apply {
+            setDataSource(voizy.filePath)
+            setAudioAttributes(audioAttributes)
+            prepare()
+            start()
+            setOnCompletionListener {
+                release()
+                mediaPlayer = null
+            }
+            durationInMillis = duration
+        }
+        return durationInMillis
+    }
+
+    // TODO play-pause remove duplicates
     fun playRemote(url: String): Int {
         var durationInMillis: Int = -1
 

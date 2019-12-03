@@ -22,6 +22,7 @@ import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
@@ -90,6 +91,56 @@ class LibraryFragment :
         initCopyToClipBoard()
         initSaveNotifications()
         initPrivacyPolicy()
+        initPlayback()
+    }
+
+    private fun initPlay() {
+        // voizyAdapter.setPlayEventListener { viewHolder, position, voizy ->
+        //     viewModel.togglePlay(voizy)
+        //         .observeOn(AndroidSchedulers.mainThread())
+        //         .autoDisposable(getScopeProvider())
+        //         .subscribe { viewHolder.animateProgress(it) }
+        // }
+
+        // viewModel.onPlaybackStopped().subscribe()
+        // another option V
+
+        voizyAdapter.setPlayEventListener { viewHolder, position, voizy ->
+            /*
+            In case one voizy is playing and we reclick.. now the stop will happen,
+            but the viewHolder that we have here is wrong. Therefore we would need to keep track
+            of the playing viewholder to be able to stop the animation.
+                - Keep in Fragment variable
+                - Keep in ViewModel variable
+                - Keep in Adapter *variable*
+
+            Try also if we can just call notifyDataSetChanged()
+             */
+            viewModel.togglePlay(voizy)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { viewHolder.animateProgress(it) }
+                .observeOn(Schedulers.io())
+                .autoDisposable(getScopeProvider())
+                .subscribe { viewHolder.animateProgress(it) }
+            voizyAdapter.notifyDataSetChanged()
+
+        }
+    }
+
+    private fun initPlayback() {
+        // setting the playback event listener : viewHolder: ViewHolder, position: Int, voizy: Voizy
+        // val stopFunction = viewholder.getStopFunction()
+        // wrapper that returns viewholder details... including stopFunction
+        // we have stream here
+        // Observable.just(viewHolderWrapper)
+        //     .doOnNext(viewModel.togglePlay())
+        //     .zipWith(viewModel.getPlayEvents())
+        //     .subscribe({
+        //         if (stop) {
+        //             stopFunction.invoke()
+        //         }
+        //     })
+        // not going to work.. would stop for the next one.
     }
 
     private fun initLoader() {
