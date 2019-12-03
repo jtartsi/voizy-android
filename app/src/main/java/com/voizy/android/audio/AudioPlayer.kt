@@ -20,26 +20,6 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
         return playbackEvents
     }
 
-    // fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
-    //     return if (isPlaying && currentTrackPath == voizy.filePath) {
-    //         val audioLength = stop()
-    //         Observable.just(PlaybackInfo(PlaybackEvent.STOP, audioLength))
-    //     } else if (isPlaying) {
-    //         stop()
-    //         val audioLength = play(voizy.filePath)
-    //         firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-    //         Observable.just(PlaybackInfo(PlaybackEvent.SWITCH, audioLength))
-    //     } else if (!isPlaying) {
-    //         val audioLength = play(voizy.filePath)
-    //         // TODO play-pause remove analytics for the preview playback
-    //         // maybe still move that part to the viewmodel with .doOnNext pattern...
-    //         firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-    //         Observable.just(PlaybackInfo(PlaybackEvent.START, audioLength))
-    //     } else {
-    //         Observable.empty()
-    //     }
-    // }
-
     fun togglePlay(url: String): Observable<PlaybackInfo> {
         return Observable.defer {
             if (isPlaying && currentTrackPath == url) {
@@ -70,7 +50,7 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
 
         mediaPlayer = MediaPlayer()
 
-        Timber.d("play-pause play $filePath")
+        Timber.d("play-pause play() $filePath")
         mediaPlayer?.apply {
             setDataSource(filePath)
             setAudioAttributes(audioAttributes)
@@ -87,6 +67,7 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
     }
 
     private fun stop(): Int {
+        Timber.d("play-pause stop() ")
         mediaPlayer?.apply {
             if (isPlaying) {
                 stop()
@@ -97,71 +78,4 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
         }
         return 0
     }
-
-    // fun playLocal(filepath: String): Int {
-    //     var durationInMillis: Int = -1
-    //
-    //     mediaPlayer = MediaPlayer()
-    //
-    //     mediaPlayer?.apply {
-    //         setDataSource(filepath)
-    //         prepare()
-    //         start()
-    //         setOnCompletionListener {
-    //             release()
-    //             mediaPlayer = null
-    //         }
-    //         durationInMillis = duration
-    //     }
-    //     return durationInMillis
-    // }
-    //
-    // fun playRemote(voizy: Voizy): Int {
-    //     var durationInMillis: Int = -1
-    //
-    //     val audioAttributes = AudioAttributes.Builder()
-    //         .setUsage(AudioAttributes.USAGE_MEDIA)
-    //         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-    //         .build()
-    //
-    //     mediaPlayer = MediaPlayer()
-    //
-    //     mediaPlayer?.apply {
-    //         setDataSource(voizy.filePath)
-    //         setAudioAttributes(audioAttributes)
-    //         prepare()
-    //         start()
-    //         setOnCompletionListener {
-    //             release()
-    //             mediaPlayer = null
-    //         }
-    //         durationInMillis = duration
-    //     }
-    //     return durationInMillis
-    // }
-    //
-    // // TODO play-pause remove duplicates
-    // fun playRemote(url: String): Int {
-    //     var durationInMillis: Int = -1
-    //
-    //     val audioAttributes = AudioAttributes.Builder()
-    //         .setUsage(AudioAttributes.USAGE_MEDIA)
-    //         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-    //         .build()
-    //
-    //     mediaPlayer = MediaPlayer()
-    //
-    //     mediaPlayer?.apply {
-    //         setDataSource(url)
-    //         setAudioAttributes(audioAttributes)
-    //         prepare()
-    //         start()
-    //         setOnCompletionListener {
-    //             release()
-    //             mediaPlayer = null
-    //         }
-    //         durationInMillis = duration
-    //     }
-    //     return durationInMillis
-    // }
 }
