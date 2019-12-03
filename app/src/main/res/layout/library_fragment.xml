@@ -5,30 +5,62 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:theme="@style/VoizyAppBarTheme"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/voizy_logo" />
+
+            <ImageButton
+                android:id="@+id/btn_privacy_policy"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="end"
+                android:src="@drawable/info_white"
+                android:background="@android:color/transparent" />
+
+        </android.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <EditText
         android:id="@+id/et_search"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_privacy_policy"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        app:layout_constraintEnd_toEndOf="parent"
         android:drawablePadding="8dp"
         android:foregroundTintMode="@android:color/white"
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:hint="Search"
         android:background="@drawable/border_background" />
 
-    <ImageButton
-        android:id="@+id/btn_privacy_policy"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/et_search"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/info"
-        android:background="@android:color/transparent" />
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/btn_privacy_policy"-->
+    <!--        android:layout_width="45dp"-->
+    <!--        android:layout_height="45dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/et_search"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:src="@drawable/info"-->
+    <!--        android:background="@android:color/transparent" />-->
 
     <ProgressBar
         android:id="@+id/initial_loader"
