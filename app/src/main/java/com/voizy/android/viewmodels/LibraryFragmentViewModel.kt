@@ -45,9 +45,11 @@ class LibraryFragmentViewModel(
     val voizys: Observable<PagedList<Voizy>> = voizyResults
         .flatMap { it.pagedListObservable }
         .withErrorHandling(TAG, "failed to get voizys")
+
     val networkState: Observable<NetworkState> = voizyResults
         .flatMap { it.networkSate }
         .withErrorHandling(TAG, "failed to get networkState")
+
     val initialLoading: Observable<NetworkState> = voizyResults
         .flatMap { it.initialLoading }
         .withErrorHandling(TAG, "failed to get initialLoading state")

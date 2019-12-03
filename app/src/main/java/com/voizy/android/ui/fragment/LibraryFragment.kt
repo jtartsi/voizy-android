@@ -25,12 +25,10 @@ import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class LibraryFragment :
     BaseFragment(),
-    VoizyActionListener,
-    TextWatcher {
+    VoizyActionListener {
 
     override fun getFragmentTag(): String {
         return TAG
@@ -47,18 +45,6 @@ class LibraryFragment :
 
     companion object {
         val TAG = LibraryFragment::class.java.simpleName
-    }
-
-    override fun afterTextChanged(s: Editable?) {
-    }
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-    }
-
-    override fun onTextChanged(searchText: CharSequence?, start: Int, before: Int, count: Int) {
-        voizyRecyclerView.scrollToPosition(0)
-        voizyAdapter.submitList(null)
-        viewModel.loadVoizys(searchText.toString())
     }
 
     override fun shareVoizy(voizy: Voizy) {
@@ -78,7 +64,6 @@ class LibraryFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("onCreate()")
     }
 
     override fun onCreateView(
@@ -91,37 +76,94 @@ class LibraryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.d("onViewCreated()")
-
-        et_search.addTextChangedListener(this)
-        btn_privacy_policy.setOnClickListener {
-            Timber.d("onClick")
-            val intent = Intent(context, WebViewActivity::class.java)
-            startActivity(intent)
-        }
 
         voizyRecyclerView = view.findViewById(R.id.rv_voizy_list)
-
-        initListAdapter()
-
-        setObservables()
-
-        viewModel.loadVoizys()
     }
 
-    private fun initListAdapter() {
+    override fun onStart() {
+        super.onStart()
 
+        initLoader()
+        initVoizyListing()
+        initSearch()
+        initSharing()
+        initCopyToClipBoard()
+        initSaveNotifications()
+        initPrivacyPolicy()
+    }
+
+    private fun initLoader() {
+        viewModel.initialLoading
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                initial_loader.visibility =
+                    if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
+            }
+    }
+
+    private fun initVoizyListing() {
         voizyAdapter = VoizyListAdapter(this)
-
         voizyRecyclerView.layoutManager = LinearLayoutManager(
             this.context!!,
             LinearLayoutManager.VERTICAL,
             false
         )
         voizyRecyclerView.adapter = voizyAdapter
+
+        viewModel.voizys
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { voizyAdapter.submitList(it) }
+
+        viewModel.networkState
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { voizyAdapter.networkState = it }
+
+        viewModel.loadVoizys()
     }
 
-    private fun setObservables() {
+    private fun initSearch() {
+        et_search.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(
+                searchText: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                voizyRecyclerView.scrollToPosition(0)
+                voizyAdapter.submitList(null)
+                viewModel.loadVoizys(searchText.toString())
+            }
+        })
+    }
+
+    private fun initCopyToClipBoard() {
+        clipBoardRequests.switchMap { viewModel.downloadUrlToClipboard(context!!, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                Snackbar.make(
+                    view!!, getString(R.string.url_copied_to_clipboard), Snackbar.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    private fun initSaveNotifications() {
+        viewModel.getSaveVoizyEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(saveEventConsumer())
+    }
+
+    private fun initSharing() {
         shareRequests
             .doOnNext {
                 Snackbar.make(
@@ -134,41 +176,16 @@ class LibraryFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
-
-        viewModel.getSaveVoizyEvents()
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe(saveEventObserver())
-
-        viewModel.voizys
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe { voizyAdapter.submitList(it) }
-
-        viewModel.initialLoading
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                initial_loader.visibility =
-                    if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
-            }
-
-        viewModel.networkState
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe { voizyAdapter.networkState = it }
-
-        clipBoardRequests.switchMap { viewModel.downloadUrlToClipboard(context!!, it) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                Snackbar.make(
-                    view!!, getString(R.string.url_copied_to_clipboard), Snackbar.LENGTH_SHORT
-                ).show()
-            }
     }
 
-    private fun saveEventObserver(): Consumer<Pair<Boolean, Voizy?>> {
+    private fun initPrivacyPolicy() {
+        btn_privacy_policy.setOnClickListener {
+            val intent = Intent(context, WebViewActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun saveEventConsumer(): Consumer<Pair<Boolean, Voizy?>> {
         return Consumer { pair ->
             if (pair.first) {
                 Snackbar.make(
