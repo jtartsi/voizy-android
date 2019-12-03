@@ -23,7 +23,7 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
     fun togglePlay(voizy: Voizy) {
         if (isPlaying) {
             val audioLength = stop()
-            playbackEvents.onNext(PlaybackInfo(PlaybackEvent.START, audioLength))
+            playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, audioLength))
         }
         if (currentTrackPath != voizy.filePath) {
             val audioLength = play(voizy.filePath)

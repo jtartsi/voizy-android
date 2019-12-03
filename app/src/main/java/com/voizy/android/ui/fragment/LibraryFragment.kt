@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.WebViewActivity
 import com.voizy.android.ui.adapter.VoizyListAdapter
@@ -94,7 +95,50 @@ class LibraryFragment :
         initPlayback()
     }
 
+    /*
+    Another plan...
+    - toggle to return events directly here start, stop, switch
+    - stop -> adapter.clearPlaying
+    - start -> adapter.startPlaying(viewHolder)
+    - switch -> adapter.clearPlaying, adapter.startPlaying(viewHolder)
+     */
+
+    /*
+    Through subjects..
+    - toggle doesn't return anything
+    - before starts adapter { selected <- this }
+    - start -> adapter.startPlayingSelected()
+    - stop -> adapter.clearPlaying()
+    - switch -> adapter.clearPlaying(), adapter.startPlaying()
+     */
     private fun initPlay() {
+        voizyAdapter.setPlayEventListener { viewHolder, position, voizy ->
+            viewModel.togglePlay(voizy)
+        }
+
+        viewModel.getPlayEvents()
+            .filter { it.playbackEvent == PlaybackEvent.START }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+            }
+
+        //
+
+        viewModel.getPlayEvents()
+            .filter { it.playbackEvent == PlaybackEvent.STOP }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                voizyAdapter.clearCurrentPlay()
+                // notifyDataSetChanged()
+                // keep track of the started content
+            }
+    }
+
+    private fun initPlaya() {
         // voizyAdapter.setPlayEventListener { viewHolder, position, voizy ->
         //     viewModel.togglePlay(voizy)
         //         .observeOn(AndroidSchedulers.mainThread())
@@ -116,13 +160,13 @@ class LibraryFragment :
 
             Try also if we can just call notifyDataSetChanged()
              */
-            viewModel.togglePlay(voizy)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { viewHolder.animateProgress(it) }
-                .observeOn(Schedulers.io())
-                .autoDisposable(getScopeProvider())
-                .subscribe { viewHolder.animateProgress(it) }
-            voizyAdapter.notifyDataSetChanged()
+            // viewModel.togglePlay(voizy)
+            //     .observeOn(AndroidSchedulers.mainThread())
+            //     .doOnNext { viewHolder.animateProgress(it) }
+            //     .observeOn(Schedulers.io())
+            //     .autoDisposable(getScopeProvider())
+            //     .subscribe { viewHolder.animateProgress(it) }
+            // voizyAdapter.notifyDataSetChanged()
 
         }
     }

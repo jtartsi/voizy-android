@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.paging.PagedList
 import com.voizy.android.audio.AudioPlayer
+import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
@@ -75,36 +76,28 @@ class LibraryFragmentViewModel(
             .withErrorHandling(TAG, "save voizy events error")
     }
 
-    fun newTogglePlay(voizy: Voizy) {
-        if (voizyPlayer.isPlaying) {
-            voizyPlayer.stop()
-        } else {
-            firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-            voizyPlayer.playRemote(voizy)
-        }
-    }
-
-    fun newTogglePlay() {
-        voizyPlayer.togglePlay()
+    fun getPlayEvents(): Observable<PlaybackInfo> {
+        return voizyPlayer.getPlaybackEvents()
     }
 
     // TODO play-pause remove this
-    fun togglePlay(voizy: Voizy): Observable<Int> {
-        val toggleObservable: Observable<Int> =
-            if (!voizyPlayer.isPlaying) {
-                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-
-                voizyRepository.getDownloadUrl(voizy.filePath)
-                    .map { voizyPlayer.playRemote(it) }
-            } else {
-                Observable.defer {
-                    Observable.fromCallable { voizyPlayer.stop() }
-                }
-            }
-
-        return toggleObservable
-            .subscribeOn(Schedulers.io())
-            .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
+    fun togglePlay(voizy: Voizy) {
+        voizyPlayer.togglePlay(voizy)
+        // val toggleObservable: Observable<Int> =
+        //     if (!voizyPlayer.isPlaying) {
+        //         firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+        //
+        //         voizyRepository.getDownloadUrl(voizy.filePath)
+        //             .map { voizyPlayer.playRemote(it) }
+        //     } else {
+        //         Observable.defer {
+        //             Observable.fromCallable { voizyPlayer.stop() }
+        //         }
+        //     }
+        //
+        // return toggleObservable
+        //     .subscribeOn(Schedulers.io())
+        //     .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
     }
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<Pair<Voizy, File>> {
