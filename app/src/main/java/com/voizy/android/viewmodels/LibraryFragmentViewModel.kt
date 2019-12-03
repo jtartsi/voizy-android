@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.paging.PagedList
 import com.voizy.android.audio.AudioPlayer
+import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
@@ -20,6 +21,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 import java.util.concurrent.TimeUnit
+import java.util.function.Consumer
 
 class LibraryFragmentViewModel(
     private val voizyRepository: VoizyRepository,
@@ -81,7 +83,11 @@ class LibraryFragmentViewModel(
     }
 
     fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
-        return voizyPlayer.togglePlay(voizy)
+        return voizyRepository.getDownloadUrl(voizy.filePath)
+            .flatMap {
+                voizyPlayer.togglePlay(it)
+            }
+            .doOnNext { handlePlayAnalytics(voizy) }
             .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
     }
 
@@ -107,5 +113,15 @@ class LibraryFragmentViewModel(
                 clipBoard.primaryClip = ClipData.newPlainText("voizy url", it)
             }
             .withErrorHandling(TAG, "Failed to copy download url")
+    }
+
+    private fun handlePlayAnalytics(voizy: Voizy): Consumer<PlaybackInfo> {
+        return Consumer {
+            if (it.playbackEvent == PlaybackEvent.START ||
+                it.playbackEvent == PlaybackEvent.SWITCH
+            ) {
+                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+            }
+        }
     }
 }
