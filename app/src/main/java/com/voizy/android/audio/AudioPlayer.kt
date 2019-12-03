@@ -5,15 +5,23 @@ import android.media.MediaPlayer
 
 class AudioPlayer {
 
+    private var mediaPlayer: MediaPlayer? = null
+
+    val isPlaying: Boolean
+        get() = mediaPlayer != null && mediaPlayer!!.isPlaying
+
     fun playLocal(filepath: String): Int {
         var durationInMillis: Int = -1
 
-        MediaPlayer().apply {
+        mediaPlayer = MediaPlayer()
+
+        mediaPlayer?.apply {
             setDataSource(filepath)
             prepare()
             start()
             setOnCompletionListener {
-                it.release()
+                release()
+                mediaPlayer = null
             }
             durationInMillis = duration
         }
@@ -28,16 +36,30 @@ class AudioPlayer {
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build()
 
-        MediaPlayer().apply {
+        mediaPlayer = MediaPlayer()
+
+        mediaPlayer?.apply {
             setDataSource(url)
             setAudioAttributes(audioAttributes)
             prepare()
             start()
             setOnCompletionListener {
-                it.release()
+                release()
+                mediaPlayer = null
             }
             durationInMillis = duration
         }
         return durationInMillis
+    }
+
+    fun stop(): Int {
+        mediaPlayer?.apply {
+            if (isPlaying) {
+                stop()
+                release()
+                mediaPlayer = null
+            }
+        }
+        return 0
     }
 }

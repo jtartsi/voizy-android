@@ -66,7 +66,7 @@ class LibraryFragment :
     }
 
     override fun playVoizy(viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) {
-        viewModel.playVoizy(voizy)
+        viewModel.togglePlay(voizy)
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { viewHolder.animateProgress(it) }

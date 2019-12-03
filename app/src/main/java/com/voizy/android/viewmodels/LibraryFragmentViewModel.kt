@@ -73,12 +73,22 @@ class LibraryFragmentViewModel(
             .withErrorHandling(TAG, "save voizy events error")
     }
 
-    fun playVoizy(voizy: Voizy): Observable<Int> {
-        firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-        return voizyRepository.getDownloadUrl(voizy.filePath)
-            .map { voizyPlayer.playRemote(it) }
+    fun togglePlay(voizy: Voizy): Observable<Int> {
+        val toggleObservable: Observable<Int> =
+            if (!voizyPlayer.isPlaying) {
+                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+
+                voizyRepository.getDownloadUrl(voizy.filePath)
+                    .map { voizyPlayer.playRemote(it) }
+            } else {
+                Observable.defer {
+                    Observable.fromCallable { voizyPlayer.stop() }
+                }
+            }
+
+        return toggleObservable
             .subscribeOn(Schedulers.io())
-            .withErrorHandling(TAG, "Failed to play Voizy ${voizy.name}")
+            .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
     }
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<Pair<Voizy, File>> {
