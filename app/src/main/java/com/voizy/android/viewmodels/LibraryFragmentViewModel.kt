@@ -78,10 +78,6 @@ class LibraryFragmentViewModel(
             .withErrorHandling(TAG, "save voizy events error")
     }
 
-    fun getPlayEvents(): Observable<PlaybackInfo> {
-        return voizyPlayer.getPlaybackEvents()
-    }
-
     fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
         return voizyRepository.getDownloadUrl(voizy.filePath)
             .flatMap {
