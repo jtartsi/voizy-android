@@ -19,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
@@ -47,9 +48,32 @@ class LibraryFragmentViewModel(
 
     val voizys: Observable<PagedList<Voizy>> = voizyResults
         .flatMap { it.pagedListObservable }
+        .doOnNext {
+            it.addWeakCallback(null, object : PagedList.Callback() {
+                override fun onChanged(position: Int, count: Int) {
+                    Timber.d("results-state onChanged() position $position, count $count")
+                }
+
+                override fun onInserted(position: Int, count: Int) {
+                    Timber.d("results-state onInserted() position $position, count $count")
+                }
+
+                override fun onRemoved(position: Int, count: Int) {
+                    Timber.d("results-state onRemoved() position $position, count $count")
+                }
+            })
+        }
         .withErrorHandling(TAG, "failed to get voizys")
 
-    val resultsState: Observable<Boolean> = voizys.map { !it.isEmpty() }
+    val resultsState: Observable<Boolean> = voizys.map {
+        Timber.d("results-state $it")
+        Timber.d("results-state size ${it.size}")
+        Timber.d("results-state snapshot ${it.snapshot()}")
+        Timber.d("results-state snapshot.size ${it.snapshot().size}")
+        Timber.d("results-state snapshot.loadedCount ${it.loadedCount}")
+        Timber.d("results-state snapshot.positionOffSet ${it.positionOffset}")
+        !it.isEmpty()
+    }
 
     val networkState: Observable<NetworkState> = voizyResults
         .flatMap { it.networkSate }

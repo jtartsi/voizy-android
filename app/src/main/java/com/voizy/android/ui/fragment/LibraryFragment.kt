@@ -26,6 +26,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class LibraryFragment :
     BaseFragment() {
@@ -130,7 +131,13 @@ class LibraryFragment :
         viewModel.voizys
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { voizyListAdapter.submitList(it) }
+            .subscribe {
+                Timber.d("results-state viewmodel.voizys.size ${it.size}")
+                Timber.d("results-state viewmodel.voizys.snapshot ${it.snapshot()}")
+                Timber.d("results-state viewmodel.voizys.snapshot.size ${it.snapshot().size}")
+                Timber.d("results-state viewmodel.voizys.loadedCount ${it.loadedCount}")
+                voizyListAdapter.submitList(it)
+            }
 
         viewModel.networkState
             .observeOn(AndroidSchedulers.mainThread())
@@ -142,7 +149,6 @@ class LibraryFragment :
 
     private fun initResultsState() {
         viewModel.resultsState
-            .observeOn(Schedulers.io())
             .autoDisposable(getScopeProvider())
             .subscribe {
                 image_no_results.visibility = if (it) View.GONE else View.VISIBLE
