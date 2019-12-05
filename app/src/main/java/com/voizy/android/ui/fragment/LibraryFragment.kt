@@ -17,7 +17,6 @@ import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.WebViewActivity
 import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
-import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.LibraryFragmentViewModel
@@ -29,8 +28,7 @@ import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
 
 class LibraryFragment :
-    BaseFragment(),
-    VoizyActionListener {
+    BaseFragment() {
 
     override fun getFragmentTag(): String {
         return TAG
@@ -41,28 +39,12 @@ class LibraryFragment :
 
     private val viewModel: LibraryFragmentViewModel by inject()
     private lateinit var voizyRecyclerView: RecyclerView
-    private lateinit var voizyAdapter: VoizyListAdapter
+    private lateinit var voizyListAdapter: VoizyListAdapter
     private val shareRequests = PublishSubject.create<Voizy>()
     private val clipBoardRequests = PublishSubject.create<Voizy>()
 
     companion object {
         val TAG = LibraryFragment::class.java.simpleName
-    }
-
-    override fun shareVoizy(voizy: Voizy) {
-        shareRequests.onNext(voizy)
-    }
-
-    // TODO play-pause remove this
-    override fun playVoizy(viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) {
-        // viewModel.togglePlay(voizy)
-        //     .observeOn(AndroidSchedulers.mainThread())
-        //     .autoDisposable(getScopeProvider())
-        //     .subscribe { viewHolder.animateProgress(it) }
-    }
-
-    override fun onVoizyLongPress(voizy: Voizy) {
-        clipBoardRequests.onNext(voizy)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,31 +71,15 @@ class LibraryFragment :
         initLoader()
         initVoizyListing()
         initSearch()
-        initSharing()
+        initShare()
         initCopyToClipBoard()
         initSaveNotifications()
         initPrivacyPolicy()
         initPlayback()
     }
 
-    /*
-    Another plan...
-    - toggle to return events directly here start, stop, switch
-    - stop -> adapter.clearPlaying
-    - start -> adapter.startPlaying(viewHolder)
-    - switch -> adapter.clearPlaying, adapter.startPlaying(viewHolder)
-     */
-
-    /*
-    Through subjects..
-    - toggle doesn't return anything
-    - before starts adapter { selected <- this }
-    - start -> adapter.startPlayingSelected()
-    - stop -> adapter.clearPlaying()
-    - switch -> adapter.clearPlaying(), adapter.startPlaying()
-     */
     private fun initPlayback() {
-        voizyAdapter.setPlayEventListener { viewHolder, position, voizy ->
+        voizyListAdapter.onPlayEvent = { viewHolder: VoizyViewHolder, i: Int, voizy: Voizy ->
             viewModel.togglePlay(voizy)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,68 +87,25 @@ class LibraryFragment :
                 .subscribe {
                     when (it.playbackEvent) {
                         PlaybackEvent.START -> {
-                            voizyAdapter.showPlayingIndicator(viewHolder, it.audioLengthInMillis)
+                            voizyListAdapter.showPlayingIndicator(
+                                viewHolder,
+                                it.audioLengthInMillis
+                            )
                         }
                         PlaybackEvent.STOP -> {
-                            voizyAdapter.clearPlayingState()
+                            voizyListAdapter.clearPlayingState()
                         }
                         PlaybackEvent.SWITCH -> {
-                            voizyAdapter.clearPlayingState()
-                            voizyAdapter.showPlayingIndicator(viewHolder, it.audioLengthInMillis)
+                            voizyListAdapter.clearPlayingState()
+                            voizyListAdapter.showPlayingIndicator(
+                                viewHolder,
+                                it.audioLengthInMillis
+                            )
                         }
                     }
                 }
         }
     }
-
-    // private fun initPlaya() {
-    // voizyAdapter.setPlayEventListener { viewHolder, position, voizy ->
-    //     viewModel.togglePlay(voizy)
-    //         .observeOn(AndroidSchedulers.mainThread())
-    //         .autoDisposable(getScopeProvider())
-    //         .subscribe { viewHolder.animateProgress(it) }
-    // }
-
-    // viewModel.onPlaybackStopped().subscribe()
-    // another option V
-
-    // voizyAdapter.setPlayEventListener { viewHolder, position, voizy ->
-    /*
-    In case one voizy is playing and we reclick.. now the stop will happen,
-    but the viewHolder that we have here is wrong. Therefore we would need to keep track
-    of the playing viewholder to be able to stop the animation.
-        - Keep in Fragment variable
-        - Keep in ViewModel variable
-        - Keep in Adapter *variable*
-
-    Try also if we can just call notifyDataSetChanged()
-     */
-    // viewModel.togglePlay(voizy)
-    //     .observeOn(AndroidSchedulers.mainThread())
-    //     .doOnNext { viewHolder.animateProgress(it) }
-    //     .observeOn(Schedulers.io())
-    //     .autoDisposable(getScopeProvider())
-    //     .subscribe { viewHolder.animateProgress(it) }
-    // voizyAdapter.notifyDataSetChanged()
-
-    // }
-    // }
-
-    // private fun initPlayback() {
-    // setting the playback event listener : viewHolder: ViewHolder, position: Int, voizy: Voizy
-    // val stopFunction = viewholder.getStopFunction()
-    // wrapper that returns viewholder details... including stopFunction
-    // we have stream here
-    // Observable.just(viewHolderWrapper)
-    //     .doOnNext(viewModel.togglePlay())
-    //     .zipWith(viewModel.getPlayEvents())
-    //     .subscribe({
-    //         if (stop) {
-    //             stopFunction.invoke()
-    //         }
-    //     })
-    // not going to work.. would stop for the next one.
-    // }
 
     private fun initLoader() {
         viewModel.initialLoading
@@ -195,23 +118,23 @@ class LibraryFragment :
     }
 
     private fun initVoizyListing() {
-        voizyAdapter = VoizyListAdapter(this)
+        voizyListAdapter = VoizyListAdapter()
         voizyRecyclerView.layoutManager = LinearLayoutManager(
             this.context!!,
             LinearLayoutManager.VERTICAL,
             false
         )
-        voizyRecyclerView.adapter = voizyAdapter
+        voizyRecyclerView.adapter = voizyListAdapter
 
         viewModel.voizys
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { voizyAdapter.submitList(it) }
+            .subscribe { voizyListAdapter.submitList(it) }
 
         viewModel.networkState
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe { voizyAdapter.networkState = it }
+            .subscribe { voizyListAdapter.networkState = it }
 
         viewModel.loadVoizys()
     }
@@ -231,7 +154,7 @@ class LibraryFragment :
                 count: Int
             ) {
                 voizyRecyclerView.scrollToPosition(0)
-                voizyAdapter.submitList(null)
+                voizyListAdapter.submitList(null)
                 viewModel.loadVoizys(searchText.toString())
             }
         })
@@ -246,6 +169,10 @@ class LibraryFragment :
                     view!!, getString(R.string.url_copied_to_clipboard), Snackbar.LENGTH_SHORT
                 ).show()
             }
+
+        voizyListAdapter.onLongPress = { _: VoizyViewHolder, _: Int, voizy: Voizy ->
+            clipBoardRequests.onNext(voizy)
+        }
     }
 
     private fun initSaveNotifications() {
@@ -255,7 +182,7 @@ class LibraryFragment :
             .subscribe(saveEventConsumer())
     }
 
-    private fun initSharing() {
+    private fun initShare() {
         shareRequests
             .doOnNext {
                 Snackbar.make(
@@ -268,6 +195,10 @@ class LibraryFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
+
+        voizyListAdapter.onShareEvent = { _: VoizyViewHolder, _: Int, voizy: Voizy ->
+            shareRequests.onNext(voizy)
+        }
     }
 
     private fun initPrivacyPolicy() {
