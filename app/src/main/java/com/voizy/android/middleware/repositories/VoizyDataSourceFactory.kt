@@ -10,7 +10,7 @@ import io.reactivex.subjects.PublishSubject
 class VoizyDataSourceFactory(
     private val searchKeyword: String,
     private val compositeDisposable: CompositeDisposable,
-    private val searchCollecition: VoizySearchRequestCollection
+    private val searchCollection: VoizySearchRequestCollection
 ) : Factory<Int, Voizy>() {
 
     val dataSource = PublishSubject.create<VoizyDataSource>()
@@ -20,7 +20,7 @@ class VoizyDataSourceFactory(
             VoizyDataSource(
                 searchKeyword,
                 compositeDisposable,
-                searchCollecition
+                searchCollection
             )
         dataSource.onNext(voizysDataSource)
         return voizysDataSource

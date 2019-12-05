@@ -76,6 +76,7 @@ class LibraryFragment :
         initSaveNotifications()
         initPrivacyPolicy()
         initPlayback()
+        initResultsState()
     }
 
     private fun initPlayback() {
@@ -107,16 +108,6 @@ class LibraryFragment :
         }
     }
 
-    private fun initLoader() {
-        viewModel.initialLoading
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                initial_loader.visibility =
-                    if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
-            }
-    }
-
     private fun initVoizyListing() {
         voizyListAdapter = VoizyListAdapter()
         voizyRecyclerView.layoutManager = LinearLayoutManager(
@@ -137,6 +128,30 @@ class LibraryFragment :
             .subscribe { voizyListAdapter.networkState = it }
 
         viewModel.loadVoizys()
+    }
+
+    private fun initLoader() {
+        viewModel.initialLoading
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                progress_initial_loader.visibility =
+                    if (it == NetworkState.LOADING) View.VISIBLE else View.INVISIBLE
+            }
+    }
+
+    private fun initResultsState() {
+        viewModel.initialLoading
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                if (it == NetworkState.LOADING) {
+                    layout_no_results.visibility = View.GONE
+                } else {
+                    layout_no_results.visibility =
+                        if (voizyListAdapter.itemCount > 0) View.GONE else View.VISIBLE
+                }
+            }
     }
 
     private fun initSearch() {
