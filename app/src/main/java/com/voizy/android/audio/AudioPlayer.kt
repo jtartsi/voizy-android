@@ -2,33 +2,43 @@ package com.voizy.android.audio
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 
 class AudioPlayer {
 
-    private var mediaPlayer: MediaPlayer? = null
-
-    val isPlaying: Boolean
+    private val isPlaying: Boolean
         get() = mediaPlayer != null && mediaPlayer!!.isPlaying
 
-    fun playLocal(filepath: String): Int {
-        var durationInMillis: Int = -1
+    private val playbackEvents: PublishSubject<PlaybackInfo> = PublishSubject.create()
+    private var mediaPlayer: MediaPlayer? = null
+    private var currentTrackPath: String = ""
 
-        mediaPlayer = MediaPlayer()
-
-        mediaPlayer?.apply {
-            setDataSource(filepath)
-            prepare()
-            start()
-            setOnCompletionListener {
-                release()
-                mediaPlayer = null
-            }
-            durationInMillis = duration
-        }
-        return durationInMillis
+    fun getPlaybackEvents(): Observable<PlaybackInfo> {
+        return playbackEvents
     }
 
-    fun playRemote(url: String): Int {
+    fun togglePlay(url: String): Observable<PlaybackInfo> {
+        return Observable.defer {
+            if (isPlaying && currentTrackPath == url) {
+                val audioLength = stop()
+                Observable.just(PlaybackInfo(PlaybackEvent.STOP, audioLength))
+            } else if (isPlaying) {
+                stop()
+                val audioLength = play(url)
+                Observable.just(PlaybackInfo(PlaybackEvent.SWITCH, audioLength))
+            } else if (!isPlaying) {
+                val audioLength = play(url)
+                Observable.just(PlaybackInfo(PlaybackEvent.START, audioLength))
+            } else {
+                Observable.empty()
+            }
+        }
+    }
+
+    private fun play(filePath: String): Int {
+        currentTrackPath = filePath
+
         var durationInMillis: Int = -1
 
         val audioAttributes = AudioAttributes.Builder()
@@ -39,25 +49,27 @@ class AudioPlayer {
         mediaPlayer = MediaPlayer()
 
         mediaPlayer?.apply {
-            setDataSource(url)
+            setDataSource(filePath)
             setAudioAttributes(audioAttributes)
             prepare()
             start()
             setOnCompletionListener {
                 release()
                 mediaPlayer = null
+                currentTrackPath = ""
             }
             durationInMillis = duration
         }
         return durationInMillis
     }
 
-    fun stop(): Int {
+    private fun stop(): Int {
         mediaPlayer?.apply {
             if (isPlaying) {
                 stop()
                 release()
                 mediaPlayer = null
+                currentTrackPath = ""
             }
         }
         return 0

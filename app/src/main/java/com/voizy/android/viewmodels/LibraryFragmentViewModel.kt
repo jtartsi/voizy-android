@@ -5,6 +5,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.paging.PagedList
 import com.voizy.android.audio.AudioPlayer
+import com.voizy.android.audio.PlaybackEvent
+import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
@@ -19,6 +21,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 import java.util.concurrent.TimeUnit
+import java.util.function.Consumer
 
 class LibraryFragmentViewModel(
     private val voizyRepository: VoizyRepository,
@@ -45,9 +48,11 @@ class LibraryFragmentViewModel(
     val voizys: Observable<PagedList<Voizy>> = voizyResults
         .flatMap { it.pagedListObservable }
         .withErrorHandling(TAG, "failed to get voizys")
+
     val networkState: Observable<NetworkState> = voizyResults
         .flatMap { it.networkSate }
         .withErrorHandling(TAG, "failed to get networkState")
+
     val initialLoading: Observable<NetworkState> = voizyResults
         .flatMap { it.initialLoading }
         .withErrorHandling(TAG, "failed to get initialLoading state")
@@ -73,21 +78,16 @@ class LibraryFragmentViewModel(
             .withErrorHandling(TAG, "save voizy events error")
     }
 
-    fun togglePlay(voizy: Voizy): Observable<Int> {
-        val toggleObservable: Observable<Int> =
-            if (!voizyPlayer.isPlaying) {
-                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+    fun getPlayEvents(): Observable<PlaybackInfo> {
+        return voizyPlayer.getPlaybackEvents()
+    }
 
-                voizyRepository.getDownloadUrl(voizy.filePath)
-                    .map { voizyPlayer.playRemote(it) }
-            } else {
-                Observable.defer {
-                    Observable.fromCallable { voizyPlayer.stop() }
-                }
+    fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
+        return voizyRepository.getDownloadUrl(voizy.filePath)
+            .flatMap {
+                voizyPlayer.togglePlay(it)
             }
-
-        return toggleObservable
-            .subscribeOn(Schedulers.io())
+            .doOnNext { handlePlayAnalytics(voizy) }
             .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
     }
 
@@ -113,5 +113,15 @@ class LibraryFragmentViewModel(
                 clipBoard.primaryClip = ClipData.newPlainText("voizy url", it)
             }
             .withErrorHandling(TAG, "Failed to copy download url")
+    }
+
+    private fun handlePlayAnalytics(voizy: Voizy): Consumer<PlaybackInfo> {
+        return Consumer {
+            if (it.playbackEvent == PlaybackEvent.START ||
+                it.playbackEvent == PlaybackEvent.SWITCH
+            ) {
+                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
+            }
+        }
     }
 }

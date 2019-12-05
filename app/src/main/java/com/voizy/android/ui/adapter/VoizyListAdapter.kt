@@ -4,20 +4,36 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.middleware.firebase.models.Voizy
-import com.voizy.android.ui.listener.VoizyActionListener
 import com.voizy.android.utils.NetworkState
 
-class VoizyListAdapter(
-    private val listener: VoizyActionListener
-) :
-    PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
-        Voizy.DIFF_CALLBACK
-    ) {
+class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
+    Voizy.DIFF_CALLBACK
+) {
 
     companion object {
         private const val TYPE_PROGRESS = 0
         private const val TYPE_ITEM = 1
     }
+
+    lateinit var onPlayEvent: (
+        viewHolder: VoizyViewHolder,
+        position: Int,
+        voizy: Voizy
+    ) -> Unit
+
+    lateinit var onShareEvent: (
+        viewHolder: VoizyViewHolder,
+        position: Int,
+        voizy: Voizy
+    ) -> Unit
+
+    lateinit var onLongPress: (
+        viewHolder: VoizyViewHolder,
+        position: Int,
+        voizy: Voizy
+    ) -> Unit
+
+    private var playingViewHolder: VoizyViewHolder? = null
 
     var networkState: NetworkState? = null
         set(value) {
@@ -50,13 +66,13 @@ class VoizyListAdapter(
 
                 holder.bindTo(getItem(position)!!)
                 holder.itemView.setOnClickListener {
-                    listener.playVoizy(holder, position, getItem(position)!!)
+                    onPlayEvent(holder, position, getItem(position)!!)
                 }
                 holder.btnShare.setOnClickListener {
-                    listener.shareVoizy(getItem(position)!!)
+                    onShareEvent(holder, position, getItem(position)!!)
                 }
                 holder.itemView.setOnLongClickListener {
-                    listener.onVoizyLongPress(getItem(position)!!)
+                    onLongPress(holder, position, getItem(position)!!)
                     true
                 }
             }
@@ -69,6 +85,17 @@ class VoizyListAdapter(
             TYPE_PROGRESS
         } else {
             TYPE_ITEM
+        }
+    }
+
+    fun showPlayingIndicator(viewHolder: VoizyViewHolder, audioLengthInMillis: Int) {
+        viewHolder.animateProgress(audioLengthInMillis)
+        playingViewHolder = viewHolder
+    }
+
+    fun clearPlayingState() {
+        playingViewHolder?.let {
+            it.animateProgress(0)
         }
     }
 
