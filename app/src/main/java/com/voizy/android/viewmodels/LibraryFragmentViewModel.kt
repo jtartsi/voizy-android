@@ -49,6 +49,8 @@ class LibraryFragmentViewModel(
         .flatMap { it.pagedListObservable }
         .withErrorHandling(TAG, "failed to get voizys")
 
+    val resultsState: Observable<Boolean> = voizys.map { !it.isEmpty() }
+
     val networkState: Observable<NetworkState> = voizyResults
         .flatMap { it.networkSate }
         .withErrorHandling(TAG, "failed to get networkState")

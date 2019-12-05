@@ -76,6 +76,7 @@ class LibraryFragment :
         initSaveNotifications()
         initPrivacyPolicy()
         initPlayback()
+        initResultsState()
     }
 
     private fun initPlayback() {
@@ -112,7 +113,7 @@ class LibraryFragment :
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                initial_loader.visibility =
+                progress_initial_loader.visibility =
                     if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
             }
     }
@@ -137,6 +138,15 @@ class LibraryFragment :
             .subscribe { voizyListAdapter.networkState = it }
 
         viewModel.loadVoizys()
+    }
+
+    private fun initResultsState() {
+        viewModel.resultsState
+            .observeOn(Schedulers.io())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                image_no_results.visibility = if (it) View.GONE else View.VISIBLE
+            }
     }
 
     private fun initSearch() {
