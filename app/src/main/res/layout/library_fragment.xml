@@ -77,17 +77,35 @@
         android:layout_marginTop="2dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <ImageView
-        android:id="@+id/image_no_results"
+    <RelativeLayout
+        android:id="@+id/layout_no_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/no_results"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/rv_voizy_list"
         app:layout_constraintStart_toStartOf="@+id/rv_voizy_list"
         app:layout_constraintTop_toBottomOf="@+id/progress_initial_loader"
-        app:layout_constraintVertical_bias="0.35" />
+        app:layout_constraintVertical_bias="0.20">
+
+        <ImageView
+            android:id="@+id/iv_no_results"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/no_results" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_no_results"
+            android:layout_below="@+id/iv_no_results"
+            android:letterSpacing="0.01"
+            android:lineSpacingExtra="5.5sp"
+            android:textSize="29.5sp"
+            android:textColor="@color/voizy_orange"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

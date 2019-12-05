@@ -115,7 +115,7 @@ class LibraryFragment :
             .autoDisposable(getScopeProvider())
             .subscribe {
                 progress_initial_loader.visibility =
-                    if (it == NetworkState.LOADING) View.VISIBLE else View.GONE
+                    if (it == NetworkState.LOADING) View.VISIBLE else View.INVISIBLE
             }
     }
 
@@ -148,10 +148,18 @@ class LibraryFragment :
     }
 
     private fun initResultsState() {
-        viewModel.resultsState
+        viewModel.networkState
+            .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                image_no_results.visibility = if (it) View.GONE else View.VISIBLE
+                Timber.d("results-state initResultsState() networkState $it")
+                Timber.d("results-state initResultsState() adapter.itemCount ${voizyListAdapter.itemCount}")
+                if (it == NetworkState.LOADING) {
+                    layout_no_results.visibility = View.GONE
+                } else {
+                    layout_no_results.visibility =
+                        if (voizyListAdapter.itemCount > 0) View.GONE else View.VISIBLE
+                }
             }
     }
 
