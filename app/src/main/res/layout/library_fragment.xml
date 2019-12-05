@@ -101,9 +101,8 @@
             android:layout_below="@+id/iv_no_results"
             android:letterSpacing="0.01"
             android:lineSpacingExtra="5.5sp"
-            android:textSize="29.5sp"
-            android:textColor="@color/voizy_orange"
-            android:textStyle="bold" />
+            android:textSize="25sp"
+            android:textColor="@color/voizy_orange" />
 
     </RelativeLayout>
 

@@ -108,16 +108,6 @@ class LibraryFragment :
         }
     }
 
-    private fun initLoader() {
-        viewModel.initialLoading
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                progress_initial_loader.visibility =
-                    if (it == NetworkState.LOADING) View.VISIBLE else View.INVISIBLE
-            }
-    }
-
     private fun initVoizyListing() {
         voizyListAdapter = VoizyListAdapter()
         voizyRecyclerView.layoutManager = LinearLayoutManager(
@@ -140,8 +130,18 @@ class LibraryFragment :
         viewModel.loadVoizys()
     }
 
+    private fun initLoader() {
+        viewModel.initialLoading
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                progress_initial_loader.visibility =
+                    if (it == NetworkState.LOADING) View.VISIBLE else View.INVISIBLE
+            }
+    }
+
     private fun initResultsState() {
-        viewModel.networkState
+        viewModel.initialLoading
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {

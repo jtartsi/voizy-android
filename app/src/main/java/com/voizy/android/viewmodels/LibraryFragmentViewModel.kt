@@ -47,14 +47,18 @@ class LibraryFragmentViewModel(
 
     val voizys: Observable<PagedList<Voizy>> = voizyResults
         .flatMap { it.pagedListObservable }
+        .share()
         .withErrorHandling(TAG, "failed to get voizys")
 
     val networkState: Observable<NetworkState> = voizyResults
         .flatMap { it.networkSate }
-        .withErrorHandling(TAG, "failed to get networkState")
+        .share()
+        .withErrorHandling(TAG, "results failed to get networkState")
 
+    // Indicates when loading first dataset for each search keyword
     val initialLoading: Observable<NetworkState> = voizyResults
         .flatMap { it.initialLoading }
+        .share()
         .withErrorHandling(TAG, "failed to get initialLoading state")
 
     override fun onCleared() {
