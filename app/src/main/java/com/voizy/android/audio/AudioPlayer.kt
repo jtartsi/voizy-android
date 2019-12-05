@@ -2,14 +2,12 @@ package com.voizy.android.audio
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 
-class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
+class AudioPlayer {
 
-    val isPlaying: Boolean
+    private val isPlaying: Boolean
         get() = mediaPlayer != null && mediaPlayer!!.isPlaying
 
     private val playbackEvents: PublishSubject<PlaybackInfo> = PublishSubject.create()
@@ -50,7 +48,6 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
 
         mediaPlayer = MediaPlayer()
 
-        Timber.d("play-pause play() $filePath")
         mediaPlayer?.apply {
             setDataSource(filePath)
             setAudioAttributes(audioAttributes)
@@ -67,7 +64,6 @@ class AudioPlayer(private val firebaseAnalytics: VoizyFirebaseAnalytics) {
     }
 
     private fun stop(): Int {
-        Timber.d("play-pause stop() ")
         mediaPlayer?.apply {
             if (isPlaying) {
                 stop()

@@ -88,27 +88,6 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
         }
     }
 
-    // fun setPlayEventListener(
-    //     onPlayEvent:
-    //         (viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) -> Unit
-    // ) {
-    //     this.onPlayEvent = onPlayEvent
-    // }
-    //
-    // fun setShareEventListener(
-    //     onShareEvent:
-    //         (viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) -> Unit
-    // ) {
-    //     this.onShareEvent = onShareEvent
-    // }
-    //
-    // fun setLongPressListener(
-    //     onLongPress:
-    //         (viewHolder: VoizyViewHolder, position: Int, voizy: Voizy) -> Unit
-    // ) {
-    //     this.onLongPress = onLongPress
-    // }
-
     fun showPlayingIndicator(viewHolder: VoizyViewHolder, audioLengthInMillis: Int) {
         viewHolder.animateProgress(audioLengthInMillis)
         playingViewHolder = viewHolder

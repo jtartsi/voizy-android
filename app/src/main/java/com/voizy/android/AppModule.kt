@@ -24,7 +24,7 @@ import org.koin.dsl.module
 val appLogicsModule = module {
     factory { CompositeDisposable() }
     factory { ShareManager(get()) }
-    single { AudioPlayer(get()) }
+    single { AudioPlayer() }
     single { AudioRecorder() }
     single { LocalFileManager(get()) }
 }
