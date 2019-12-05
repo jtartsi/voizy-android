@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+
+        <shape android:shape="rectangle">
+            <corners
+                android:topRightRadius="10dp"
+                android:bottomRightRadius="10dp" />
+            <solid android:color="@color/voizy_orange" />
+            <size
+                android:width="95dp"
+                android:height="50dp" />
+        </shape>
+    </item>
+
+    <item
+        android:drawable="@drawable/search_magnifying_glass"
+        android:gravity="center"
+        android:height="25dp"
+        android:width="25dp" />
+
+</layer-list>
