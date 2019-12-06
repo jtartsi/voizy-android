@@ -27,14 +27,14 @@ class VoizyFirebaseStorage(
         val encodedFirebaseFileName = URLEncoder.encode(firebaseFileName, "UTF-8")
 
         val uploadRef = storageRef.child(VOIZYS_PATH).child(encodedFirebaseFileName)
-        val stream = FileInputStream(File(voizy.filePath))
+        val stream = FileInputStream(File(voizy.localPath))
 
         return uploadRef.putStream(stream).toObservable()
             .map {
                 if (it.uploadSessionUri == null) {
                     throw IllegalStateException("Failed to upload voizy")
                 }
-                val uploadedVoizy = voizy.copy(filePath = uploadRef.path)
+                val uploadedVoizy = voizy.copy(remoteUrl = uploadRef.path)
                 Pair(true, uploadedVoizy)
             }
             .withErrorHandling(TAG, "Failed to upload audio file")

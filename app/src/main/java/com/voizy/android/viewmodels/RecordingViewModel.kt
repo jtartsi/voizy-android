@@ -89,7 +89,7 @@ class RecordingViewModel(
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<Pair<Voizy, File>> {
         val destinationFile = File(LocalFileManager(context).getTempFilePath())
         return voizyRepository
-            .downloadVoizy(voizy.filePath, destinationFile)
+            .downloadVoizy(voizy.remoteUrl, destinationFile)
             .map { Pair(voizy, it) }
             .subscribeOn(Schedulers.io())
             .withErrorHandling(TAG, "Failed to download Voizy")
