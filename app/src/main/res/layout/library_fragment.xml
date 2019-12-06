@@ -86,7 +86,8 @@
         app:layout_constraintEnd_toEndOf="@+id/rv_voizy_list"
         app:layout_constraintStart_toStartOf="@+id/rv_voizy_list"
         app:layout_constraintTop_toBottomOf="@+id/progress_initial_loader"
-        app:layout_constraintVertical_bias="0.20">
+        app:layout_constraintVertical_bias="0.20"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_no_results"
