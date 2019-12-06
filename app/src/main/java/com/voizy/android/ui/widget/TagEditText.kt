@@ -1,6 +1,5 @@
 package com.voizy.android.ui.widget
 
-import android.R
 import android.content.Context
 import android.text.Editable
 import android.text.Spanned
@@ -8,6 +7,7 @@ import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.widget.EditText
+import com.voizy.android.R
 import timber.log.Timber
 
 class TagEditText : EditText, TextWatcher {
@@ -46,11 +46,18 @@ class TagEditText : EditText, TextWatcher {
 
         val colorUntil = editable!!.lastIndexOf(" ")
         if (colorUntil > 0) {
-            val orangeColorSpan = ForegroundColorSpan(context!!.getColor(R.color.holo_orange_dark))
+            val orangeColorSpan =
+                ForegroundColorSpan(context!!.resources.getColor(R.color.voizy_orange))
             editable.setSpan(orangeColorSpan, 0, colorUntil, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
 
-            val blackColorSpan = ForegroundColorSpan(context!!.getColor(R.color.widget_edittext_dark))
-            editable.setSpan(blackColorSpan, colorUntil, editable.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            val blackColorSpan =
+                ForegroundColorSpan(context!!.resources.getColor(android.R.color.widget_edittext_dark))
+            editable.setSpan(
+                blackColorSpan,
+                colorUntil,
+                editable.length,
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+            )
         }
     }
 

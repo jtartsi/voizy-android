@@ -40,14 +40,14 @@
         android:singleLine="true"
         android:textSize="14sp"
         android:ellipsize="marquee"
-        android:textColor="@android:color/holo_orange_dark"
+        android:textColor="@color/voizy_orange"
         tools:text="#football #barcelona #realmadrid #goal" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_voizy_row_shares"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textColor="@android:color/holo_orange_light"
+        android:textColor="@color/voizy_orange"
         tools:text="150"
         android:textSize="16sp"
         android:gravity="center_vertical|end"
@@ -78,7 +78,7 @@
         android:layout_height="2dp"
         android:progress="0"
         android:max="5000"
-        android:progressTint="@android:color/holo_orange_dark"
+        android:progressTint="@color/voizy_orange"
         android:progressBackgroundTint="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/view" />
 

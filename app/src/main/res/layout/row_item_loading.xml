@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:indeterminate="true"
-        android:progressTint="@android:color/holo_orange_dark"
+        android:progressTint="@color/voizy_orange"
         android:progressBackgroundTint="@android:color/transparent" />
 
 </LinearLayout>

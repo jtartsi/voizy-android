@@ -84,7 +84,7 @@ class VoizySwipeCallback(
             deleteDrawable = context.getDrawable(R.drawable.ic_mic_white_48dp)
             // deleteDrawable = context.getDrawable(R.drawable.ic_delete_sweep_orange_dark)
         } else {
-            background = ColorDrawable(context.getColor(android.R.color.holo_orange_dark))
+            background = ColorDrawable(context.getColor(R.color.voizy_orange))
             shareDrawable = context.getDrawable(R.drawable.ic_send_white)
             deleteDrawable = context.getDrawable(R.drawable.ic_mic_white_48dp)
             // deleteDrawable = context.getDrawable(R.drawable.ic_delete_sweep_white)
