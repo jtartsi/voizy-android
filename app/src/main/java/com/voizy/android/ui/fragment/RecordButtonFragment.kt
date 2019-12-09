@@ -59,16 +59,17 @@ class RecordButtonFragment : Fragment() {
                 }
             }
 
-        // TODO("rec-play remove this)
-        // fragmentChangeListener()
-        //     .subscribeOn(Schedulers.io())
-        //     .observeOn(AndroidSchedulers.mainThread())
-        //     .autoDisposable(getScopeProvider())
-        //     .subscribe {
-        //         if (it.getFragmentTag() == LibraryFragment.TAG) {
-        //             recordButton.state = RecordButton.State.RECORD
-        //         }
-        //     }
+        fragmentChangeListener()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                if (it.getFragmentTag() == LibraryFragment.TAG) {
+                    fragmentManager!!.beginTransaction()
+                        .show(this)
+                        .commit()
+                }
+            }
 
         viewModel.getRecordingEvents()
             .withLatestFrom(fragmentChangeListener(), toPair())
@@ -84,9 +85,9 @@ class RecordButtonFragment : Fragment() {
                 if (it.first == AudioRecorder.RecordingEvent.STOP &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
-                    fragmentManager!!.popBackStackImmediate(
-                        TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
+                    fragmentManager!!.beginTransaction()
+                        .hide(this)
+                        .commit()
                 } else if (it.first == AudioRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME) {
                     fragmentManager!!.popBackStackImmediate(
                         RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
