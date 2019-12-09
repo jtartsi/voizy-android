@@ -9,6 +9,7 @@ import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import java.io.File
 import java.io.FileInputStream
+import java.io.InputStream
 import java.net.URLEncoder
 import java.util.Date
 
@@ -27,7 +28,7 @@ class VoizyFirebaseStorage(
         val encodedFirebaseFileName = URLEncoder.encode(firebaseFileName, "UTF-8")
 
         val uploadRef = storageRef.child(VOIZYS_PATH).child(encodedFirebaseFileName)
-        val stream = FileInputStream(File(voizy.localPath))
+        val stream = FileInputStream(File(voizy.localPath)) as InputStream
 
         return uploadRef.putStream(stream).toObservable()
             .map {
