@@ -69,6 +69,7 @@ class RecordingFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initPlayback()
         initSave()
         initFileInput()
         initBackPress()
@@ -80,6 +81,13 @@ class RecordingFragment : BaseFragment() {
         } else {
             showSaveLayout()
         }
+    }
+
+    private fun initPlayback() {
+        RxView.clicks(btn_playback)
+            .doOnNext { viewModel.startPreviewVoizyPlayback() }
+            .autoDisposable(getScopeProvider())
+            .subscribe()
     }
 
     private fun initSave() {

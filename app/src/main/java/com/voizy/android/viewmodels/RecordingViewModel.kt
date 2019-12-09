@@ -2,6 +2,7 @@ package com.voizy.android.viewmodels
 
 import android.content.Context
 import android.net.Uri
+import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
@@ -18,7 +19,8 @@ class RecordingViewModel(
     private val voizyRecorder: AudioRecorder,
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics,
     private val localFileManager: LocalFileManager,
-    private val shareManager: ShareManager
+    private val shareManager: ShareManager,
+    private val voizyPlayer: AudioPlayer
 ) : DisposingViewModel() {
 
     companion object {
@@ -99,7 +101,19 @@ class RecordingViewModel(
         shareManager.startVoizyShare(context, voizy, file)
     }
 
-    fun isAudioTrackWithinLimit(audioLength: Long): Boolean {
+    fun startPreviewVoizyPlayback() {
+        voizyPlayer.togglePlay(voizyRepository.getTempFilePath())
+            .withErrorHandling(TAG, "Failed to play preview voizy")
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+            .autoDispose()
+    }
+
+    fun releasePlayer() {
+        voizyPlayer.release()
+    }
+
+    private fun isAudioTrackWithinLimit(audioLength: Long): Boolean {
         return audioLength < MAX_AUDIO_LENGTH_MS
     }
 }
