@@ -13,7 +13,7 @@ class VoizysCollection(private val firestore: FirebaseFirestore) {
         private val VOIZYS_COLLECTION = "voizys"
     }
 
-    fun saveVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy?>> {
+    fun saveVoizyToCloud(voizy: Voizy): Observable<Pair<Boolean, Voizy?>> {
         return firestore
             .voizysCollection()
             .add(voizy)

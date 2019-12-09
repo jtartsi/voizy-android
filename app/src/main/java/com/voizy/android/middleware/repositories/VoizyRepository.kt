@@ -42,8 +42,8 @@ class VoizyRepository(
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
         .switchMap { voizyStorage.uploadVoizy(it) }
-        .switchMap { voizysCollection.saveVoizy(it.second) }
-        // .switchMap { localFileManager.deleteFile(it.) } TODO(temp-file fix this)
+        .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
+        .doOnNext { localFileManager.deleteFile(it.second!!.localPath) }
         .share()
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
