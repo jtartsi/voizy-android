@@ -55,7 +55,6 @@ class RecordButtonFragment : Fragment() {
                 when (it) {
                     Event.START_RECORD -> startRecording()
                     Event.STOP_RECORD -> stopRecording()
-                    // Event.PLAY -> viewModel.startPreviewVoizyPlayback() TODO("rec-play remove this)
                 }
             }
 
@@ -77,11 +76,6 @@ class RecordButtonFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                // if (it.first == AudioRecorder.RecordingEvent.STOP && TODO("rec-play remove this)
-                //     it.second.getFragmentTag() == RecordingFragment.TAG
-                // ) {
-                //     recordButton.state = RecordButton.State.PLAY
-                // } else
                 if (it.first == AudioRecorder.RecordingEvent.STOP &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
@@ -99,15 +93,6 @@ class RecordButtonFragment : Fragment() {
                     ).show()
                 }
             }
-// TODO("rec-play remove this)
-//         viewModel.getRecordingEvents()
-//             .filter { it == AudioRecorder.RecordingEvent.FILE_RECEIVED }
-//             .subscribeOn(Schedulers.io())
-//             .observeOn(AndroidSchedulers.mainThread())
-//             .autoDisposable(getScopeProvider())
-//             .subscribe {
-//                 recordButton.state = RecordButton.State.PLAY
-//             }
     }
 
     // override fun onStop() {
