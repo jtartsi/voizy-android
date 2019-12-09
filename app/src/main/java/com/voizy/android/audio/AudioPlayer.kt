@@ -36,6 +36,13 @@ class AudioPlayer {
         }
     }
 
+    fun release() {
+        if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+            mediaPlayer!!.release()
+            mediaPlayer = null
+        }
+    }
+
     private fun play(filePath: String): Int {
         currentTrackPath = filePath
 

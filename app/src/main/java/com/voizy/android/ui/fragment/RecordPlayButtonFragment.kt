@@ -101,6 +101,11 @@ class RecordPlayButtonFragment : Fragment() {
             }
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.releasePlayer()
+    }
+
     private fun fragmentChangeListener(): Observable<BaseFragment> {
         return Observable.create { emitter ->
             fragmentManager!!.addOnBackStackChangedListener {

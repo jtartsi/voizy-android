@@ -49,4 +49,8 @@ class RecordPlayButtonViewModel(
             .subscribe()
             .autoDispose()
     }
+
+    fun releasePlayer() {
+        voizyPlayer.release()
+    }
 }
