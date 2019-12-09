@@ -79,6 +79,11 @@ class LibraryFragment :
         initResultsState()
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.releasePlayer()
+    }
+
     private fun initPlayback() {
         voizyListAdapter.onPlayEvent = { viewHolder: VoizyViewHolder, i: Int, voizy: Voizy ->
             viewModel.togglePlay(voizy)

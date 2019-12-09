@@ -91,6 +91,10 @@ class LibraryFragmentViewModel(
             .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
     }
 
+    fun releasePlayer() {
+        voizyPlayer.release()
+    }
+
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<Pair<Voizy, File>> {
         val destinationFile = File(LocalFileManager(context).getTempFilePath())
         return voizyRepository
