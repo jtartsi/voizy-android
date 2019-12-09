@@ -2,15 +2,18 @@ package com.voizy.android.middleware.firebase.models
 
 import androidx.recyclerview.widget.DiffUtil
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
 
 data class Voizy(
     val id: String = "",
     val name: String = "",
     val tags: List<String> = emptyList(),
-    val filePath: String = "",
-    @ServerTimestamp
-    val createdAt: Timestamp = Timestamp.now(), // For uploading to Firestore
+    val localPath: String = "",
+    @get:PropertyName("filePath")
+    @set:PropertyName("filePath")
+    var remoteUrl: String = "",
+    @ServerTimestamp val createdAt: Timestamp = Timestamp.now(), // For uploading to Firestore
     val locale: String = "",
     val localeLang: String = "",
     val localeCountry: String = ""

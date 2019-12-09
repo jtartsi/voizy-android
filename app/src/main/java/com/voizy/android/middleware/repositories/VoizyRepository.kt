@@ -16,7 +16,7 @@ import io.reactivex.subjects.PublishSubject
 import java.io.File
 
 class VoizyRepository(
-    private val voizys: VoizysCollection,
+    private val voizysCollection: VoizysCollection,
     private val shareCollection: ShareCollection,
     private val compositeDisposable: CompositeDisposable,
     private val voizySearchRequestCollection: VoizySearchRequestCollection,
@@ -42,7 +42,8 @@ class VoizyRepository(
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
         .switchMap { voizyStorage.uploadVoizy(it) }
-        .switchMap { voizys.saveVoizy(it.second) }
+        .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
+        .doOnNext { localFileManager.deleteFile(it.second!!.localPath) }
         .share()
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
