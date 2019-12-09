@@ -8,7 +8,7 @@
     android:clipChildren="false"
     android:background="@android:color/transparent">
 
-    <com.voizy.android.ui.widget.RecordPlayButton
+    <com.voizy.android.ui.widget.RecordButton
         android:id="@+id/button_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

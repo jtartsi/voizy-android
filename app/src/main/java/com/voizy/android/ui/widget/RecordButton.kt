@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 
-class RecordPlayButton : FloatingActionButton {
+class RecordButton : FloatingActionButton {
 
     companion object {
         private const val ANIMATION_DELAY = 200L
