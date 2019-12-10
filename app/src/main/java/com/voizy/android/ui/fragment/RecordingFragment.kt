@@ -295,6 +295,7 @@ class RecordingFragment : BaseFragment() {
         et_voizy_name.visibility = View.VISIBLE
         et_voizy_tags.visibility = View.VISIBLE
         btn_save_voizy.visibility = View.VISIBLE
+        btn_playback.visibility = View.VISIBLE
     }
 
     private fun hideSoftKeyboard(view: View) {

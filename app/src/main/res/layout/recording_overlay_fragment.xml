@@ -34,7 +34,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_recording_time"
         android:src="@android:drawable/ic_media_play"
-        android:backgroundTint="@color/voizy_orange" />
+        android:backgroundTint="@color/voizy_orange"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/text_voizy_save_error"
