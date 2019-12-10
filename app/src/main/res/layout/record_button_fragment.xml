@@ -8,16 +8,17 @@
     android:clipChildren="false"
     android:background="@android:color/transparent">
 
-    <com.voizy.android.ui.widget.RecordPlayButton
+    <com.voizy.android.ui.widget.RecordButton
         android:id="@+id/button_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:longClickable="true"
-        app:fabCustomSize="90dp"
+        app:fabCustomSize="75dp"
         app:maxImageSize="45dp"
         app:backgroundTint="@android:color/white"
         android:scaleType="center"
-        android:src="@drawable/sound_waves" />
+        android:src="@drawable/mic_orange" />
+
 </LinearLayout>

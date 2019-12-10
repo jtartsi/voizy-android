@@ -25,6 +25,17 @@
         app:layout_constraintVertical_bias="0.25"
         android:text="00:00 / 00:15" />
 
+    <com.voizy.android.ui.widget.PlayPauseButton
+        android:id="@+id/btn_playback"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_recording_time"
+        android:src="@android:drawable/ic_media_play"
+        android:backgroundTint="@color/voizy_orange" />
+
     <TextView
         android:id="@+id/text_voizy_save_error"
         android:layout_width="wrap_content"

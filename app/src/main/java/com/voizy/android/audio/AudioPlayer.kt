@@ -18,32 +18,44 @@ class AudioPlayer {
         return playbackEvents
     }
 
-    fun togglePlay(url: String): Observable<PlaybackInfo> {
+    fun play(path: String): Observable<Int> {
         return Observable.defer {
-            if (isPlaying && currentTrackPath == url) {
-                val audioLength = stop()
-                Observable.just(PlaybackInfo(PlaybackEvent.STOP, audioLength))
+
+            val durationInMillis = startPlayback(path)
+            val playbackInfo = PlaybackInfo(PlaybackEvent.START, durationInMillis)
+            playbackEvents.onNext(playbackInfo)
+            Observable.just(startPlayback(path))
+        }
+    }
+
+    fun stop(): Observable<Int> {
+        return Observable.defer {
+            val durationInMillis = stopPlayback()
+            val playbackInfo = PlaybackInfo(PlaybackEvent.STOP, durationInMillis)
+            playbackEvents.onNext(playbackInfo)
+            Observable.just(durationInMillis)
+        }
+    }
+
+    fun togglePlay(path: String): Observable<PlaybackInfo> {
+        return Observable.defer {
+            val playbackInfo: PlaybackInfo = if (isPlaying && currentTrackPath == path) {
+                val audioLength = stopPlayback()
+                PlaybackInfo(PlaybackEvent.STOP, audioLength)
             } else if (isPlaying) {
-                stop()
-                val audioLength = play(url)
-                Observable.just(PlaybackInfo(PlaybackEvent.SWITCH, audioLength))
-            } else if (!isPlaying) {
-                val audioLength = play(url)
-                Observable.just(PlaybackInfo(PlaybackEvent.START, audioLength))
+                stopPlayback()
+                val audioLength = startPlayback(path)
+                PlaybackInfo(PlaybackEvent.SWITCH, audioLength)
             } else {
-                Observable.empty()
+                val audioLength = startPlayback(path)
+                PlaybackInfo(PlaybackEvent.START, audioLength)
             }
+            playbackEvents.onNext(playbackInfo)
+            Observable.just(playbackInfo)
         }
     }
 
-    fun release() {
-        if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
-            mediaPlayer!!.release()
-            mediaPlayer = null
-        }
-    }
-
-    private fun play(filePath: String): Int {
+    private fun startPlayback(filePath: String): Int {
         currentTrackPath = filePath
 
         var durationInMillis: Int = -1
@@ -61,6 +73,7 @@ class AudioPlayer {
             prepare()
             start()
             setOnCompletionListener {
+                playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, durationInMillis))
                 release()
                 mediaPlayer = null
                 currentTrackPath = ""
@@ -70,7 +83,7 @@ class AudioPlayer {
         return durationInMillis
     }
 
-    private fun stop(): Int {
+    fun stopPlayback(): Int {
         mediaPlayer?.apply {
             if (isPlaying) {
                 stop()

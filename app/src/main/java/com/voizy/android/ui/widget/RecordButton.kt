@@ -10,30 +10,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.voizy.android.R
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 
-class RecordPlayButton : FloatingActionButton {
+class RecordButton : FloatingActionButton {
 
     companion object {
         private const val ANIMATION_DELAY = 200L
     }
 
-    enum class State { RECORD, PLAY }
-
-    enum class Event { START_RECORD, STOP_RECORD, PLAY }
+    enum class Event { START_RECORD, STOP_RECORD }
 
     private val events = PublishSubject.create<Event>()
-
-    var state: State = State.RECORD
-        set(value) {
-            Timber.d("setRecordPlayButton state $value")
-            field = value
-            if (value == State.RECORD) {
-                setImageResource(R.drawable.sound_waves)
-            } else {
-                setImageResource(R.drawable.play_orange_dark)
-            }
-        }
 
     constructor(context: Context) : this(context, null)
 
@@ -45,21 +31,13 @@ class RecordPlayButton : FloatingActionButton {
         defStyleAttributeSet
     ) {
         setOnTouchListener { view, event ->
-            if (state == State.RECORD) {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        handleStartRecording()
-                        true
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        handleStopRecording()
-                        true
-                    }
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    handleStartRecording()
+                    true
                 }
-            } else {
-                false
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    events.onNext(Event.PLAY)
+                MotionEvent.ACTION_UP -> {
+                    handleStopRecording()
                     true
                 }
             }
@@ -72,7 +50,7 @@ class RecordPlayButton : FloatingActionButton {
     }
 
     fun handleStartRecording() {
-        setImageResource(R.drawable.sound_waves)
+        setImageResource(R.drawable.mic_orange)
         val colorStateList = ColorStateList.valueOf(context.getColor(R.color.voizy_orange))
         backgroundTintList = colorStateList
 
@@ -82,7 +60,7 @@ class RecordPlayButton : FloatingActionButton {
     }
 
     fun handleStopRecording() {
-        setImageResource(R.drawable.sound_waves)
+        setImageResource(R.drawable.mic_orange)
         val colorStateList = ColorStateList.valueOf(context.getColor(android.R.color.white))
         backgroundTintList = colorStateList
 

@@ -88,11 +88,11 @@ class LibraryFragmentViewModel(
                 voizyPlayer.togglePlay(it)
             }
             .doOnNext { handlePlayAnalytics(voizy) }
-            .withErrorHandling(TAG, "Failed to toggle play Voizy ${voizy.name}")
+            .withErrorHandling(TAG, "Failed to toggle startPlayback Voizy ${voizy.name}")
     }
 
     fun releasePlayer() {
-        voizyPlayer.release()
+        voizyPlayer.stopPlayback()
     }
 
     fun downloadVoizy(context: Context, voizy: Voizy): Observable<Pair<Voizy, File>> {

@@ -14,8 +14,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.AudioRecorder
-import com.voizy.android.ui.widget.RecordPlayButton
-import com.voizy.android.ui.widget.RecordPlayButton.Event
+import com.voizy.android.ui.widget.RecordButton
+import com.voizy.android.ui.widget.RecordButton.Event
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.toPair
 import com.voizy.android.viewmodels.RecordPlayButtonViewModel
@@ -27,14 +27,14 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 @SuppressWarnings("ClickableViewAccessibility")
-class RecordPlayButtonFragment : Fragment() {
+class RecordButtonFragment : Fragment() {
 
     private val viewModel: RecordPlayButtonViewModel by inject<RecordPlayButtonViewModel>()
-    private lateinit var recordPlayButton: RecordPlayButton
+    private lateinit var recordButton: RecordButton
     private val stopTimer = Handler()
 
     companion object {
-        public val TAG = RecordPlayButtonFragment::class.java.simpleName
+        public val TAG = RecordButtonFragment::class.java.simpleName
     }
 
     override fun onCreateView(
@@ -48,14 +48,13 @@ class RecordPlayButtonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recordPlayButton = view.findViewById(R.id.button_record)
-        recordPlayButton.getButtonEvents()
+        recordButton = view.findViewById(R.id.button_record)
+        recordButton.getButtonEvents()
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
                     Event.START_RECORD -> startRecording()
                     Event.STOP_RECORD -> stopRecording()
-                    Event.PLAY -> viewModel.startPreviewVoizyPlayback()
                 }
             }
 
@@ -65,7 +64,9 @@ class RecordPlayButtonFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (it.getFragmentTag() == LibraryFragment.TAG) {
-                    recordPlayButton.state = RecordPlayButton.State.RECORD
+                    fragmentManager!!.beginTransaction()
+                        .show(this)
+                        .commit()
                 }
             }
 
@@ -78,7 +79,9 @@ class RecordPlayButtonFragment : Fragment() {
                 if (it.first == AudioRecorder.RecordingEvent.STOP &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
-                    recordPlayButton.state = RecordPlayButton.State.PLAY
+                    fragmentManager!!.beginTransaction()
+                        .hide(this)
+                        .commit()
                 } else if (it.first == AudioRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME) {
                     fragmentManager!!.popBackStackImmediate(
                         RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -90,20 +93,6 @@ class RecordPlayButtonFragment : Fragment() {
                     ).show()
                 }
             }
-
-        viewModel.getRecordingEvents()
-            .filter { it == AudioRecorder.RecordingEvent.FILE_RECEIVED }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                recordPlayButton.state = RecordPlayButton.State.PLAY
-            }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.releasePlayer()
     }
 
     private fun fragmentChangeListener(): Observable<BaseFragment> {
@@ -133,7 +122,7 @@ class RecordPlayButtonFragment : Fragment() {
     }
 
     private fun stopRecording() {
-        recordPlayButton.handleStopRecording()
+        recordButton.handleStopRecording()
         stopTimer.removeCallbacksAndMessages(null)
         viewModel.stopRecording()
     }
