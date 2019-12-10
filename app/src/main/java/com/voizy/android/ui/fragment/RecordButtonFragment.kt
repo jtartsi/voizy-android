@@ -95,12 +95,6 @@ class RecordButtonFragment : Fragment() {
             }
     }
 
-    // override fun onStop() {
-    //     super.onStop()
-    // TODO rec-startPlayback remove this and move to save voizy fragment
-    // viewModel.releasePlayer()
-    // }
-
     private fun fragmentChangeListener(): Observable<BaseFragment> {
         return Observable.create { emitter ->
             fragmentManager!!.addOnBackStackChangedListener {

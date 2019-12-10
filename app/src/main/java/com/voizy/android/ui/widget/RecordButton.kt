@@ -50,7 +50,7 @@ class RecordButton : FloatingActionButton {
     }
 
     fun handleStartRecording() {
-        setImageResource(R.drawable.sound_waves)
+        setImageResource(R.drawable.mic_orange)
         val colorStateList = ColorStateList.valueOf(context.getColor(R.color.voizy_orange))
         backgroundTintList = colorStateList
 
@@ -60,7 +60,7 @@ class RecordButton : FloatingActionButton {
     }
 
     fun handleStopRecording() {
-        setImageResource(R.drawable.sound_waves)
+        setImageResource(R.drawable.mic_orange)
         val colorStateList = ColorStateList.valueOf(context.getColor(android.R.color.white))
         backgroundTintList = colorStateList
 
