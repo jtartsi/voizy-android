@@ -15,8 +15,10 @@ import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.audio.AudioRecorder
+import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.ui.widget.PlayPauseButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingViewModel
 import io.reactivex.Observable
@@ -83,11 +85,29 @@ class RecordingFragment : BaseFragment() {
         }
     }
 
-    private fun initPlayback() {
-        RxView.clicks(btn_playback)
-            .doOnNext { viewModel.startPreviewVoizyPlayback() }
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopPlayback()
             .autoDisposable(getScopeProvider())
             .subscribe()
+    }
+
+    private fun initPlayback() {
+        RxView.clicks(btn_playback)
+            .flatMap { viewModel.togglePlay() }
+            .autoDisposable(getScopeProvider())
+            .subscribe()
+
+        viewModel.getPlaybackEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                if (it.playbackEvent == PlaybackEvent.START) {
+                    btn_playback.state = PlayPauseButton.State.STOP_ICON
+                } else if (it.playbackEvent == PlaybackEvent.STOP) {
+                    btn_playback.state = PlayPauseButton.State.PLAY_ICON
+                }
+            }
     }
 
     private fun initSave() {

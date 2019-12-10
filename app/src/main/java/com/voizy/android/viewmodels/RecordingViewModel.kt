@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.AudioRecorder
+import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
@@ -101,16 +102,18 @@ class RecordingViewModel(
         shareManager.startVoizyShare(context, voizy, file)
     }
 
-    fun startPreviewVoizyPlayback() {
-        voizyPlayer.togglePlay(voizyRepository.getTempFilePath())
-            .withErrorHandling(TAG, "Failed to play preview voizy")
-            .subscribeOn(Schedulers.io())
-            .subscribe()
-            .autoDispose()
+    fun togglePlay(): Observable<PlaybackInfo> {
+        return voizyPlayer.togglePlay(voizyRepository.getTempFilePath())
+            .withErrorHandling(TAG, "Failed to togglePlay on preview voizy")
     }
 
-    fun releasePlayer() {
-        voizyPlayer.release()
+    fun stopPlayback(): Observable<Int> {
+        return voizyPlayer.stop()
+            .withErrorHandling(TAG, "Failed to stopPlayback on preview voizy")
+    }
+
+    fun getPlaybackEvents(): Observable<PlaybackInfo> {
+        return voizyPlayer.getPlaybackEvents()
     }
 
     private fun isAudioTrackWithinLimit(audioLength: Long): Boolean {

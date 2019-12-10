@@ -97,7 +97,7 @@ class RecordButtonFragment : Fragment() {
 
     // override fun onStop() {
     //     super.onStop()
-    // TODO rec-play remove this and move to save voizy fragment
+    // TODO rec-startPlayback remove this and move to save voizy fragment
     // viewModel.releasePlayer()
     // }
 

@@ -25,7 +25,7 @@
         app:layout_constraintVertical_bias="0.25"
         android:text="00:00 / 00:15" />
 
-    <ImageButton
+    <com.voizy.android.ui.widget.PlayPauseButton
         android:id="@+id/btn_playback"
         android:layout_width="55dp"
         android:layout_height="55dp"
