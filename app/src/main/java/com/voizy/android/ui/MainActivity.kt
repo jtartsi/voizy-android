@@ -12,7 +12,7 @@ import com.voizy.android.ui.fragment.RecordingFragment
 class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
+        setTheme(R.style.VoizyTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

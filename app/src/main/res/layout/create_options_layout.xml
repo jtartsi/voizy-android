@@ -2,17 +2,44 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/create_button"
+        android:id="@+id/btn_create"
+        style="@style/VoizyFloatingButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/round_add_black_48"
+        app:fabCustomSize="@dimen/fab_size_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="@android:color/white"
-        android:tint="@color/voizy_orange"
-        android:src="@mipmap/round_add_black_48" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="@dimen/fab_src_size_big" />
+
+    <com.voizy.android.ui.widget.RecordButton
+        android:id="@+id/btn_rec_mic"
+        style="@style/VoizyFloatingButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="@dimen/fab_size_big"
+        app:maxImageSize="@dimen/fab_src_size_big"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/round_mic_black_48"
+        android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_choose_file"
+        style="@style/VoizyFloatingButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/round_folder_black_48"
+        app:layout_constraintBottom_toTopOf="@id/btn_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
