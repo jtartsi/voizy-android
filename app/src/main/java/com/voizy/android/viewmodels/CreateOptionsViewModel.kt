@@ -8,13 +8,13 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
-class RecordPlayButtonViewModel(
+class CreateOptionsViewModel(
     private val context: Context,
     private val voizyRecorder: AudioRecorder
 ) : DisposingViewModel() {
 
     companion object {
-        private val TAG = RecordPlayButtonViewModel::class.java.simpleName
+        private val TAG = CreateOptionsViewModel::class.java.simpleName
     }
 
     fun startRecording() {

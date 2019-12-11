@@ -14,11 +14,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.AudioRecorder
-import com.voizy.android.ui.widget.RecordButton
-import com.voizy.android.ui.widget.RecordButton.Event
+import com.voizy.android.ui.widget.createoptions.CreateEvent
+import com.voizy.android.ui.widget.createoptions.CreateOptionsWidget
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.toPair
-import com.voizy.android.viewmodels.RecordPlayButtonViewModel
+import com.voizy.android.viewmodels.CreateOptionsViewModel
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,14 +27,15 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 @SuppressWarnings("ClickableViewAccessibility")
-class RecordButtonFragment : Fragment() {
+class CreateOptionsFragment : Fragment() {
 
-    private val viewModel: RecordPlayButtonViewModel by inject<RecordPlayButtonViewModel>()
-    private lateinit var recordButton: RecordButton
+    private val viewModel: CreateOptionsViewModel by inject<CreateOptionsViewModel>()
+    // private lateinit var recordButton: RecordButton
+    private lateinit var createOptionsWidget: CreateOptionsWidget
     private val stopTimer = Handler()
 
     companion object {
-        public val TAG = RecordButtonFragment::class.java.simpleName
+        public val TAG = CreateOptionsFragment::class.java.simpleName
     }
 
     override fun onCreateView(
@@ -42,19 +43,19 @@ class RecordButtonFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.record_button_fragment, container, false)
+        return inflater.inflate(R.layout.create_options_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recordButton = view.findViewById(R.id.button_record)
-        recordButton.getButtonEvents()
+        createOptionsWidget = view.findViewById(R.id.create_options_widget)
+        createOptionsWidget.getButtonEvents()
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    Event.START_RECORD -> startRecording()
-                    Event.STOP_RECORD -> stopRecording()
+                    CreateEvent.START_REC_MIC -> startRecording()
+                    CreateEvent.STOP_REC_MIC -> stopRecording()
                 }
             }
 
@@ -125,7 +126,7 @@ class RecordButtonFragment : Fragment() {
     }
 
     private fun stopRecording() {
-        recordButton.handleStopRecording()
+        createOptionsWidget.state = CreateOptionsWidget.State.CLOSED
         stopTimer.removeCallbacksAndMessages(null)
         viewModel.stopRecording()
     }
