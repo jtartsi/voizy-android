@@ -76,7 +76,10 @@ class RecordButtonFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                if (it.first == AudioRecorder.RecordingEvent.STOP &&
+                Timber.d("button-state getRecordingEvents() ${it.first}")
+                if (
+                    it.first == AudioRecorder.RecordingEvent.STOP ||
+                    it.first == AudioRecorder.RecordingEvent.FILE_RECEIVED &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
                     fragmentManager!!.beginTransaction()

@@ -46,12 +46,17 @@ class MainActivity : BaseActivity() {
 
             recordingFragment.arguments = bundle
 
+            val recordButtonFragment =
+                supportFragmentManager.findFragmentById(R.id.record_button_fragment)
+
             supportFragmentManager.beginTransaction()
+                .hide(recordButtonFragment!!)
                 .add(R.id.fragment_container, recordingFragment)
                 .commit()
         } else {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, LibraryFragment())
+
                 .commit()
         }
     }

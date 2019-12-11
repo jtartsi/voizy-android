@@ -30,6 +30,7 @@ class AudioRecorder {
         .share()
 
     fun audioFileReceived() {
+        Timber.d("button-state audioFileReceived()")
         fileReceivedEvents.onNext(RecordingEvent.FILE_RECEIVED)
     }
 
