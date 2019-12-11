@@ -27,13 +27,15 @@
 
     <com.voizy.android.ui.widget.PlayPauseButton
         android:id="@+id/btn_playback"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_recording_time"
-        android:src="@drawable/play_orange" />
+        android:src="@drawable/round_play_arrow_black_48"
+        android:tint="@color/voizy_orange"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/text_voizy_save_error"
