@@ -68,8 +68,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="imageAsset" value="$USER_HOME$/Projects/voizy/icons/sound_wave_purchased.png" />
-                                      <entry key="outputName" value="mic_orange" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Projects/voizy/assets/res/drawable-xxxhdpi/round_stop_black_48.png" />
+                                      <entry key="outputName" value="stop_orange" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="fe9100" />
                                     </map>
