@@ -34,8 +34,8 @@ class PlayPauseButton : ImageButton {
         attributeSet,
         defStyleAttributeSet
     ) {
-        playDrawable = context.getDrawable(R.drawable.play_orange)!!
-        stopDrawable = context.getDrawable(R.drawable.stop_orange)!!
+        playDrawable = context.getDrawable(R.drawable.round_play_arrow_black_48)!!
+        stopDrawable = context.getDrawable(R.drawable.round_stop_black_48)!!
         state = State.PLAY_ICON
     }
 }
