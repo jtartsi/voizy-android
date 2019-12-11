@@ -19,6 +19,7 @@
         app:maxImageSize="45dp"
         app:backgroundTint="@android:color/white"
         android:scaleType="center"
-        android:src="@drawable/mic_orange" />
+        android:tint="@color/voizy_orange"
+        android:src="@drawable/round_mic_black_48" />
 
 </LinearLayout>

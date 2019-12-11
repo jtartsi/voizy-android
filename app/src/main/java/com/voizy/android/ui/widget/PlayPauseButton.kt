@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageButton
+import com.voizy.android.R
 
 class PlayPauseButton : ImageButton {
 
@@ -33,8 +34,8 @@ class PlayPauseButton : ImageButton {
         attributeSet,
         defStyleAttributeSet
     ) {
-        playDrawable = context.getDrawable(android.R.drawable.ic_media_play)!!
-        stopDrawable = context.getDrawable(android.R.drawable.ic_media_pause)!!
+        playDrawable = context.getDrawable(R.drawable.round_play_arrow_black_48)!!
+        stopDrawable = context.getDrawable(R.drawable.round_stop_black_48)!!
         state = State.PLAY_ICON
     }
 }
