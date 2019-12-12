@@ -1,9 +1,11 @@
 package com.voizy.android.ui.fragment
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.provider.DocumentsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.AudioRecorder
+import com.voizy.android.ui.MainActivity
 import com.voizy.android.ui.widget.createoptions.CreateEvent
 import com.voizy.android.ui.widget.createoptions.CreateOptionsWidget
 import com.voizy.android.utils.getScopeProvider
@@ -31,7 +34,7 @@ class CreateOptionsFragment : Fragment() {
 
     private val viewModel: CreateOptionsViewModel by inject<CreateOptionsViewModel>()
     // private lateinit var recordButton: RecordButton
-    private lateinit var createOptionsWidget: CreateOptionsWidget
+    private lateinit var createOptions: CreateOptionsWidget
     private val stopTimer = Handler()
 
     companion object {
@@ -49,13 +52,14 @@ class CreateOptionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        createOptionsWidget = view.findViewById(R.id.create_options_widget)
-        createOptionsWidget.getButtonEvents()
+        createOptions = view.findViewById(R.id.create_options_widget)
+        createOptions.getButtonEvents()
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
                     CreateEvent.START_REC_MIC -> startRecording()
                     CreateEvent.STOP_REC_MIC -> stopRecording()
+                    CreateEvent.CHOOSE_FILE -> pickFile()
                 }
             }
 
@@ -126,9 +130,18 @@ class CreateOptionsFragment : Fragment() {
     }
 
     private fun stopRecording() {
-        createOptionsWidget.state = CreateOptionsWidget.State.CLOSED
+        createOptions.state = CreateOptionsWidget.State.CLOSED
         stopTimer.removeCallbacksAndMessages(null)
         viewModel.stopRecording()
+    }
+
+    private fun pickFile() {
+        val pickFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "audio/*"
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, "")
+        }
+        activity!!.startActivityForResult(pickFileIntent, MainActivity.PICK_FILE_REQUEST_CODE)
     }
 
     private fun addRecordingFragment() {

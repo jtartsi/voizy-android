@@ -1,6 +1,8 @@
 package com.voizy.android.ui
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,6 +12,10 @@ import com.voizy.android.ui.fragment.LibraryFragment
 import com.voizy.android.ui.fragment.RecordingFragment
 
 class MainActivity : BaseActivity() {
+
+    companion object {
+        const val PICK_FILE_REQUEST_CODE = 100
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.VoizyTheme)
@@ -35,28 +41,38 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_FILE_REQUEST_CODE) {
+            openFileInApp(data!!.data)
+        }
+    }
+
     private fun initDataImport() {
         if (intent.action == Intent.ACTION_SEND) {
-            val recordingFragment = RecordingFragment()
-
-            val bundle = Bundle()
-            bundle.putString(VoizyApp.KEY_ACTION, Intent.ACTION_SEND)
             val uri = intent.clipData?.getItemAt(0)?.uri
-            bundle.putParcelable(VoizyApp.KEY_DATA, uri)
-
-            recordingFragment.arguments = bundle
-
-            val recordButtonFragment =
-                supportFragmentManager.findFragmentById(R.id.record_button_fragment)
-
-            supportFragmentManager.beginTransaction()
-                .hide(recordButtonFragment!!)
-                .add(R.id.fragment_container, recordingFragment)
-                .commit()
+            openFileInApp(uri)
         } else {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, LibraryFragment())
                 .commit()
         }
+    }
+
+    private fun openFileInApp(uri: Uri?) {
+        val bundle = Bundle()
+        bundle.putString(VoizyApp.KEY_ACTION, Intent.ACTION_SEND)
+        bundle.putParcelable(VoizyApp.KEY_DATA, uri)
+
+        val recordingFragment = RecordingFragment()
+        recordingFragment.arguments = bundle
+
+        val recordButtonFragment =
+            supportFragmentManager.findFragmentById(R.id.record_button_fragment)
+
+        supportFragmentManager.beginTransaction()
+            .hide(recordButtonFragment!!)
+            .add(R.id.fragment_container, recordingFragment)
+            .commit()
     }
 }

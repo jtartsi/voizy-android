@@ -34,7 +34,7 @@ class CreateOptionsWidget : ConstraintLayout {
         inflate(context, R.layout.create_options_layout, this)
         initOpenClose()
     }
-    
+
     fun getButtonEvents(): Observable<CreateEvent> {
         return RxView
             .clicks(btn_choose_file)
