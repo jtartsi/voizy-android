@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.provider.DocumentsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +18,7 @@ import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.ui.MainActivity
 import com.voizy.android.ui.widget.createoptions.CreateEvent
 import com.voizy.android.ui.widget.createoptions.CreateOptionsWidget
+import com.voizy.android.utils.SupportedFileTypes
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.toPair
 import com.voizy.android.viewmodels.CreateOptionsViewModel
@@ -126,7 +126,6 @@ class CreateOptionsFragment : Fragment() {
 
             var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
             if (recFragment == null) {
-                Timber.d("startRecording()")
                 addRecordingFragment()
             }
         } else {
@@ -143,7 +142,7 @@ class CreateOptionsFragment : Fragment() {
         val pickFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "audio/*"
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, "")
+            putExtra(Intent.EXTRA_MIME_TYPES, SupportedFileTypes.toArray())
         }
         activity!!.startActivityForResult(pickFileIntent, MainActivity.PICK_FILE_REQUEST_CODE)
     }
