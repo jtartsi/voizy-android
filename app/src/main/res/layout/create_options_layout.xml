@@ -3,7 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
+
+    <com.voizy.android.ui.widget.createoptions.RecordButton
+        android:id="@+id/btn_rec_mic"
+        style="@style/VoizyFloatingButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/round_mic_black_48"
+        app:fabCustomSize="@dimen/fab_size_big"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="@dimen/fab_src_size_big"
+        android:tint="@android:color/white"
+        android:backgroundTint="@color/voizy_orange" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_open_options"
@@ -16,20 +30,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="@dimen/fab_src_size_big"
         android:visibility="visible" />
-
-    <com.voizy.android.ui.widget.createoptions.RecordButton
-        android:id="@+id/btn_rec_mic"
-        style="@style/VoizyFloatingButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/round_mic_black_48"
-        android:visibility="invisible"
-        app:fabCustomSize="@dimen/fab_size_big"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="@dimen/fab_src_size_big"
-        android:tint="@android:color/white"
-        android:backgroundTint="@color/voizy_orange" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_choose_file"

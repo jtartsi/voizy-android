@@ -34,7 +34,7 @@ class CreateOptionsWidget : ConstraintLayout {
         inflate(context, R.layout.create_options_layout, this)
         initOpenClose()
     }
-
+    
     fun getButtonEvents(): Observable<CreateEvent> {
         return RxView
             .clicks(btn_choose_file)
@@ -62,7 +62,6 @@ class CreateOptionsWidget : ConstraintLayout {
     @SuppressLint("RestrictedApi")
     private fun showOptions() {
         btn_open_options.visibility = View.INVISIBLE
-        btn_rec_mic.visibility = View.VISIBLE
         btn_choose_file.visibility = View.VISIBLE
         btn_close_options.visibility = View.VISIBLE
     }
@@ -70,7 +69,6 @@ class CreateOptionsWidget : ConstraintLayout {
     @SuppressLint("RestrictedApi")
     private fun hideOptions() {
         btn_open_options.visibility = View.VISIBLE
-        btn_rec_mic.visibility = View.INVISIBLE
         btn_choose_file.visibility = View.INVISIBLE
         btn_close_options.visibility = View.INVISIBLE
     }
