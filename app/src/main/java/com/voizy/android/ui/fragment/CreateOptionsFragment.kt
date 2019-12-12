@@ -103,6 +103,11 @@ class CreateOptionsFragment : Fragment() {
             }
     }
 
+    override fun onStart() {
+        super.onStart()
+        createOptions.state = CreateOptionsWidget.State.CLOSED
+    }
+
     private fun fragmentChangeListener(): Observable<BaseFragment> {
         return Observable.create { emitter ->
             fragmentManager!!.addOnBackStackChangedListener {
@@ -130,7 +135,6 @@ class CreateOptionsFragment : Fragment() {
     }
 
     private fun stopRecording() {
-        createOptions.state = CreateOptionsWidget.State.CLOSED
         stopTimer.removeCallbacksAndMessages(null)
         viewModel.stopRecording()
     }

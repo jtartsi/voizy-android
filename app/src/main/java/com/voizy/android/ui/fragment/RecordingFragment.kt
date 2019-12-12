@@ -36,7 +36,12 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class RecordingFragment : BaseFragment() {
-
+    /*
+     TODO code improvements
+      - Break into RecordingFragment & SaveFragment
+      - SaveFragment could be abstract and then ImportSave, NormalSaveFragment
+            could distinguish UI navigation patterns
+     */
     private val viewModel: RecordingViewModel by inject()
     private var timerDisposable: Disposable? = null
     private val backPressEvent = PublishSubject.create<String>()
@@ -216,7 +221,15 @@ class RecordingFragment : BaseFragment() {
     private fun backPressConsumer(): Consumer<Timed<String>> {
         return Consumer {
             if (isFileSendAction()) {
-                this.activity!!.finish()
+
+                val createOptionsFragment =
+                    fragmentManager!!.findFragmentById(R.id.record_button_fragment)
+
+                fragmentManager!!.beginTransaction()
+                    .remove(this)
+                    .add(R.id.fragment_container, LibraryFragment(), null)
+                    .show(createOptionsFragment!!)
+                    .commit()
             } else {
                 voizyFirebaseAnalytics.logRecordingCancel()
                 fragmentManager!!.popBackStackImmediate(
