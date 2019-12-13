@@ -32,6 +32,8 @@ import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -268,12 +270,10 @@ class RecordingFragment : BaseFragment() {
     }
 
     private fun showTimeText(timeInSeconds: Int) {
-        val secondsString = if (timeInSeconds < 10) {
-            "0$timeInSeconds"
-        } else {
-            timeInSeconds.toString()
-        }
-        tv_recording_time.text = "00:".plus(secondsString).plus(" / 00:15")
+        val inMillis = (timeInSeconds).toLong() * 1000
+        val dateFormatter = SimpleDateFormat("mm:ss")
+        val timeString = dateFormatter.format(Date(inMillis))
+        tv_recording_time.text = timeString.plus(" / 00:15")
     }
 
     private fun isFileSendAction(): Boolean {
