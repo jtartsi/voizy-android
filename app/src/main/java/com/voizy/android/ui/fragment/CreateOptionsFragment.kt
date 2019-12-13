@@ -27,7 +27,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 @SuppressWarnings("ClickableViewAccessibility")
 class CreateOptionsFragment : Fragment() {
@@ -63,7 +62,7 @@ class CreateOptionsFragment : Fragment() {
                 }
             }
 
-        fragmentChangeListener()
+        framgentChangeEvents()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -76,12 +75,11 @@ class CreateOptionsFragment : Fragment() {
             }
 
         viewModel.getRecordingEvents()
-            .withLatestFrom(fragmentChangeListener(), toPair())
+            .withLatestFrom(framgentChangeEvents(), toPair())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("button-state getRecordingEvents() ${it.first}")
                 if (
                     it.first == AudioRecorder.RecordingEvent.STOP ||
                     it.first == AudioRecorder.RecordingEvent.FILE_RECEIVED &&
@@ -103,12 +101,12 @@ class CreateOptionsFragment : Fragment() {
             }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         createOptions.state = CreateOptionsWidget.State.CLOSED
     }
 
-    private fun fragmentChangeListener(): Observable<BaseFragment> {
+    private fun framgentChangeEvents(): Observable<BaseFragment> {
         return Observable.create { emitter ->
             fragmentManager!!.addOnBackStackChangedListener {
                 val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
@@ -124,6 +122,7 @@ class CreateOptionsFragment : Fragment() {
             stopTimer.postDelayed({ stopRecording() }, 15000)
             viewModel.startRecording()
 
+            createOptions.state = CreateOptionsWidget.State.CLOSED
             var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
             if (recFragment == null) {
                 addRecordingFragment()
