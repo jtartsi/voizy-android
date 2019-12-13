@@ -69,8 +69,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Projects/voizy/assets/res/drawable-xxxhdpi/round_stop_black_48.png" />
-                                      <entry key="outputName" value="stop_orange" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Projects/voizy/assets/res/drawable-xxxhdpi/round_add_black_48.png" />
+                                      <entry key="outputName" value="plus" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="fe9100" />
                                     </map>

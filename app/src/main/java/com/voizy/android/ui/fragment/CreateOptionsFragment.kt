@@ -1,6 +1,7 @@
 package com.voizy.android.ui.fragment
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -14,27 +15,29 @@ import com.google.android.material.snackbar.Snackbar
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.AudioRecorder
-import com.voizy.android.ui.widget.RecordButton
-import com.voizy.android.ui.widget.RecordButton.Event
+import com.voizy.android.ui.MainActivity
+import com.voizy.android.ui.widget.createoptions.CreateEvent
+import com.voizy.android.ui.widget.createoptions.CreateOptionsWidget
+import com.voizy.android.utils.SupportedFileTypes
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.toPair
-import com.voizy.android.viewmodels.RecordPlayButtonViewModel
+import com.voizy.android.viewmodels.CreateOptionsViewModel
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 @SuppressWarnings("ClickableViewAccessibility")
-class RecordButtonFragment : Fragment() {
+class CreateOptionsFragment : Fragment() {
 
-    private val viewModel: RecordPlayButtonViewModel by inject<RecordPlayButtonViewModel>()
-    private lateinit var recordButton: RecordButton
+    private val viewModel: CreateOptionsViewModel by inject<CreateOptionsViewModel>()
+    // private lateinit var recordButton: RecordButton
+    private lateinit var createOptions: CreateOptionsWidget
     private val stopTimer = Handler()
 
     companion object {
-        public val TAG = RecordButtonFragment::class.java.simpleName
+        public val TAG = CreateOptionsFragment::class.java.simpleName
     }
 
     override fun onCreateView(
@@ -42,23 +45,24 @@ class RecordButtonFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.record_button_fragment, container, false)
+        return inflater.inflate(R.layout.create_options_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recordButton = view.findViewById(R.id.button_record)
-        recordButton.getButtonEvents()
+        createOptions = view.findViewById(R.id.create_options_widget)
+        createOptions.getButtonEvents()
             .autoDisposable(getScopeProvider())
             .subscribe {
                 when (it) {
-                    Event.START_RECORD -> startRecording()
-                    Event.STOP_RECORD -> stopRecording()
+                    CreateEvent.START_REC_MIC -> startRecording()
+                    CreateEvent.STOP_REC_MIC -> stopRecording()
+                    CreateEvent.CHOOSE_FILE -> pickFile()
                 }
             }
 
-        fragmentChangeListener()
+        framgentChangeEvents()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -71,12 +75,11 @@ class RecordButtonFragment : Fragment() {
             }
 
         viewModel.getRecordingEvents()
-            .withLatestFrom(fragmentChangeListener(), toPair())
+            .withLatestFrom(framgentChangeEvents(), toPair())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("button-state getRecordingEvents() ${it.first}")
                 if (
                     it.first == AudioRecorder.RecordingEvent.STOP ||
                     it.first == AudioRecorder.RecordingEvent.FILE_RECEIVED &&
@@ -98,7 +101,12 @@ class RecordButtonFragment : Fragment() {
             }
     }
 
-    private fun fragmentChangeListener(): Observable<BaseFragment> {
+    override fun onResume() {
+        super.onResume()
+        createOptions.state = CreateOptionsWidget.State.CLOSED
+    }
+
+    private fun framgentChangeEvents(): Observable<BaseFragment> {
         return Observable.create { emitter ->
             fragmentManager!!.addOnBackStackChangedListener {
                 val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
@@ -114,9 +122,9 @@ class RecordButtonFragment : Fragment() {
             stopTimer.postDelayed({ stopRecording() }, 15000)
             viewModel.startRecording()
 
+            createOptions.state = CreateOptionsWidget.State.CLOSED
             var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
             if (recFragment == null) {
-                Timber.d("startRecording()")
                 addRecordingFragment()
             }
         } else {
@@ -125,9 +133,17 @@ class RecordButtonFragment : Fragment() {
     }
 
     private fun stopRecording() {
-        recordButton.handleStopRecording()
         stopTimer.removeCallbacksAndMessages(null)
         viewModel.stopRecording()
+    }
+
+    private fun pickFile() {
+        val pickFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "audio/*"
+            putExtra(Intent.EXTRA_MIME_TYPES, SupportedFileTypes.toArray())
+        }
+        activity!!.startActivityForResult(pickFileIntent, MainActivity.PICK_FILE_REQUEST_CODE)
     }
 
     private fun addRecordingFragment() {

@@ -32,11 +32,18 @@ import kotlinx.android.synthetic.main.recording_overlay_fragment.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class RecordingFragment : BaseFragment() {
-
+    /*
+     TODO code improvements
+      - Break into RecordingFragment & SaveFragment
+      - SaveFragment could be abstract and then ImportSave, NormalSaveFragment
+            could distinguish UI navigation patterns
+     */
     private val viewModel: RecordingViewModel by inject()
     private var timerDisposable: Disposable? = null
     private val backPressEvent = PublishSubject.create<String>()
@@ -142,17 +149,9 @@ class RecordingFragment : BaseFragment() {
 
             if (!et_voizy_name.text.toString().isNullOrEmpty()) {
                 viewModel.saveVoizy(getVoizyFromUserInputs())
-
-                if (!isFileSendAction()) {
-                    hideSoftKeyboard(view)
-                    fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                } else {
-                    Snackbar.make(
-                        view, getString(R.string.voizy_saving), Snackbar.LENGTH_SHORT
-                    ).show()
-                }
+                hideSoftKeyboard(view)
+                navigateBackToLibrary()
             } else {
-
                 Snackbar.make(
                     view, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT
                 ).show()
@@ -215,15 +214,8 @@ class RecordingFragment : BaseFragment() {
 
     private fun backPressConsumer(): Consumer<Timed<String>> {
         return Consumer {
-            if (isFileSendAction()) {
-                this.activity!!.finish()
-            } else {
-                voizyFirebaseAnalytics.logRecordingCancel()
-                fragmentManager!!.popBackStackImmediate(
-                    it.value(),
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
-            }
+            voizyFirebaseAnalytics.logRecordingCancel()
+            navigateBackToLibrary()
         }
     }
 
@@ -278,12 +270,10 @@ class RecordingFragment : BaseFragment() {
     }
 
     private fun showTimeText(timeInSeconds: Int) {
-        val secondsString = if (timeInSeconds < 10) {
-            "0$timeInSeconds"
-        } else {
-            timeInSeconds.toString()
-        }
-        tv_recording_time.text = "00:".plus(secondsString).plus(" / 00:15")
+        val inMillis = (timeInSeconds).toLong() * 1000
+        val dateFormatter = SimpleDateFormat("mm:ss")
+        val timeString = dateFormatter.format(Date(inMillis))
+        tv_recording_time.text = timeString.plus(" / 00:15")
     }
 
     private fun isFileSendAction(): Boolean {
@@ -313,5 +303,24 @@ class RecordingFragment : BaseFragment() {
             localeLang = locale.language,
             localeCountry = locale.country
         )
+    }
+
+    private fun navigateBackToLibrary() {
+        if (isFileSendAction()) {
+
+            val createOptionsFragment =
+                fragmentManager!!.findFragmentById(R.id.record_button_fragment)
+
+            fragmentManager!!.beginTransaction()
+                .remove(this)
+                .add(R.id.fragment_container, LibraryFragment(), null)
+                .show(createOptionsFragment!!)
+                .commit()
+        } else {
+            fragmentManager!!.popBackStackImmediate(
+                TAG,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+        }
     }
 }

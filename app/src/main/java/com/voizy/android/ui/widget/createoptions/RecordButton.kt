@@ -1,4 +1,4 @@
-package com.voizy.android.ui.widget
+package com.voizy.android.ui.widget.createoptions
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -17,9 +17,7 @@ class RecordButton : FloatingActionButton {
         private const val ANIMATION_DELAY = 200L
     }
 
-    enum class Event { START_RECORD, STOP_RECORD }
-
-    private val events = PublishSubject.create<Event>()
+    private val events = PublishSubject.create<CreateEvent>()
 
     constructor(context: Context) : this(context, null)
 
@@ -45,7 +43,7 @@ class RecordButton : FloatingActionButton {
         }
     }
 
-    fun getButtonEvents(): Observable<Event> {
+    fun getButtonEvents(): Observable<CreateEvent> {
         return events
     }
 
@@ -57,7 +55,7 @@ class RecordButton : FloatingActionButton {
 
         delayedVibrate()
         animateButtonOnStart()
-        events.onNext(Event.START_RECORD)
+        events.onNext(CreateEvent.START_REC_MIC)
     }
 
     fun handleStopRecording() {
@@ -68,21 +66,23 @@ class RecordButton : FloatingActionButton {
 
         delayedVibrate()
         animateButtonOnStop()
-        events.onNext(Event.STOP_RECORD)
+        events.onNext(CreateEvent.STOP_REC_MIC)
     }
 
     private fun animateButtonOnStart() {
         animate()
             .scaleY(1.25f)
             .scaleX(1.25f)
-            .duration = ANIMATION_DELAY
+            .duration =
+            ANIMATION_DELAY
     }
 
     private fun animateButtonOnStop() {
         animate()
             .scaleY(1f)
             .scaleX(1f)
-            .duration = ANIMATION_DELAY
+            .duration =
+            ANIMATION_DELAY
     }
 
     private fun delayedVibrate() {
