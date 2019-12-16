@@ -18,6 +18,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.voizy_details_fragment.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class VoizyDetailsFragment : BaseFragment() {
 
@@ -40,15 +41,24 @@ class VoizyDetailsFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Timber.d("voizy-details onCreateView()")
         return inflater.inflate(R.layout.voizy_details_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Timber.d("voizy-details onViewCreated()")
         initDetails()
         initPlayback()
         initShare()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopPlayback()
+            .autoDisposable(getScopeProvider())
+            .subscribe()
     }
 
     private fun initDetails() {
