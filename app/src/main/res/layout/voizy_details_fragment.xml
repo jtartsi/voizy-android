@@ -45,7 +45,7 @@
 
 
     <com.voizy.android.ui.widget.PlayPauseButton
-        android:id="@+id/btn_playback"
+        android:id="@+id/btn_details_playback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/tv_voizy_details_tags"
@@ -56,7 +56,7 @@
         tools:tint="@android:color/black" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_share_voizy"
+        android:id="@+id/btn_details_share_voizy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"

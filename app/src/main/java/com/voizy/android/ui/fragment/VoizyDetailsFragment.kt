@@ -72,7 +72,7 @@ class VoizyDetailsFragment : BaseFragment() {
     }
 
     private fun initPlayback() {
-        RxView.clicks(btn_playback)
+        RxView.clicks(btn_details_playback)
             .flatMap { viewModel.togglePlay() }
             .autoDisposable(getScopeProvider())
             .subscribe()
@@ -82,25 +82,26 @@ class VoizyDetailsFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (it.playbackEvent == PlaybackEvent.START) {
-                    btn_playback.state = PlayPauseButton.State.STOP_ICON
+                    btn_details_playback.state = PlayPauseButton.State.STOP_ICON
                 } else if (it.playbackEvent == PlaybackEvent.STOP) {
-                    btn_playback.state = PlayPauseButton.State.PLAY_ICON
+                    btn_details_playback.state = PlayPauseButton.State.PLAY_ICON
                 }
             }
     }
 
     private fun initShare() {
-        shareRequests
-            .doOnNext(showSharingToast())
+        RxView.clicks(btn_details_share_voizy)
+            // .doOnNext(showSharingToast()) // TODO voizy-details remove this
             .autoDisposable(getScopeProvider())
             .subscribe { viewModel.share(context!!) }
     }
 
-    private fun showSharingToast(): Consumer<Voizy> {
+    // TODO voizy-details remove this
+    private fun showSharingToast(): Consumer<Any> {
         return Consumer {
             Snackbar.make(
                 view!!,
-                getString(R.string.voizy_sharing, it.name),
+                getString(R.string.voizy_sharing, "Voizy"),
                 Snackbar.LENGTH_LONG
             ).show()
         }
