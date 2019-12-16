@@ -47,7 +47,7 @@ val viewModels = module {
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
     viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { CreateOptionsViewModel(get(), get()) }
-    viewModel { VoizyDetailsViewModel(get(), get(), get(), get()) }
+    viewModel { VoizyDetailsViewModel(get(), get(), get()) }
 }
 
 val allModules = listOf(appLogicsModule, repositoryModule, viewModels)

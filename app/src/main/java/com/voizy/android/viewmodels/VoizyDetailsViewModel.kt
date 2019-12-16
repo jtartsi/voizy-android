@@ -4,7 +4,6 @@ import android.content.Context
 import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.models.Voizy
-import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.ShareManager
 import com.voizy.android.utils.withErrorHandling
@@ -14,7 +13,6 @@ import java.io.File
 class VoizyDetailsViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: AudioPlayer,
-    private val localFileManager: LocalFileManager,
     private val shareManager: ShareManager
 ) : DisposingViewModel() {
 
@@ -35,6 +33,7 @@ class VoizyDetailsViewModel(
             .withErrorHandling(TAG, "Failed to togglePlay on preview voizy")
     }
 
+    // TODO voizy-details stop playback when leaving view.
     fun stopPlayback(): Observable<Int> {
         return voizyPlayer
             .stop()
@@ -49,17 +48,5 @@ class VoizyDetailsViewModel(
             .withErrorHandling(TAG, "Failed to share voizy")
             .subscribe()
             .autoDispose()
-    }
-
-    fun getAudioFileLengthInSeconds(path: String): Observable<Int> {
-        return Observable
-            .defer {
-                Observable.fromCallable {
-                    localFileManager.getAudioFileLengthInMillis(path)
-                }
-            }.map {
-                (it / 1000).toInt()
-            }
-            .withErrorHandling(TAG, "failed to get audio length")
     }
 }

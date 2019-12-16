@@ -16,7 +16,6 @@ import com.voizy.android.viewmodels.VoizyDetailsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.row_item_voizy.*
 import kotlinx.android.synthetic.main.voizy_details_fragment.*
 import org.koin.android.ext.android.inject
 
@@ -59,11 +58,7 @@ class VoizyDetailsFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe { voizy ->
                 tv_voizy_details_title.text = voizy.name
-                tv_voizy_row_tags.text = voizy.hashTags
-                viewModel.getAudioFileLengthInSeconds(voizy.localPath)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .autoDisposable(getScopeProvider())
-                    .subscribe { tv_voizy_details_duration.text = it.toString() }
+                tv_voizy_details_tags.text = voizy.hashTags
             }
     }
 
