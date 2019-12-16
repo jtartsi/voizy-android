@@ -27,8 +27,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
 
-class LibraryFragment :
-    BaseFragment() {
+class LibraryFragment : BaseFragment() {
 
     override fun getFragmentTag(): String {
         return TAG
@@ -73,7 +72,7 @@ class LibraryFragment :
         initSearch()
         initShare()
         initCopyToClipBoard()
-        initSaveNotifications()
+        // initSaveNotifications() // TODO voizy-details
         initPrivacyPolicy()
         initPlayback()
         initResultsState()
@@ -195,12 +194,13 @@ class LibraryFragment :
         }
     }
 
-    private fun initSaveNotifications() {
-        viewModel.getSaveVoizyEvents()
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe(saveEventConsumer())
-    }
+    // TODO voizy-details
+    // private fun initSaveNotifications() {
+    //     viewModel.getSaveVoizyEvents()
+    //         .observeOn(AndroidSchedulers.mainThread())
+    //         .autoDisposable(getScopeProvider())
+    //         .subscribe(saveEventConsumer())
+    // }
 
     private fun initShare() {
         shareRequests
