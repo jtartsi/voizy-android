@@ -26,7 +26,6 @@ class VoizyDetailsFragment : BaseFragment() {
 
     companion object {
         public val TAG = RecordingFragment::class.java.simpleName
-        public const val ARGS_KEY_VOIZY = "args_voizy"
     }
 
     override fun getFragmentTag(): String {

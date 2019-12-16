@@ -83,7 +83,7 @@ class RecordingFragment : BaseFragment() {
         initFileInput()
         initBackPress()
         initRecordEvents()
-        initShare()
+        // initShare() // TODO voizy-details remove this
 
         if (!isFileSendAction()) {
             startTimer()
@@ -129,20 +129,21 @@ class RecordingFragment : BaseFragment() {
             .subscribe(saveEventConsumer())
     }
 
-    private fun initShare() {
-        shareRequests
-            .doOnNext {
-                Snackbar.make(
-                    view!!,
-                    getString(R.string.voizy_sharing, it.name),
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-            .switchMap { viewModel.downloadVoizy(context!!, it) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
-    }
+    // TODO voizy-details remove this
+    // private fun initShare() {
+    //     shareRequests
+    //         .doOnNext {
+    //             Snackbar.make(
+    //                 view!!,
+    //                 getString(R.string.voizy_sharing, it.name),
+    //                 Snackbar.LENGTH_LONG
+    //             ).show()
+    //         }
+    //         .switchMap { viewModel.downloadVoizy(context!!, it) }
+    //         .observeOn(AndroidSchedulers.mainThread())
+    //         .autoDisposable(getScopeProvider())
+    //         .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
+    // }
 
     private fun saveClickConsumer(): Consumer<View> {
         return Consumer { view ->
@@ -150,6 +151,7 @@ class RecordingFragment : BaseFragment() {
             if (!et_voizy_name.text.toString().isNullOrEmpty()) {
                 val voizy = getVoizyFromUserInputs()
                 viewModel.saveVoizy(voizy)
+                hideSoftKeyboard(view)
                 fragmentManager!!.beginTransaction()
                     .remove(this)
                     .add(VoizyDetailsFragment(), VoizyDetailsFragment.TAG)
