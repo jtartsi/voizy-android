@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
 import java.io.File
 
 class VoizyRepository(
@@ -37,8 +37,8 @@ class VoizyRepository(
             .build()
     }
 
-    private val saveVoizyQueue = PublishSubject.create<Voizy>()
-    private val saveVoizyEvents = saveVoizyQueue
+    private val saveVoizysStream = BehaviorSubject.create<Voizy>()
+    private val saveVoizyEvents = saveVoizysStream
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
         .switchMap { voizyStorage.uploadVoizy(it) }
@@ -50,12 +50,20 @@ class VoizyRepository(
         return saveVoizyEvents
     }
 
+    /**
+     * Returns last voizy that has been queued up for saving. Voizy might be already saved, or
+     * uploading might still be in process
+     */
+    fun lastVoizyToBeSaved(): Observable<Voizy> {
+        return saveVoizysStream
+    }
+
     fun getTempFilePath(): String {
         return localFileManager.getTempFilePath()
     }
 
     fun saveVoizy(voizy: Voizy) {
-        saveVoizyQueue.onNext(voizy)
+        saveVoizysStream.onNext(voizy)
     }
 
     fun voizys(searchKeyword: String): Listing<Voizy> {

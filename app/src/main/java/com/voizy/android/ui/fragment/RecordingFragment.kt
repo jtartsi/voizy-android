@@ -148,9 +148,12 @@ class RecordingFragment : BaseFragment() {
         return Consumer { view ->
 
             if (!et_voizy_name.text.toString().isNullOrEmpty()) {
-                viewModel.saveVoizy(getVoizyFromUserInputs())
-                hideSoftKeyboard(view)
-                navigateBackToLibrary()
+                val voizy = getVoizyFromUserInputs()
+                viewModel.saveVoizy(voizy)
+                fragmentManager!!.beginTransaction()
+                    .remove(this)
+                    .add(VoizyDetailsFragment(), VoizyDetailsFragment.TAG)
+                    .commit()
             } else {
                 Snackbar.make(
                     view, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT

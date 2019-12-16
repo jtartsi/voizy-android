@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_voizy_title"
+        android:id="@+id/tv_voizy_details_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
@@ -19,18 +19,18 @@
         tools:text="I am down!" />
 
     <TextView
-        android:id="@+id/tv_voizy_duration"
+        android:id="@+id/tv_voizy_details_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_title"
         android:textSize="27sp"
         android:textColor="@color/voizy_purple"
         tools:text="4s" />
 
     <TextView
-        android:id="@+id/tv_voizy_tags"
+        android:id="@+id/tv_voizy_details_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="26.5sp"
@@ -48,10 +48,10 @@
         android:id="@+id/btn_playback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/tv_voizy_tags"
+        app:layout_constraintBottom_toTopOf="@+id/tv_voizy_details_tags"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_duration"
+        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_duration"
         android:tint="@color/voizy_orange"
         tools:tint="@android:color/black" />
 
@@ -62,7 +62,7 @@
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_tags"
+        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_tags"
         app:fabCustomSize="83dp"
         app:maxImageSize="34dp"
         android:backgroundTint="@android:color/white"

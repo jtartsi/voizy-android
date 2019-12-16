@@ -76,13 +76,15 @@ class RecordingViewModel(
     }
 
     fun getAudioFileLengthInSeconds(path: String): Observable<Int> {
-        return Observable.defer {
-            Observable.fromCallable {
-                localFileManager.getAudioFileLengthInMillis(path)
+        return Observable
+            .defer {
+                Observable.fromCallable {
+                    localFileManager.getAudioFileLengthInMillis(path)
+                }
+            }.map {
+                (it / 1000).toInt()
             }
-        }.map {
-            (it / 1000).toInt()
-        }.withErrorHandling(TAG, "failed to get audio length")
+            .withErrorHandling(TAG, "failed to get audio length")
     }
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {

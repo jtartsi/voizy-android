@@ -18,6 +18,12 @@ data class Voizy(
     val localeLang: String = "",
     val localeCountry: String = ""
 ) {
+
+    var hashTags: String = ""
+        get() {
+            return tags.joinToString(separator = " #", prefix = "#")
+        }
+
     companion object {
         var DIFF_CALLBACK: DiffUtil.ItemCallback<Voizy> = object : DiffUtil.ItemCallback<Voizy>() {
             override fun areItemsTheSame(oldItem: Voizy, newItem: Voizy): Boolean {
@@ -36,9 +42,5 @@ data class Voizy(
 
         val article = obj as Voizy?
         return article!!.id === this.id
-    }
-
-    fun getHashTags(): String {
-        return tags.joinToString(separator = " #", prefix = "#")
     }
 }
