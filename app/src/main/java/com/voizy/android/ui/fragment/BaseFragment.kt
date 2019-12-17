@@ -4,11 +4,12 @@ import androidx.fragment.app.Fragment
 
 abstract class BaseFragment : Fragment() {
 
-    open fun doubleBackPressNeeded(): Boolean {
+    open fun useCustomBackPress(): Boolean {
         return false
     }
 
     abstract fun getFragmentTag(): String
 
-    abstract fun onBackPressed()
+    open fun onBackPressed() {
+    }
 }

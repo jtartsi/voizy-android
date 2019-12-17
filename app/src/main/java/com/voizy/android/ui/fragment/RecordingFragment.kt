@@ -55,7 +55,7 @@ class RecordingFragment : BaseFragment() {
         private const val ACCEPT_BACK_THRESHOLD = 3000
     }
 
-    override fun doubleBackPressNeeded(): Boolean {
+    override fun useCustomBackPress(): Boolean {
         return true
     }
 

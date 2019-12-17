@@ -31,7 +31,14 @@ class VoizyDetailsFragment : BaseFragment() {
         return TAG
     }
 
+    override fun useCustomBackPress(): Boolean {
+        return true
+    }
+
     override fun onBackPressed() {
+        fragmentManager!!.popBackStack(
+            RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
 
     override fun onCreateView(
