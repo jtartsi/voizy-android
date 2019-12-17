@@ -28,7 +28,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Timed
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.recording_overlay_fragment.*
+import kotlinx.android.synthetic.main.recording_fragment.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -72,7 +72,7 @@ class RecordingFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.recording_overlay_fragment, container, false)
+        return inflater.inflate(R.layout.recording_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
