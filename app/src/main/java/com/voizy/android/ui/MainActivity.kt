@@ -73,6 +73,7 @@ class MainActivity : BaseActivity() {
         supportFragmentManager.beginTransaction()
             .hide(createOptionsFragment!!)
             .add(R.id.fragment_container, recordingFragment)
+            .addToBackStack(RecordingFragment.TAG)
             .commit()
     }
 }

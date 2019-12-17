@@ -51,7 +51,6 @@
         android:textSize="26.5sp"
         tools:text="#accept #down #reaction" />
 
-
     <com.voizy.android.ui.widget.PlayPauseButton
         android:id="@+id/btn_details_playback"
         android:layout_width="75dp"
