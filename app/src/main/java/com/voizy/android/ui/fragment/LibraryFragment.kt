@@ -27,8 +27,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
 
-class LibraryFragment :
-    BaseFragment() {
+class LibraryFragment : BaseFragment() {
 
     override fun getFragmentTag(): String {
         return TAG
@@ -73,7 +72,6 @@ class LibraryFragment :
         initSearch()
         initShare()
         initCopyToClipBoard()
-        initSaveNotifications()
         initPrivacyPolicy()
         initPlayback()
         initResultsState()
@@ -193,13 +191,6 @@ class LibraryFragment :
         voizyListAdapter.onLongPress = { _: VoizyViewHolder, _: Int, voizy: Voizy ->
             clipBoardRequests.onNext(voizy)
         }
-    }
-
-    private fun initSaveNotifications() {
-        viewModel.getSaveVoizyEvents()
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe(saveEventConsumer())
     }
 
     private fun initShare() {

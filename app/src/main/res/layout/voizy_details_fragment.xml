@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tv_voizy_details_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:lines="2"
+        android:gravity="center"
+        android:textColor="@color/voizy_purple"
+        android:textSize="35.5sp"
+        tools:text="I am down!" />
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_voizy_details_duration"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_title"-->
+    <!--        android:textSize="27sp"-->
+    <!--        android:textColor="@color/voizy_purple"-->
+    <!--        tools:text="4s"-->
+    <!--        android:visibility="gone" />-->
+
+    <TextView
+        android:id="@+id/tv_voizy_details_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6"
+        android:lines="2"
+        android:gravity="center"
+        android:textColor="@color/voizy_orange"
+        android:textSize="26.5sp"
+        tools:text="#accept #down #reaction" />
+
+    <com.voizy.android.ui.widget.PlayPauseButton
+        android:id="@+id/btn_details_playback"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:tint="@color/voizy_orange"
+        app:layout_constraintBottom_toTopOf="@+id/tv_voizy_details_tags"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_title"
+        tools:tint="@android:color/black" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_details_share_voizy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_tags"
+        app:fabCustomSize="83dp"
+        app:maxImageSize="34dp"
+        android:backgroundTint="@android:color/white"
+        android:src="@drawable/round_share_black_48"
+        android:tint="@color/voizy_orange" />
+
+    <Button
+        style="@style/VoizyTheme.BorderButton"
+        android:id="@+id/btn_details_finish"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/finish" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

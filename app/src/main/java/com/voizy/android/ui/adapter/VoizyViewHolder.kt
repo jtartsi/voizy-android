@@ -31,7 +31,7 @@ class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindTo(voizy: Voizy) {
         tvTitle.text = voizy.name
-        tvTags.text = voizy.getHashTags()
+        tvTags.text = voizy.hashTags
         progressBar.progress = 0
         progressBar.max = 0
     }

@@ -8,10 +8,12 @@ import com.voizy.android.middleware.firebase.collections.VoizySearchRequestColle
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
+import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 
@@ -37,17 +39,27 @@ class VoizyRepository(
             .build()
     }
 
+    private val lastSavedVoizy = BehaviorSubject.create<Voizy>()
     private val saveVoizyQueue = PublishSubject.create<Voizy>()
     private val saveVoizyEvents = saveVoizyQueue
         .observeOn(Schedulers.io())
         .switchMap { localFileManager.saveVoizy(it) }
+        .doOnNext { lastSavedVoizy.onNext(it) }
         .switchMap { voizyStorage.uploadVoizy(it) }
         .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
-        .doOnNext { localFileManager.deleteFile(it.second!!.localPath) }
+        .withErrorHandling(TAG, "saveVoizyEvents error")
         .share()
 
     fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
         return saveVoizyEvents
+    }
+
+    /**
+     * Returns last voizy that has been queued up for saving. Voizy might be already saved, or
+     * uploading might still be in process
+     */
+    fun lastVoizyToBeSaved(): Observable<Voizy> {
+        return lastSavedVoizy
     }
 
     fun getTempFilePath(): String {

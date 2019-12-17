@@ -16,6 +16,9 @@ local.properties
 # Signing files
 .signing/
 
+# Screen captures
+./captures
+
 # User-specific configurations
 .idea/caches/
 .idea/libraries/

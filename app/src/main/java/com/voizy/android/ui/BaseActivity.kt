@@ -10,7 +10,7 @@ abstract class BaseActivity : FragmentActivity() {
         val currentFragment = supportFragmentManager
             .findFragmentById(R.id.fragment_container)
 
-        if (currentFragment is BaseFragment && currentFragment.doubleBackPressNeeded()) {
+        if (currentFragment is BaseFragment && currentFragment.useCustomBackPress()) {
             currentFragment.onBackPressed()
         } else {
             super.onBackPressed()

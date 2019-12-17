@@ -17,6 +17,7 @@ import com.voizy.android.utils.ShareManager
 import com.voizy.android.viewmodels.CreateOptionsViewModel
 import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import com.voizy.android.viewmodels.RecordingViewModel
+import com.voizy.android.viewmodels.VoizyDetailsViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -46,6 +47,7 @@ val viewModels = module {
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
     viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { CreateOptionsViewModel(get(), get()) }
+    viewModel { VoizyDetailsViewModel(get(), get(), get(), get()) }
 }
 
 val allModules = listOf(appLogicsModule, repositoryModule, viewModels)
