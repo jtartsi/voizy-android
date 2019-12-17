@@ -47,8 +47,6 @@ class VoizyRepository(
         .doOnNext { lastSavedVoizy.onNext(it) }
         .switchMap { voizyStorage.uploadVoizy(it) }
         .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
-        // TODO voizy-details move this to closing of voizy details view.
-        // .doOnNext { localFileManager.deleteFile(it.second!!.localPath) }
         .withErrorHandling(TAG, "saveVoizyEvents error")
         .share()
 

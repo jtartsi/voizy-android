@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.FragmentManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
@@ -14,11 +14,9 @@ import com.voizy.android.ui.widget.PlayPauseButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.VoizyDetailsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.voizy_details_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class VoizyDetailsFragment : BaseFragment() {
 
@@ -41,17 +39,16 @@ class VoizyDetailsFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Timber.d("voizy-details onCreateView()")
         return inflater.inflate(R.layout.voizy_details_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Timber.d("voizy-details onViewCreated()")
         initDetails()
         initPlayback()
         initShare()
+        initFinish()
     }
 
     override fun onStop() {
@@ -91,19 +88,18 @@ class VoizyDetailsFragment : BaseFragment() {
 
     private fun initShare() {
         RxView.clicks(btn_details_share_voizy)
-            // .doOnNext(showSharingToast()) // TODO voizy-details remove this
             .autoDisposable(getScopeProvider())
             .subscribe { viewModel.share(context!!) }
     }
 
-    // TODO voizy-details remove this
-    private fun showSharingToast(): Consumer<Any> {
-        return Consumer {
-            Snackbar.make(
-                view!!,
-                getString(R.string.voizy_sharing, "Voizy"),
-                Snackbar.LENGTH_LONG
-            ).show()
-        }
+    private fun initFinish() {
+        RxView.clicks(btn_details_finish)
+            .switchMap { viewModel.deleteLocalFile() }
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                fragmentManager!!.popBackStack(
+                    RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+            }
     }
 }

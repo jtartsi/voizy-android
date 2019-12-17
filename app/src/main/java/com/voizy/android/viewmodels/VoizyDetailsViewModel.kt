@@ -4,6 +4,7 @@ import android.content.Context
 import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.ShareManager
 import com.voizy.android.utils.withErrorHandling
@@ -14,7 +15,8 @@ import java.io.File
 class VoizyDetailsViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: AudioPlayer,
-    private val shareManager: ShareManager
+    private val shareManager: ShareManager,
+    private val localFileManager: LocalFileManager
 ) : DisposingViewModel() {
 
     val playbackEvents: Observable<PlaybackInfo>
@@ -52,5 +54,13 @@ class VoizyDetailsViewModel(
             .withErrorHandling(TAG, "Failed to share voizy")
             .subscribe()
             .autoDispose()
+    }
+
+    fun deleteLocalFile(): Observable<Unit> {
+        return voizyRepository.lastVoizyToBeSaved()
+            .flatMap {
+                Observable.fromCallable { localFileManager.deleteFile(it.localPath) }
+            }
+            .withErrorHandling(TAG, "Failed to delete local file")
     }
 }
