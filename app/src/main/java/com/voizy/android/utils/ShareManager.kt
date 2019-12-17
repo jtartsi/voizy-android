@@ -21,7 +21,6 @@ class ShareManager(private val shareRepository: ShareRepository) {
         private const val AUTHORITY = "com.voizy.android.fileprovider"
     }
 
-    // TODO voizy-details, change file to path?
     fun startVoizyShare(context: Context, voizy: Voizy, file: File) {
         val fileUri: Uri? = getFileUri(context, file)
         val sendIntent: Intent = Intent().apply {

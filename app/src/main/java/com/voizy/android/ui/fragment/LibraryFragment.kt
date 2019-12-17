@@ -72,7 +72,6 @@ class LibraryFragment : BaseFragment() {
         initSearch()
         initShare()
         initCopyToClipBoard()
-        // initSaveNotifications() // TODO voizy-details
         initPrivacyPolicy()
         initPlayback()
         initResultsState()
@@ -193,14 +192,6 @@ class LibraryFragment : BaseFragment() {
             clipBoardRequests.onNext(voizy)
         }
     }
-
-    // TODO voizy-details
-    // private fun initSaveNotifications() {
-    //     viewModel.getSaveVoizyEvents()
-    //         .observeOn(AndroidSchedulers.mainThread())
-    //         .autoDisposable(getScopeProvider())
-    //         .subscribe(saveEventConsumer())
-    // }
 
     private fun initShare() {
         shareRequests

@@ -9,7 +9,6 @@ import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.ShareManager
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
-import timber.log.Timber
 import java.io.File
 
 class VoizyDetailsViewModel(
@@ -32,14 +31,10 @@ class VoizyDetailsViewModel(
 
     fun togglePlay(): Observable<PlaybackInfo> {
         return voizyRepository.lastVoizyToBeSaved()
-            .doOnNext {
-                Timber.d("voizy-details togglePlay() ${it.name}, ${it.localPath}")
-            }
             .flatMap { voizyPlayer.togglePlay(it.localPath) }
             .withErrorHandling(TAG, "Failed to togglePlay on preview voizy")
     }
 
-    // TODO voizy-details stop playback when leaving view.
     fun stopPlayback(): Observable<Int> {
         return voizyPlayer
             .stop()

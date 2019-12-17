@@ -18,21 +18,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:lines="2"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:textColor="@color/voizy_purple"
         android:textSize="35.5sp"
         tools:text="I am down!" />
 
-    <TextView
-        android:id="@+id/tv_voizy_details_duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_title"
-        android:textSize="27sp"
-        android:textColor="@color/voizy_purple"
-        tools:text="4s" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_voizy_details_duration"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_title"-->
+    <!--        android:textSize="27sp"-->
+    <!--        android:textColor="@color/voizy_purple"-->
+    <!--        tools:text="4s"-->
+    <!--        android:visibility="gone" />-->
 
     <TextView
         android:id="@+id/tv_voizy_details_tags"
@@ -46,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.6"
         android:lines="2"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:textColor="@color/voizy_orange"
         android:textSize="26.5sp"
         tools:text="#accept #down #reaction" />
@@ -55,11 +56,11 @@
         android:id="@+id/btn_details_playback"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:tint="@color/voizy_orange"
         app:layout_constraintBottom_toTopOf="@+id/tv_voizy_details_tags"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_duration"
-        android:tint="@color/voizy_orange"
+        app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_title"
         tools:tint="@android:color/black" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

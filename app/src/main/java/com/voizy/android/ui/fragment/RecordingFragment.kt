@@ -47,7 +47,6 @@ class RecordingFragment : BaseFragment() {
     private val viewModel: RecordingViewModel by inject()
     private var timerDisposable: Disposable? = null
     private val backPressEvent = PublishSubject.create<String>()
-    private val shareRequests = PublishSubject.create<Voizy>()
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics = get()
 
     companion object {
@@ -83,7 +82,6 @@ class RecordingFragment : BaseFragment() {
         initFileInput()
         initBackPress()
         initRecordEvents()
-        // initShare() // TODO voizy-details remove this
 
         if (!isFileSendAction()) {
             startTimer()
@@ -122,40 +120,14 @@ class RecordingFragment : BaseFragment() {
             .map { btn_save_voizy }
             .autoDisposable(getScopeProvider())
             .subscribe(saveClickConsumer())
-
-        // TODO voizy-details remove this if not needed
-        // viewModel.getSaveVoizyEvents()
-        //     .observeOn(AndroidSchedulers.mainThread())
-        //     .autoDisposable(getScopeProvider())
-        //     .subscribe(saveEventConsumer())
     }
-
-    // TODO voizy-details remove this
-    // private fun initShare() {
-    //     shareRequests
-    //         .doOnNext {
-    //             Snackbar.make(
-    //                 view!!,
-    //                 getString(R.string.voizy_sharing, it.name),
-    //                 Snackbar.LENGTH_LONG
-    //             ).show()
-    //         }
-    //         .switchMap { viewModel.downloadVoizy(context!!, it) }
-    //         .observeOn(AndroidSchedulers.mainThread())
-    //         .autoDisposable(getScopeProvider())
-    //         .subscribe { viewModel.startVoizyShare(context!!, it.first, it.second) }
-    // }
 
     private fun saveClickConsumer(): Consumer<View> {
         return Consumer { view ->
-            Timber.d("voizy-details saveClickConsumer()")
             if (!et_voizy_name.text.toString().isNullOrEmpty()) {
-                Timber.d("voizy-details saveClickConsumer() inside")
                 val voizy = getVoizyFromUserInputs()
                 viewModel.saveVoizy(voizy)
                 hideSoftKeyboard(view)
-                Timber.d("voizy-details saveClickConsumer() inside")
-                // TODO voizy-details move this to base fragment
                 fragmentManager!!.beginTransaction()
                     .replace(
                         R.id.fragment_container,
@@ -167,27 +139,6 @@ class RecordingFragment : BaseFragment() {
             } else {
                 Snackbar.make(
                     view, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    // TODO voizy-details remove this if it's not needed...
-    private fun saveEventConsumer(): Consumer<Pair<Boolean, Voizy?>> {
-        return Consumer { pair ->
-            Timber.d("voizy-details saveEventConsumer()")
-            if (pair.first) {
-                Timber.d("voizy-details saveEventConsumer() created")
-                Snackbar.make(
-                    view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
-                ).setAction(R.string.share) {
-                    shareRequests.onNext(pair.second!!)
-                }.show()
-            } else {
-                Snackbar.make(
-                    view!!,
-                    getString(R.string.voizy_save_failed),
-                    Snackbar.LENGTH_SHORT
                 ).show()
             }
         }
