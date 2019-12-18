@@ -30,8 +30,8 @@ class VoizyRepository(
     companion object {
 
         private val TAG = VoizyRepository::class.java.simpleName
-        private val PAGE_SIZE: Int = 25
-        private val INITIAL_LOADING = PAGE_SIZE * 2
+        private const val PAGE_SIZE: Int = 25
+        private const val INITIAL_LOADING = PAGE_SIZE * 2
 
         private val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
