@@ -47,7 +47,7 @@ val repositoryModule = module {
 
 val viewModels = module {
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
-    viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { CreateOptionsViewModel(get(), get()) }
     viewModel { VoizyDetailsViewModel(get(), get(), get(), get()) }
 }

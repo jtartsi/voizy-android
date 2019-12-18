@@ -32,7 +32,6 @@ import org.koin.android.ext.android.inject
 class CreateOptionsFragment : Fragment() {
 
     private val viewModel: CreateOptionsViewModel by inject<CreateOptionsViewModel>()
-    // private lateinit var recordButton: RecordButton
     private lateinit var createOptions: CreateOptionsWidget
     private val stopTimer = Handler()
 

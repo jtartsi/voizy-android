@@ -18,7 +18,6 @@ import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
-import com.voizy.android.ui.model.ImportedData
 import com.voizy.android.ui.widget.PlayPauseButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingViewModel
@@ -211,16 +210,6 @@ class RecordingFragment : BaseFragment() {
                 else -> {
                 }
             }
-        }
-    }
-
-    private fun fileInputConsumer(): Consumer<ImportedData> {
-        return Consumer {
-            if (it.durationInSecods > 15) {
-                text_voizy_save_error.visibility = View.VISIBLE
-                btn_save_voizy.isEnabled = false
-            }
-            showTimeText(it.durationInSecods.toInt())
         }
     }
 
