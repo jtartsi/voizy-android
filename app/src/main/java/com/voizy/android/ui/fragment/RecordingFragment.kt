@@ -149,11 +149,8 @@ class RecordingFragment : BaseFragment() {
         Observable.just(isFileSendAction())
             .filter { it }
             .map {
-                ImportedData(arguments!!.get(VoizyApp.KEY_DATA) as Uri)
-            }
-            .switchMap {
-                viewModel.getAudioFileLengthInSeconds(it)
-                    .map
+                val importedData = ImportedData(arguments!!.get(VoizyApp.KEY_DATA) as Uri)
+                importedData.lengthInMillis = viewModel.getAudiFileLengthInMillis(path)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

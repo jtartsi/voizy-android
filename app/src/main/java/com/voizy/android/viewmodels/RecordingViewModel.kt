@@ -119,6 +119,10 @@ class RecordingViewModel(
     //     }
     // }
 
+    fun getAudiFileLengthInMillis(path: String): Long {
+        return localFileManager.getAudioFileLengthInMillis(path)
+    }
+
     fun getAudioFileLengthInSeconds(path: String): Observable<Int> {
         return Observable
             .defer {
