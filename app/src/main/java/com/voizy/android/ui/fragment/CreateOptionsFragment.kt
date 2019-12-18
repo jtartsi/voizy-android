@@ -52,6 +52,10 @@ class CreateOptionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         createOptions = view.findViewById(R.id.create_options_widget)
+    }
+
+    override fun onStart() {
+        super.onStart()
         createOptions.getButtonEvents()
             .autoDisposable(getScopeProvider())
             .subscribe {
