@@ -12,6 +12,7 @@ import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.model.ImportedData
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
+import timber.log.Timber
 
 class RecordingViewModel(
     private val voizyRepository: VoizyRepository,
@@ -34,6 +35,7 @@ class RecordingViewModel(
 
     fun saveVoizy(voizy: Voizy) {
         voizyFirebaseAnalytics.logRecordingSave()
+        Timber.d("voizy-details saveVoizy()")
         voizyRepository.saveVoizy(voizy)
     }
 

@@ -17,6 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.voizy_details_fragment.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class VoizyDetailsFragment : BaseFragment() {
 
@@ -65,10 +66,12 @@ class VoizyDetailsFragment : BaseFragment() {
     }
 
     private fun initDetails() {
+        Timber.d("voizy-details initDetails()")
         viewModel.getLastVoizyToBeSaved()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { voizy ->
+                Timber.d("voizy-details initDetails() subscribe")
                 tv_voizy_details_title.text = voizy.name
                 tv_voizy_details_tags.text = voizy.hashTags
             }

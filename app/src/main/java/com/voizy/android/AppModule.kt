@@ -41,7 +41,7 @@ val repositoryModule = module {
     single { VoizysCollection(get()) }
     single { VoizySearchRequestCollection(get()) }
     single { ShareCollection(get()) }
-    single { VoizyRepository(get(), get(), get(), get(), get(), get()) }
+    single { VoizyRepository(get(), get(), get(), get(), get()) }
     single { ShareRepository(get(), get()) }
 }
 
