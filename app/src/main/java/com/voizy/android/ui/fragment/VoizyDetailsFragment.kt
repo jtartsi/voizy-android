@@ -49,15 +49,14 @@ class VoizyDetailsFragment : BaseFragment() {
         return inflater.inflate(R.layout.voizy_details_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onStart() {
+        super.onStart()
         initDetails()
         initPlayback()
         initShare()
         initFinish()
     }
-
+    
     override fun onStop() {
         super.onStop()
         viewModel.stopPlayback()
