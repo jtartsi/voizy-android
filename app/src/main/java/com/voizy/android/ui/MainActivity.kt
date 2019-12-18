@@ -10,6 +10,7 @@ import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.ui.fragment.LibraryFragment
 import com.voizy.android.ui.fragment.RecordingFragment
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -44,6 +45,11 @@ class MainActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_FILE_REQUEST_CODE) {
+            Timber.d("data-import onActivityResult() data $data")
+            Timber.d("data-import onActivityResult() data.data ${data!!.data}")
+            Timber.d("data-import onActivityResult() clipData ${data!!.clipData}")
+            Timber.d("data-import onActivityResult() dataString ${data!!.dataString}")
+            Timber.d("data-import onActivityResult() extras ${data!!.extras}")
             openFileInApp(data!!.data)
         }
     }

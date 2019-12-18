@@ -18,6 +18,7 @@ import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.ui.model.ImportedData
 import com.voizy.android.ui.widget.PlayPauseButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingViewModel
@@ -147,11 +148,13 @@ class RecordingFragment : BaseFragment() {
     private fun initFileInput() {
         Observable.just(isFileSendAction())
             .filter { it }
-            .flatMap {
-                val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
-                viewModel.saveReceivedFile(fileUri)
+            .map {
+                ImportedData(arguments!!.get(VoizyApp.KEY_DATA) as Uri)
             }
-            .switchMap { viewModel.getAudioFileLengthInSeconds(it) }
+            .switchMap {
+                viewModel.getAudioFileLengthInSeconds(it)
+                    .map
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
