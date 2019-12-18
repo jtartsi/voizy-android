@@ -21,10 +21,10 @@ data class ImportedData(val uri: Uri) {
     val fileExtension: String
         get() = uri.path!!.split(".")!!.last()
 
-    var lengthInMillis: Long = -1
+    var durationInMillis: Long = -1
 
-    val filePath: String
-        get() {
-            return uri.path!!
-        }
+    val durationInSecods: Long
+        get() = durationInMillis / 1000
+
+    var accessibleFilePath: String = ""
 }

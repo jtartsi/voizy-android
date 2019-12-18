@@ -148,14 +148,14 @@ class RecordingFragment : BaseFragment() {
     private fun initFileInput() {
         Observable.just(isFileSendAction())
             .filter { it }
-            .map {
-                val importedData = ImportedData(arguments!!.get(VoizyApp.KEY_DATA) as Uri)
-                importedData.lengthInMillis = viewModel.getAudiFileLengthInMillis(path)
+            .flatMap {
+                val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
+                viewModel.saveReceivedFile(fileUri)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe(fileInputConsumer())
+            .subscribe { showTimeText(it.durationInSecods.toInt()) }
     }
 
     private fun initBackPress() {
@@ -214,13 +214,13 @@ class RecordingFragment : BaseFragment() {
         }
     }
 
-    private fun fileInputConsumer(): Consumer<Int> {
+    private fun fileInputConsumer(): Consumer<ImportedData> {
         return Consumer {
-            if (it > 15) {
+            if (it.durationInSecods > 15) {
                 text_voizy_save_error.visibility = View.VISIBLE
                 btn_save_voizy.isEnabled = false
             }
-            showTimeText(it)
+            showTimeText(it.durationInSecods.toInt())
         }
     }
 
