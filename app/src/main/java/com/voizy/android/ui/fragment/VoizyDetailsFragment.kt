@@ -103,9 +103,13 @@ class VoizyDetailsFragment : BaseFragment() {
             .switchMap { viewModel.deleteLocalFile() }
             .autoDisposable(getScopeProvider())
             .subscribe {
+
+                val createOptionsFragment =
+                    fragmentManager!!.findFragmentById(R.id.record_button_fragment)
+
                 fragmentManager!!.beginTransaction()
-                    .replace(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
-                    .addToBackStack(LibraryFragment.TAG)
+                    .replace(R.id.fragment_container, LibraryFragment(), null)
+                    .show(createOptionsFragment!!)
                     .commit()
             }
     }
