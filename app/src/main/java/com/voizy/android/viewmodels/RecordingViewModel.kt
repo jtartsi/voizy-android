@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.AudioRecorder
+import com.voizy.android.audio.FFmpegManager
 import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
@@ -21,7 +22,8 @@ class RecordingViewModel(
     private val voizyFirebaseAnalytics: VoizyFirebaseAnalytics,
     private val localFileManager: LocalFileManager,
     private val shareManager: ShareManager,
-    private val voizyPlayer: AudioPlayer
+    private val voizyPlayer: AudioPlayer,
+    private val ffmpegManager: FFmpegManager
 ) : DisposingViewModel() {
 
     companion object {
@@ -49,20 +51,37 @@ class RecordingViewModel(
                             localFileManager.getImportFilePath()
                         )
                     }
-                    .flatMap { finalizeImportedAudio(it) }
+                    .flatMap { editAudioForUpload(it) }
                     .doOnNext { voizyRecorder.audioFileReceived() }
             }
 
             .withErrorHandling(TAG, "Failed to save received file")
     }
 
-    /**
-     * Clips to 15s and renames file
-     */
     fun finalizeImportedAudio(sourcePath: String): Observable<String> {
         val outputPath = localFileManager.getTempFilePath()
         localFileManager.deleteFile(outputPath)
         return localFileManager.renameToTempFile(sourcePath)
+    }
+
+    /**
+     * Clips to 15s and renames file
+     */
+    private fun editAudioForUpload(sourcePath: String): Observable<String> {
+        val outputPath = localFileManager.getTempFilePath()
+        localFileManager.deleteFile(outputPath)
+        val length = localFileManager.getAudioFileLengthInMillis(sourcePath)
+        return when {
+            !isAudioTrackWithinLimit(length) -> {
+                ffmpegManager.clip(sourcePath, outputPath)
+            }
+            isAudioTrackWithinLimit(length) -> {
+                localFileManager.renameToTempFile(sourcePath)
+            }
+            else -> {
+                throw IllegalStateException("Editing file import failed")
+            }
+        }
 
         // val audioLength = localFileManager.getAudioFileLengthInMillis(sourcePath)
 
@@ -74,6 +93,31 @@ class RecordingViewModel(
         //
         // }
     }
+
+    // /**
+    //  * Edits audio to be ready for upload
+    //  *  - Clips to 15s
+    //  *  - Converts video to audio
+    //  *  - Renames file
+    //  */
+    // private fun editAudioForUpload(import: ImportedFile): Observable<String> {
+    //     val outputPath = localFileManager.getTempFilePath()
+    //     localFileManager.deleteFile(outputPath)
+    //     return when {
+    //         !isLengthWithinLimit(import.lengthInMillis) -> {
+    //             ffmpegManager.clip(import.filePath, outputPath)
+    //         }
+    //         isLengthWithinLimit(import.lengthInMillis) && import.contentType == TYPE_VIDEO -> {
+    //             ffmpegManager.convertToAudio(import.filePath, outputPath)
+    //         }
+    //         isLengthWithinLimit(import.lengthInMillis) && import.contentType == TYPE_AUDIO -> {
+    //             localFileManager.renameToTempFile(import.filePath)
+    //         }
+    //         else -> {
+    //             throw IllegalStateException("Editing file import failed")
+    //         }
+    //     }
+    // }
 
     fun getAudioFileLengthInSeconds(path: String): Observable<Int> {
         return Observable
