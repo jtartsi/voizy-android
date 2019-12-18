@@ -61,6 +61,7 @@ class MainActivity : BaseActivity() {
         } else {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, LibraryFragment())
+                .addToBackStack(LibraryFragment.TAG)
                 .commit()
         }
     }

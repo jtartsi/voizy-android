@@ -15,6 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.io.File
 
 class VoizyRepository(
@@ -43,8 +44,11 @@ class VoizyRepository(
     private val saveVoizyQueue = PublishSubject.create<Voizy>()
     private val saveVoizyEvents = saveVoizyQueue
         .observeOn(Schedulers.io())
+        .doOnNext { Timber.d("voizy-details saveVoizyEvents.doOnNext() $it") }
         .switchMap { localFileManager.saveVoizy(it) }
+        .doOnNext { Timber.d("voizy-details saveVoizyEvents.doOnNext2() $it") }
         .doOnNext { lastSavedVoizy.onNext(it) }
+        .doOnNext { Timber.d("voizy-details saveVoizyEvents.doOnNext3() $it") }
         .switchMap { voizyStorage.uploadVoizy(it) }
         .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
         .withErrorHandling(TAG, "saveVoizyEvents error")
@@ -60,6 +64,7 @@ class VoizyRepository(
      */
     fun lastVoizyToBeSaved(): Observable<Voizy> {
         return lastSavedVoizy
+            .doOnNext { Timber.d("voizy-details lastVoizyToBeSaved.doOnNext1() $it") }
     }
 
     fun getTempFilePath(): String {

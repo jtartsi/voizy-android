@@ -56,7 +56,7 @@ class VoizyDetailsFragment : BaseFragment() {
         initShare()
         initFinish()
     }
-    
+
     override fun onStop() {
         super.onStop()
         viewModel.stopPlayback()
@@ -103,9 +103,10 @@ class VoizyDetailsFragment : BaseFragment() {
             .switchMap { viewModel.deleteLocalFile() }
             .autoDisposable(getScopeProvider())
             .subscribe {
-                fragmentManager!!.popBackStack(
-                    RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
+                fragmentManager!!.beginTransaction()
+                    .replace(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
+                    .addToBackStack(LibraryFragment.TAG)
+                    .commit()
             }
     }
 }
