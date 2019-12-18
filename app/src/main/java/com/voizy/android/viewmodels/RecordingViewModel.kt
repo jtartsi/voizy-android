@@ -15,6 +15,7 @@ import com.voizy.android.utils.ShareManager
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import java.io.File
 
 class RecordingViewModel(
@@ -77,14 +78,23 @@ class RecordingViewModel(
         val outputPath = localFileManager.getTempFilePath()
         localFileManager.deleteFile(outputPath)
 
+        Timber.d("data-import")
         val editObservable = when {
             !isAudioTrackWithinLimit(importedData.durationInMillis) -> {
+                importedData.durationInMillis = 15000
+                Timber.d("data-import clip duration ${importedData.durationInMillis}")
                 ffmpegManager.clip(importedData.accessibleFilePath, outputPath)
             }
-            isAudioTrackWithinLimit(importedData.durationInMillis) -> {
+            isAudioTrackWithinLimit(importedData.durationInMillis)
+                && importedData.contentType == ImportedData.TYPE_VIDEO -> {
+                Timber.d("data-import convertToAudio duration ${importedData.durationInMillis}")
+                ffmpegManager.convertToAudio(importedData.accessibleFilePath, outputPath)
+            }
+            isAudioTrackWithinLimit(importedData.durationInMillis)
+                && importedData.contentType == ImportedData.TYPE_AUDIO -> {
+                Timber.d("data-import rename duration ${importedData.durationInMillis}")
                 localFileManager.renameToTempFile(importedData.accessibleFilePath)
             }
-            // TODO video-to-audio add video logic here.
             else -> {
                 throw IllegalStateException("Editing file import failed")
             }
