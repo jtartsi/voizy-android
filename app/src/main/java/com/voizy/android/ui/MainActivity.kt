@@ -22,6 +22,10 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
+            .commit()
+
         initDataImport()
     }
 
@@ -52,10 +56,6 @@ class MainActivity : BaseActivity() {
         if (intent.action == Intent.ACTION_SEND) {
             val uri = intent.clipData?.getItemAt(0)?.uri
             openFileInApp(uri)
-        } else {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, LibraryFragment())
-                .commit()
         }
     }
 
@@ -72,7 +72,7 @@ class MainActivity : BaseActivity() {
 
         supportFragmentManager.beginTransaction()
             .hide(createOptionsFragment!!)
-            .add(R.id.fragment_container, recordingFragment)
+            .replace(R.id.fragment_container, recordingFragment)
             .addToBackStack(RecordingFragment.TAG)
             .commit()
     }

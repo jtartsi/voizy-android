@@ -19,6 +19,7 @@ data class Voizy(
     val localeCountry: String = ""
 ) {
 
+    // TODO fixnow remove the local fields from being set to backend
     var hashTags: String = ""
         get() {
             return tags.joinToString(separator = " #", prefix = "#")

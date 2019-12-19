@@ -41,13 +41,13 @@ val repositoryModule = module {
     single { VoizysCollection(get()) }
     single { VoizySearchRequestCollection(get()) }
     single { ShareCollection(get()) }
-    single { VoizyRepository(get(), get(), get(), get(), get(), get()) }
+    single { VoizyRepository(get(), get(), get(), get(), get()) }
     single { ShareRepository(get(), get()) }
 }
 
 val viewModels = module {
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
-    viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { CreateOptionsViewModel(get(), get()) }
     viewModel { VoizyDetailsViewModel(get(), get(), get(), get()) }
 }

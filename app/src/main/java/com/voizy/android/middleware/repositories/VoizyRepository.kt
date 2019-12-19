@@ -3,7 +3,6 @@ package com.voizy.android.middleware.repositories
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
-import com.voizy.android.middleware.firebase.collections.ShareCollection
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.firebase.models.Voizy
@@ -19,7 +18,6 @@ import java.io.File
 
 class VoizyRepository(
     private val voizysCollection: VoizysCollection,
-    private val shareCollection: ShareCollection,
     private val compositeDisposable: CompositeDisposable,
     private val voizySearchRequestCollection: VoizySearchRequestCollection,
     private val localFileManager: LocalFileManager,
@@ -29,8 +27,8 @@ class VoizyRepository(
     companion object {
 
         private val TAG = VoizyRepository::class.java.simpleName
-        private val PAGE_SIZE: Int = 25
-        private val INITIAL_LOADING = PAGE_SIZE * 2
+        private const val PAGE_SIZE: Int = 25
+        private const val INITIAL_LOADING = PAGE_SIZE * 2
 
         private val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
@@ -41,17 +39,16 @@ class VoizyRepository(
 
     private val lastSavedVoizy = BehaviorSubject.create<Voizy>()
     private val saveVoizyQueue = PublishSubject.create<Voizy>()
-    private val saveVoizyEvents = saveVoizyQueue
-        .observeOn(Schedulers.io())
-        .switchMap { localFileManager.saveVoizy(it) }
-        .doOnNext { lastSavedVoizy.onNext(it) }
-        .switchMap { voizyStorage.uploadVoizy(it) }
-        .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
-        .withErrorHandling(TAG, "saveVoizyEvents error")
-        .share()
 
-    fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
-        return saveVoizyEvents
+    init {
+        saveVoizyQueue
+            .observeOn(Schedulers.io())
+            .switchMap { localFileManager.saveVoizy(it) }
+            .doOnNext { lastSavedVoizy.onNext(it) }
+            .switchMap { voizyStorage.uploadVoizy(it) }
+            .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
+            .withErrorHandling(TAG, "saveVoizyEvents error")
+            .subscribe()
     }
 
     /**
