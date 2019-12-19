@@ -10,11 +10,12 @@ data class Voizy(
     val id: String = "",
     val name: String = "",
     val tags: List<String> = emptyList(),
-    @Exclude val localPath: String = "",
+    @get:Exclude
+    val localPath: String = "",
     @get:PropertyName("filePath")
     @set:PropertyName("filePath")
-    var duration: Long = -1,
     var remoteUrl: String = "",
+    var duration: Long = -1,
     @ServerTimestamp val createdAt: Timestamp = Timestamp.now(), // For uploading to Firestore
     val locale: String = "",
     val localeLang: String = "",
@@ -22,7 +23,7 @@ data class Voizy(
 ) {
 
     // TODO fixnow remove the local fields from being set to backend
-    @Exclude
+    @get:Exclude
     var hashTags: String = ""
         get() {
             return tags.joinToString(separator = " #", prefix = "#")
