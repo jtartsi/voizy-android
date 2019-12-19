@@ -14,7 +14,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.io.File
 
 class VoizyRepository(
@@ -58,7 +57,6 @@ class VoizyRepository(
      */
     fun lastVoizyToBeSaved(): Observable<Voizy> {
         return lastSavedVoizy
-            .doOnNext { Timber.d("voizy-details lastVoizyToBeSaved.doOnNext1() $it") }
     }
 
     fun getTempFilePath(): String {

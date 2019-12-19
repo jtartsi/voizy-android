@@ -25,7 +25,6 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class LibraryFragment : BaseFragment() {
 
@@ -76,16 +75,6 @@ class LibraryFragment : BaseFragment() {
         initPlayback()
         initResultsState()
         initShowCreateOptions()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Timber.d("navigation-iss onResume() ")
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        Timber.d("navigation-iss onHiddenChanged() $hidden")
     }
 
     override fun onStop() {
