@@ -41,14 +41,12 @@ class VoizyDetailsViewModel(
             .withErrorHandling(TAG, "Failed to stopPlayback on preview voizy")
     }
 
-    fun share(context: Context) {
-        voizyRepository.lastVoizyToBeSaved()
+    fun share(context: Context): Observable<Voizy> {
+        return voizyRepository.lastVoizyToBeSaved()
             .doOnNext { voizy ->
                 shareManager.startVoizyShare(context, voizy, File(voizy.localPath))
             }
             .withErrorHandling(TAG, "Failed to share voizy")
-            .subscribe()
-            .autoDispose()
     }
 
     fun deleteLocalFile(): Observable<Unit> {
