@@ -9,19 +9,16 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.PlaybackEvent
-import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.widget.PlayPauseButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.VoizyDetailsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.voizy_details_fragment.*
 import org.koin.android.ext.android.inject
 
 class VoizyDetailsFragment : BaseFragment() {
 
     private val viewModel: VoizyDetailsViewModel by inject()
-    private val shareRequests = PublishSubject.create<Voizy>()
 
     companion object {
         public val TAG = RecordingFragment::class.java.simpleName
@@ -94,8 +91,9 @@ class VoizyDetailsFragment : BaseFragment() {
 
     private fun initShare() {
         RxView.clicks(btn_details_share_voizy)
+            .switchMap { viewModel.share(context!!) }
             .autoDisposable(getScopeProvider())
-            .subscribe { viewModel.share(context!!) }
+            .subscribe()
     }
 
     private fun initFinish() {
