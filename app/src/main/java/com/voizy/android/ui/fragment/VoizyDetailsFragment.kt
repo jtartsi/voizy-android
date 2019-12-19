@@ -17,7 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.voizy_details_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class VoizyDetailsFragment : BaseFragment() {
 
@@ -66,12 +65,10 @@ class VoizyDetailsFragment : BaseFragment() {
     }
 
     private fun initDetails() {
-        Timber.d("voizy-details initDetails()")
         viewModel.getLastVoizyToBeSaved()
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { voizy ->
-                Timber.d("voizy-details initDetails() subscribe")
                 tv_voizy_details_title.text = voizy.name
                 tv_voizy_details_tags.text = voizy.hashTags
             }
@@ -106,14 +103,13 @@ class VoizyDetailsFragment : BaseFragment() {
             .switchMap { viewModel.deleteLocalFile() }
             .autoDisposable(getScopeProvider())
             .subscribe {
-
-                val createOptionsFragment =
-                    fragmentManager!!.findFragmentById(R.id.record_button_fragment)
-
-                fragmentManager!!.beginTransaction()
-                    .replace(R.id.fragment_container, LibraryFragment(), null)
-                    .show(createOptionsFragment!!)
-                    .commit()
+                fragmentManager!!.popBackStack(
+                    TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+                fragmentManager!!.popBackStack(
+                    RecordingFragment.TAG,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
             }
     }
 }

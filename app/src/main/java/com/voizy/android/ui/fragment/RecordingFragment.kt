@@ -261,21 +261,9 @@ class RecordingFragment : BaseFragment() {
     }
 
     private fun navigateBackToLibrary() {
-        if (isFileSendAction()) {
-
-            val createOptionsFragment =
-                fragmentManager!!.findFragmentById(R.id.record_button_fragment)
-
-            fragmentManager!!.beginTransaction()
-                .remove(this)
-                .add(R.id.fragment_container, LibraryFragment(), null)
-                .show(createOptionsFragment!!)
-                .commit()
-        } else {
-            fragmentManager!!.popBackStackImmediate(
-                TAG,
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
-        }
+        fragmentManager!!.popBackStackImmediate(
+            TAG,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
 }
