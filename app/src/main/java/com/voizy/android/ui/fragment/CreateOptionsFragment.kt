@@ -32,7 +32,6 @@ import org.koin.android.ext.android.inject
 class CreateOptionsFragment : Fragment() {
 
     private val viewModel: CreateOptionsViewModel by inject<CreateOptionsViewModel>()
-    // private lateinit var recordButton: RecordButton
     private lateinit var createOptions: CreateOptionsWidget
     private val stopTimer = Handler()
 
@@ -127,10 +126,7 @@ class CreateOptionsFragment : Fragment() {
             viewModel.startRecording()
 
             createOptions.state = CreateOptionsWidget.State.CLOSED
-            var recFragment = fragmentManager!!.findFragmentByTag(RecordingFragment.TAG)
-            if (recFragment == null) {
-                addRecordingFragment()
-            }
+            addRecordingFragment()
         } else {
             requestAudioRecordingPermission()
         }
@@ -144,7 +140,7 @@ class CreateOptionsFragment : Fragment() {
     private fun pickFile() {
         val pickFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = "audio/*"
+            type = "*/*"
             putExtra(Intent.EXTRA_MIME_TYPES, SupportedFileTypes.toArray())
         }
         activity!!.startActivityForResult(pickFileIntent, MainActivity.PICK_FILE_REQUEST_CODE)

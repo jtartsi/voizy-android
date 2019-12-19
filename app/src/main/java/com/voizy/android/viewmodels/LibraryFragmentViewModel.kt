@@ -17,7 +17,6 @@ import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -34,8 +33,6 @@ class LibraryFragmentViewModel(
     companion object {
         private val TAG = LibraryFragmentViewModel::class.java.simpleName
     }
-
-    private val saveVoizyEventsBehaviorSubject = BehaviorSubject.create<Pair<Boolean, Voizy?>>()
 
     private val searchKeyword = PublishSubject.create<String>()
 
@@ -66,20 +63,8 @@ class LibraryFragmentViewModel(
         compositeDisposable.clear()
     }
 
-    init {
-        voizyRepository.getSaveVoizyEvents()
-            .withErrorHandling(TAG, "save voizy events error")
-            .subscribe { saveVoizyEventsBehaviorSubject.onNext(it) }
-            .autoDispose()
-    }
-
     fun loadVoizys(searchParam: String = "") {
         searchKeyword.onNext(searchParam)
-    }
-
-    fun getSaveVoizyEvents(): Observable<Pair<Boolean, Voizy?>> {
-        return saveVoizyEventsBehaviorSubject
-            .withErrorHandling(TAG, "save voizy events error")
     }
 
     fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {

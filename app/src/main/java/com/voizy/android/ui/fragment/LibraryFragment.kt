@@ -21,7 +21,6 @@ import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
@@ -75,6 +74,7 @@ class LibraryFragment : BaseFragment() {
         initPrivacyPolicy()
         initPlayback()
         initResultsState()
+        initShowCreateOptions()
     }
 
     override fun onStop() {
@@ -219,17 +219,19 @@ class LibraryFragment : BaseFragment() {
         }
     }
 
-    private fun saveEventConsumer(): Consumer<Pair<Boolean, Voizy?>> {
-        return Consumer { pair ->
-            if (pair.first) {
-                Snackbar.make(
-                    view!!, getString(R.string.voizy_created_share), Snackbar.LENGTH_LONG
-                ).setAction(R.string.share) {
-                    shareRequests.onNext(pair.second!!)
-                }.show()
-            } else {
-                Snackbar.make(view!!, getString(R.string.voizy_save_failed), Snackbar.LENGTH_SHORT)
-                    .show()
+    private fun initShowCreateOptions() {
+        fragmentManager!!.addOnBackStackChangedListener {
+            val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
+            if (topFragment != null &&
+                topFragment is BaseFragment &&
+                topFragment.tag == TAG
+            ) {
+                var createOptionsFragment =
+                    fragmentManager!!.findFragmentById(R.id.record_button_fragment)!!
+
+                fragmentManager!!.beginTransaction()
+                    .show(createOptionsFragment)
+                    .commit()
             }
         }
     }

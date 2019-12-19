@@ -44,6 +44,7 @@
                 <data android:mimeType="audio/3gp" />
                 <data android:mimeType="audio/mpeg-4" />
                 <data android:mimeType="audio/x-m4a" />
+                <data android:mimeType="video/*" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

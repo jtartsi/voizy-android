@@ -74,9 +74,8 @@ class RecordingFragment : BaseFragment() {
         return inflater.inflate(R.layout.recording_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onStart() {
+        super.onStart()
         initPlayback()
         initSave()
         initFileInput()
@@ -151,11 +150,10 @@ class RecordingFragment : BaseFragment() {
                 val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
                 viewModel.saveReceivedFile(fileUri)
             }
-            .switchMap { viewModel.getAudioFileLengthInSeconds(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe(fileInputConsumer())
+            .subscribe { showTimeText(it.durationInSecods.toInt()) }
     }
 
     private fun initBackPress() {
@@ -214,16 +212,6 @@ class RecordingFragment : BaseFragment() {
         }
     }
 
-    private fun fileInputConsumer(): Consumer<Int> {
-        return Consumer {
-            if (it > 15) {
-                text_voizy_save_error.visibility = View.VISIBLE
-                btn_save_voizy.isEnabled = false
-            }
-            showTimeText(it)
-        }
-    }
-
     private fun startTimer() {
         showTimeText(0)
         timerDisposable = Observable.intervalRange(
@@ -273,21 +261,9 @@ class RecordingFragment : BaseFragment() {
     }
 
     private fun navigateBackToLibrary() {
-        if (isFileSendAction()) {
-
-            val createOptionsFragment =
-                fragmentManager!!.findFragmentById(R.id.record_button_fragment)
-
-            fragmentManager!!.beginTransaction()
-                .remove(this)
-                .add(R.id.fragment_container, LibraryFragment(), null)
-                .show(createOptionsFragment!!)
-                .commit()
-        } else {
-            fragmentManager!!.popBackStackImmediate(
-                TAG,
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
-        }
+        fragmentManager!!.popBackStackImmediate(
+            TAG,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
 }
