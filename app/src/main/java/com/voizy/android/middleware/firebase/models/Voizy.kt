@@ -2,6 +2,7 @@ package com.voizy.android.middleware.firebase.models
 
 import androidx.recyclerview.widget.DiffUtil
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
 
@@ -9,9 +10,10 @@ data class Voizy(
     val id: String = "",
     val name: String = "",
     val tags: List<String> = emptyList(),
-    val localPath: String = "",
+    @Exclude val localPath: String = "",
     @get:PropertyName("filePath")
     @set:PropertyName("filePath")
+    var duration: Long = -1,
     var remoteUrl: String = "",
     @ServerTimestamp val createdAt: Timestamp = Timestamp.now(), // For uploading to Firestore
     val locale: String = "",
@@ -20,6 +22,7 @@ data class Voizy(
 ) {
 
     // TODO fixnow remove the local fields from being set to backend
+    @Exclude
     var hashTags: String = ""
         get() {
             return tags.joinToString(separator = " #", prefix = "#")
