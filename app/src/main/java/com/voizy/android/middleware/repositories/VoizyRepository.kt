@@ -44,6 +44,7 @@ class VoizyRepository(
         saveVoizyQueue
             .observeOn(Schedulers.io())
             .switchMap { localFileManager.saveVoizy(it) }
+            .map { updateDuration(it) }
             .doOnNext { lastSavedVoizy.onNext(it) }
             .switchMap { voizyStorage.uploadVoizy(it) }
             .switchMap { voizysCollection.saveVoizyToCloud(it.second) }
@@ -96,5 +97,10 @@ class VoizyRepository(
     fun downloadVoizy(firestorePath: String, destinationFile: File): Observable<File> {
         return voizyStorage.getFile(firestorePath, destinationFile)
             .map { destinationFile }
+    }
+
+    private fun updateDuration(voizy: Voizy): Voizy {
+        voizy.duration = localFileManager.getAudioDurationInMillis(voizy.localPath)
+        return voizy
     }
 }

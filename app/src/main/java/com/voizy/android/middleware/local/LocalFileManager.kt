@@ -70,7 +70,7 @@ class LocalFileManager(private val context: Context) {
         }
     }
 
-    fun getAudioFileLengthInMillis(path: String): Long {
+    fun getAudioDurationInMillis(path: String): Long {
         val mediaDataRetriever = MediaMetadataRetriever()
         mediaDataRetriever.setDataSource(path)
         return mediaDataRetriever
