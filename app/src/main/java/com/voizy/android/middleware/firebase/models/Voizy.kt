@@ -21,8 +21,7 @@ data class Voizy(
     val localeLang: String = "",
     val localeCountry: String = ""
 ) {
-
-    // TODO fixnow remove the local fields from being set to backend
+    
     @get:Exclude
     var hashTags: String = ""
         get() {
