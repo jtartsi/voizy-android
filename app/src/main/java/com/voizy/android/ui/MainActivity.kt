@@ -8,8 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import com.voizy.android.R
 import com.voizy.android.VoizyApp
+import com.voizy.android.ui.fragment.AudioClipFragment
 import com.voizy.android.ui.fragment.LibraryFragment
-import com.voizy.android.ui.fragment.RecordingFragment
 
 class MainActivity : BaseActivity() {
 
@@ -64,16 +64,16 @@ class MainActivity : BaseActivity() {
         bundle.putString(VoizyApp.KEY_ACTION, Intent.ACTION_SEND)
         bundle.putParcelable(VoizyApp.KEY_DATA, uri)
 
-        val recordingFragment = RecordingFragment()
-        recordingFragment.arguments = bundle
+        val audioClipFragment = AudioClipFragment()
+        audioClipFragment.arguments = bundle
 
         val createOptionsFragment =
             supportFragmentManager.findFragmentById(R.id.record_button_fragment)
 
         supportFragmentManager.beginTransaction()
             .hide(createOptionsFragment!!)
-            .replace(R.id.fragment_container, recordingFragment)
-            .addToBackStack(RecordingFragment.TAG)
+            .replace(R.id.fragment_container, audioClipFragment)
+            .addToBackStack(AudioClipFragment.TAG)
             .commit()
     }
 }

@@ -19,7 +19,7 @@ class VoizyDetailsViewModel(
 ) : DisposingViewModel() {
 
     val playbackEvents: Observable<PlaybackInfo>
-        get() = voizyPlayer.getPlaybackEvents()
+        get() = voizyPlayer.playbackEventStream
 
     companion object {
         private val TAG = VoizyDetailsViewModel::class.java.simpleName

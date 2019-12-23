@@ -1,14 +1,11 @@
 package com.voizy.android.ui.fragment
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
-import com.voizy.android.VoizyApp
 import com.voizy.android.audio.AudioRecorder
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.RecordingViewModel
@@ -16,7 +13,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.recording_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -48,28 +44,30 @@ class RecordingFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         // TODO audio-editor remove this
-        initFileInput()
+        // initFileInput()
         initRecordEvents()
 
-        if (!isFileSendAction()) {
-            startTimer()
-        } else {
-            navigateToSaveLayoutFragment()
-        }
+        // TODO audio-editor remove this logic too
+        // if (!isFileSendAction()) {
+        startTimer()
+        // } else {
+        //     navigateToSaveLayoutFragment()
+        // }
     }
 
-    private fun initFileInput() {
-        Observable.just(isFileSendAction())
-            .filter { it }
-            .flatMap {
-                val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
-                viewModel.saveReceivedFile(fileUri)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe { showTimeText(it.durationInSecods.toInt()) }
-    }
+    // TODO audio-editor remove this
+    // private fun initFileInput() {
+    //     Observable.just(isFileSendAction())
+    //         .filter { it }
+    //         .flatMap {
+    //             val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
+    //             viewModel.saveReceivedFile(fileUri)
+    //         }
+    //         .subscribeOn(Schedulers.io())
+    //         .observeOn(AndroidSchedulers.mainThread())
+    //         .autoDisposable(getScopeProvider())
+    //         .subscribe { showTimeText(it.durationInSecods.toInt()) }
+    // }
 
     private fun initRecordEvents() {
         viewModel.getRecordingEvents()
@@ -118,10 +116,11 @@ class RecordingFragment : BaseFragment() {
         tv_recording_time.text = timeString.plus(" / 00:15")
     }
 
-    private fun isFileSendAction(): Boolean {
-        return arguments != null &&
-            arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND
-    }
+    // TODO audio-editor remove this too
+    // private fun isFileSendAction(): Boolean {
+    //     return arguments != null &&
+    //         arguments!!.get(VoizyApp.KEY_ACTION) == Intent.ACTION_SEND
+    // }
 
     private fun navigateToSaveLayoutFragment() {
         fragmentManager!!.beginTransaction()

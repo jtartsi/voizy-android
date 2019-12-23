@@ -15,6 +15,7 @@ import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.ShareRepository
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.ShareManager
+import com.voizy.android.viewmodels.AudioClipViewModel
 import com.voizy.android.viewmodels.CreateOptionsViewModel
 import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import com.voizy.android.viewmodels.RecordingViewModel
@@ -50,6 +51,7 @@ val viewModels = module {
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
     viewModel { CreateOptionsViewModel(get(), get()) }
     viewModel { RecordingViewModel(get(), get(), get()) }
+    viewModel { AudioClipViewModel(get(), get(), get(), get()) }
     viewModel { SaveVoizyViewModel(get(), get(), get(), get()) }
     viewModel { VoizyDetailsViewModel(get(), get(), get(), get()) }
 }

@@ -36,7 +36,7 @@ class SaveVoizyViewModel(
     }
 
     fun getPlaybackEvents(): Observable<PlaybackInfo> {
-        return voizyPlayer.getPlaybackEvents()
+        return voizyPlayer.playbackEventStream
     }
 
     fun getTempVoizyDurationInMillis(): Observable<Long> {
