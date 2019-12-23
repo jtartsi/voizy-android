@@ -21,7 +21,7 @@ data class Voizy(
     val localeLang: String = "",
     val localeCountry: String = ""
 ) {
-    
+
     @get:Exclude
     var hashTags: String = ""
         get() {
