@@ -93,7 +93,7 @@ class LibraryFragment : BaseFragment() {
                         PlaybackEvent.START -> {
                             voizyListAdapter.showPlayingIndicator(
                                 viewHolder,
-                                it.audioLengthInMillis
+                                it.audioDurationInMs
                             )
                         }
                         PlaybackEvent.STOP -> {
@@ -103,7 +103,7 @@ class LibraryFragment : BaseFragment() {
                             voizyListAdapter.clearPlayingState()
                             voizyListAdapter.showPlayingIndicator(
                                 viewHolder,
-                                it.audioLengthInMillis
+                                it.audioDurationInMs
                             )
                         }
                     }

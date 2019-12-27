@@ -5,6 +5,8 @@ import android.media.MediaPlayer
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
+import java.util.Timer
+import java.util.TimerTask
 
 class AudioPlayer {
 
@@ -14,21 +16,21 @@ class AudioPlayer {
     private val playbackEvents: PublishSubject<PlaybackInfo> = PublishSubject.create()
     private var mediaPlayer: MediaPlayer? = null
     private var currentTrackPath: String = ""
+    private lateinit var onStopTimer: Timer
 
     val playbackEventStream = playbackEvents as Observable<PlaybackInfo>
 
     fun togglePlay(
         path: String,
-        startPos: Int,
-        endPos: Int,
-        looping: Boolean = false
+        startPos: Int = 0,
+        endPos: Int = 0
     ): Observable<PlaybackInfo> {
         return Observable.defer {
             val playbackInfo: PlaybackInfo = if (isPlaying && currentTrackPath == path) {
                 val audioLength = stopPlayback()
                 PlaybackInfo(PlaybackEvent.STOP, audioLength)
             } else {
-                val audioLength = startPlayback(path, startPos, endPos, looping)
+                val audioLength = startPlayback(path, startPos, endPos)
                 PlaybackInfo(PlaybackEvent.START, audioLength)
             }
             playbackEvents.onNext(playbackInfo)
@@ -45,58 +47,10 @@ class AudioPlayer {
         }
     }
 
-    fun togglePlay(path: String): Observable<PlaybackInfo> {
-        return Observable.defer {
-            val playbackInfo: PlaybackInfo = if (isPlaying && currentTrackPath == path) {
-                val audioLength = stopPlayback()
-                PlaybackInfo(PlaybackEvent.STOP, audioLength)
-            } else if (isPlaying) {
-                stopPlayback()
-                val audioLength = startPlayback(path)
-                PlaybackInfo(PlaybackEvent.SWITCH, audioLength)
-            } else {
-                val audioLength = startPlayback(path)
-                PlaybackInfo(PlaybackEvent.START, audioLength)
-            }
-            playbackEvents.onNext(playbackInfo)
-            Observable.just(playbackInfo)
-        }
-    }
-
-    private fun startPlayback(filePath: String): Int {
-        currentTrackPath = filePath
-
-        var durationInMillis: Int = -1
-
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .build()
-
-        mediaPlayer = MediaPlayer()
-
-        mediaPlayer?.apply {
-            setDataSource(filePath)
-            setAudioAttributes(audioAttributes)
-            prepare()
-            start()
-            setOnCompletionListener {
-                playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, durationInMillis))
-                release()
-                mediaPlayer = null
-                currentTrackPath = ""
-            }
-            durationInMillis = duration
-        }
-        return durationInMillis
-    }
-
-    // TODO audio-editor maybe put the startPlayback methdod's together
     private fun startPlayback(
         filePath: String,
-        startPos: Int,
-        endPos: Int,
-        looping: Boolean = false
+        startPos: Int = 0,
+        endPos: Int = 0
     ): Int {
         currentTrackPath = filePath
 
@@ -112,36 +66,23 @@ class AudioPlayer {
         mediaPlayer?.apply {
             setDataSource(filePath)
             setAudioAttributes(audioAttributes)
-            prepare()
-
-            // TODO audio-editor jump back to startPos in case looping
 
             setOnPreparedListener {
-                seekTo(startPos)
-                start()
-
-                setOnInfoListener { mp, what, extra ->
-                    Timber.d("player info $what, ${mp.currentPosition}")
-                    if (mp.currentPosition > endPos) {
-                        Timber.d("player info endPos: $endPos, currentPos: ${mp.currentPosition}")
-                        Timber.d("player info stopping playback and releasing player")
-
-                        // TODO audio-editor remove duplicates
-                        playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, durationInMillis))
-                        release()
-                        mediaPlayer = null
-                        currentTrackPath = ""
-                    }
-                    true
+                if (startPos > 0) {
+                    seekTo(startPos)
                 }
+                start()
             }
 
             setOnCompletionListener {
-                playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, durationInMillis))
-                release()
-                mediaPlayer = null
-                currentTrackPath = ""
+                stopPlayback()
             }
+
+            if (endPos > 0) {
+                setOnStopListener(endPos)
+            }
+
+            prepare()
             durationInMillis = duration
         }
         return durationInMillis
@@ -149,7 +90,11 @@ class AudioPlayer {
 
     fun stopPlayback(): Int {
         mediaPlayer?.apply {
+            Timber.d("player-info stopPlayback()")
             if (isPlaying) {
+                // TODO audio-editor consider removing duration info from here...
+                onStopTimer.cancel()
+                playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, duration))
                 stop()
                 release()
                 mediaPlayer = null
@@ -157,5 +102,18 @@ class AudioPlayer {
             }
         }
         return 0
+    }
+
+    private fun setOnStopListener(endTime: Int) {
+        onStopTimer = Timer()
+        onStopTimer.schedule(object : TimerTask() {
+            override fun run() {
+                Timber.d("player-info setOnStopListener() run")
+                if (mediaPlayer != null && mediaPlayer!!.currentPosition > endTime) {
+                    Timber.d("player-info setOnStopListener() stopPlayback")
+                    stopPlayback()
+                }
+            }
+        }, 0, 10)
     }
 }
