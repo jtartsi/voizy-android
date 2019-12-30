@@ -15,6 +15,7 @@ import com.voizy.android.viewmodels.VoizyDetailsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.voizy_details_fragment.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class VoizyDetailsFragment : BaseFragment() {
 
@@ -81,6 +82,7 @@ class VoizyDetailsFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                Timber.d("player-info getPlaybackEvents() ${it.playbackEvent}")
                 if (it.playbackEvent == PlaybackEvent.START) {
                     btn_details_playback.state = PlayPauseButton.State.STOP_ICON
                 } else if (it.playbackEvent == PlaybackEvent.STOP) {

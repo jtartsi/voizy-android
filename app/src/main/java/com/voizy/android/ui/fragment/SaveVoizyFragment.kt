@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.recording_fragment.tv_recording_time
 import kotlinx.android.synthetic.main.save_voizy_fragment.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -87,6 +88,7 @@ class SaveVoizyFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
+                Timber.d("player-info getPlaybackEvents() ${it.playbackEvent}")
                 if (it.playbackEvent == PlaybackEvent.START) {
                     btn_playback.state = PlayPauseButton.State.STOP_ICON
                 } else if (it.playbackEvent == PlaybackEvent.STOP) {

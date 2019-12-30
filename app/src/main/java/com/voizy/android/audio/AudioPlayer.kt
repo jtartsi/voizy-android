@@ -90,16 +90,12 @@ class AudioPlayer {
 
     fun stopPlayback(): Int {
         mediaPlayer?.apply {
-            Timber.d("player-info stopPlayback()")
-            if (isPlaying) {
-                // TODO audio-editor consider removing duration info from here...
-                onStopTimer.cancel()
-                playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, duration))
-                stop()
-                release()
-                mediaPlayer = null
-                currentTrackPath = ""
-            }
+            onStopTimer.cancel()
+            playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, duration))
+            stop()
+            release()
+            mediaPlayer = null
+            currentTrackPath = ""
         }
         return 0
     }

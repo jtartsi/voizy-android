@@ -22,7 +22,6 @@ class AudioClipViewModel(
 
     companion object {
         private val TAG = AudioClipViewModel::class.java.simpleName
-        private const val MAX_AUDIO_LENGTH_MS = 15000
     }
 
     fun togglePlay(startPos: Int, endPos: Int): Observable<PlaybackInfo> {
