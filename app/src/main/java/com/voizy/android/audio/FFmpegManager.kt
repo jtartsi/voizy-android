@@ -12,7 +12,7 @@ class FFmpegManager {
 
     init {
         Config.enableLogCallback {
-            Timber.d("FFmpeg $it")
+            Timber.d("FFmpeg log: ${it.text}")
         }
 
         Config.enableStatisticsCallback {
@@ -56,7 +56,6 @@ class FFmpegManager {
     }
 
     private fun getFFmpegTime(timeInMillis: Long): String {
-        SimpleDateFormat.getInstance()
         val dateFormat = SimpleDateFormat("HH:mm:ss.SSS")
         dateFormat.timeZone = TimeZone.getTimeZone("GMT")
         return dateFormat.format(Date(timeInMillis).time)

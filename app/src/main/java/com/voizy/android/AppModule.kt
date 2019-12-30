@@ -15,9 +15,11 @@ import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.ShareRepository
 import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.ShareManager
+import com.voizy.android.viewmodels.AudioClipViewModel
 import com.voizy.android.viewmodels.CreateOptionsViewModel
 import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import com.voizy.android.viewmodels.RecordingViewModel
+import com.voizy.android.viewmodels.SaveVoizyViewModel
 import com.voizy.android.viewmodels.VoizyDetailsViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -47,8 +49,10 @@ val repositoryModule = module {
 
 val viewModels = module {
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
-    viewModel { RecordingViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { CreateOptionsViewModel(get(), get()) }
+    viewModel { RecordingViewModel(get()) }
+    viewModel { AudioClipViewModel(get(), get(), get(), get()) }
+    viewModel { SaveVoizyViewModel(get(), get(), get(), get()) }
     viewModel { VoizyDetailsViewModel(get(), get(), get(), get()) }
 }
 

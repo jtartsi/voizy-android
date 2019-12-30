@@ -108,6 +108,10 @@ class VoizyDetailsFragment : BaseFragment() {
                     RecordingFragment.TAG,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
+                fragmentManager!!.popBackStack(
+                    AudioClipFragment.TAG,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
             }
     }
 }
