@@ -50,7 +50,6 @@ class AudioClipViewModel(
                             .getAudioDurationInMillis(it.accessibleFilePath)
                         it
                     }
-                // .flatMap { formatAudio(it) }
             }
             .withErrorHandling(TAG, "Failed to save received file")
     }

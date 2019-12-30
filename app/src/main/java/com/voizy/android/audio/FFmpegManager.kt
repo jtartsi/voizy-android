@@ -12,7 +12,7 @@ class FFmpegManager {
 
     init {
         Config.enableLogCallback {
-            Timber.d("FFmpeg ${it.text}")
+            Timber.d("FFmpeg log: ${it.text}")
         }
 
         Config.enableStatisticsCallback {
@@ -29,13 +29,6 @@ class FFmpegManager {
     ): Observable<String> {
         val startPos = getFFmpegTime(startPosMillis)
         val endPos = getFFmpegTime(endPosMillis)
-
-        Timber.d("audio-editor clip() startPosMillis $startPosMillis")
-        Timber.d("audio-editor clip() startPos $startPos")
-        Timber.d("audio-editor clip() endPosMillis $endPosMillis")
-        Timber.d("audio-editor clip() endPos $endPos")
-        Timber.d("audio-editor clip() sourceFile $sourceFile")
-        Timber.d("audio-editor clip() outputFile $outputFile")
 
         val cmd = arrayOf(
             "-i", sourceFile,
