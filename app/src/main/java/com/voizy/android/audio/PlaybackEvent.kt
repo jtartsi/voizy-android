@@ -1,3 +1,3 @@
 package com.voizy.android.audio
 
-public enum class PlaybackEvent { START, STOP, SWITCH }
+enum class PlaybackEvent { START, STOP, SWITCH }

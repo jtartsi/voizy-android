@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@android:color/white">
+
+    <com.voizy.android.ui.widget.PlayPauseButton
+        android:id="@+id/btn_audio_clip_play"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="416dp"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/round_fast_rewind_black_48"
+        android:tint="@color/voizy_orange"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_audio_clip_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_duration"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/audio_duration"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_audio_clip_duration_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_duration"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="11.7s" />
+
+    <SeekBar
+        android:id="@+id/sb_audio_clip_duration"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="4dp"
+        android:maxHeight="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_audio_clip_position"
+        android:progressTint="@color/voizy_orange"
+        android:progressTintMode="src_over"
+        android:progressBackgroundTint="@android:color/darker_gray"
+        android:progressBackgroundTintMode="src_over"
+        tools:max="100"
+        tools:progress="75" />
+
+    <TextView
+        android:id="@+id/tv_audio_clip_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_position"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/audio_start_pos"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_audio_clip_position_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_position"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="01:57" />
+
+    <SeekBar
+        android:id="@+id/sb_audio_clip_position"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="4dp"
+        android:maxHeight="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="240dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:progressTint="@android:color/darker_gray"
+        android:progressTintMode="src_in"
+        android:secondaryProgressTint="@color/voizy_orange"
+        android:secondaryProgressTintMode="src_over"
+        android:progressBackgroundTint="@android:color/darker_gray"
+        android:progressBackgroundTintMode="src_over"
+        tools:max="100"
+        tools:progress="34"
+        tools:secondaryProgress="64" />
+
+
+    <ImageButton
+        android:id="@+id/btn_audio_clip_rwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="160dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/round_fast_rewind_black_48"
+        android:tint="@color/voizy_orange"
+        android:backgroundTint="@android:color/transparent" />
+
+    <ImageButton
+        android:id="@+id/btn_audio_clip_ffwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="160dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/round_fast_forward_black_48"
+        android:tint="@color/voizy_orange"
+        android:backgroundTint="@android:color/transparent" />
+
+    <Button
+        android:id="@+id/btn_audio_clip_next"
+        style="@style/VoizyTheme.BorderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

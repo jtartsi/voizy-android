@@ -4,6 +4,9 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
+import java.util.Timer
+import java.util.TimerTask
 
 class AudioPlayer {
 
@@ -13,18 +16,25 @@ class AudioPlayer {
     private val playbackEvents: PublishSubject<PlaybackInfo> = PublishSubject.create()
     private var mediaPlayer: MediaPlayer? = null
     private var currentTrackPath: String = ""
+    private lateinit var onStopTimer: Timer
 
-    fun getPlaybackEvents(): Observable<PlaybackInfo> {
-        return playbackEvents
-    }
+    val playbackEventStream = playbackEvents as Observable<PlaybackInfo>
 
-    fun play(path: String): Observable<Int> {
+    fun togglePlay(
+        path: String,
+        startPos: Int = 0,
+        endPos: Int = 0
+    ): Observable<PlaybackInfo> {
         return Observable.defer {
-
-            val durationInMillis = startPlayback(path)
-            val playbackInfo = PlaybackInfo(PlaybackEvent.START, durationInMillis)
+            val playbackInfo: PlaybackInfo = if (isPlaying && currentTrackPath == path) {
+                val audioLength = stopPlayback()
+                PlaybackInfo(PlaybackEvent.STOP, audioLength)
+            } else {
+                val audioLength = startPlayback(path, startPos, endPos)
+                PlaybackInfo(PlaybackEvent.START, audioLength)
+            }
             playbackEvents.onNext(playbackInfo)
-            Observable.just(startPlayback(path))
+            Observable.just(playbackInfo)
         }
     }
 
@@ -37,25 +47,11 @@ class AudioPlayer {
         }
     }
 
-    fun togglePlay(path: String): Observable<PlaybackInfo> {
-        return Observable.defer {
-            val playbackInfo: PlaybackInfo = if (isPlaying && currentTrackPath == path) {
-                val audioLength = stopPlayback()
-                PlaybackInfo(PlaybackEvent.STOP, audioLength)
-            } else if (isPlaying) {
-                stopPlayback()
-                val audioLength = startPlayback(path)
-                PlaybackInfo(PlaybackEvent.SWITCH, audioLength)
-            } else {
-                val audioLength = startPlayback(path)
-                PlaybackInfo(PlaybackEvent.START, audioLength)
-            }
-            playbackEvents.onNext(playbackInfo)
-            Observable.just(playbackInfo)
-        }
-    }
-
-    private fun startPlayback(filePath: String): Int {
+    private fun startPlayback(
+        filePath: String,
+        startPos: Int = 0,
+        endPos: Int = 0
+    ): Int {
         currentTrackPath = filePath
 
         var durationInMillis: Int = -1
@@ -70,14 +66,23 @@ class AudioPlayer {
         mediaPlayer?.apply {
             setDataSource(filePath)
             setAudioAttributes(audioAttributes)
-            prepare()
-            start()
-            setOnCompletionListener {
-                playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, durationInMillis))
-                release()
-                mediaPlayer = null
-                currentTrackPath = ""
+
+            setOnPreparedListener {
+                if (startPos > 0) {
+                    seekTo(startPos)
+                }
+                start()
             }
+
+            setOnCompletionListener {
+                stopPlayback()
+            }
+
+            if (endPos > 0) {
+                setOnStopListener(endPos)
+            }
+
+            prepare()
             durationInMillis = duration
         }
         return durationInMillis
@@ -85,13 +90,26 @@ class AudioPlayer {
 
     fun stopPlayback(): Int {
         mediaPlayer?.apply {
-            if (isPlaying) {
-                stop()
-                release()
-                mediaPlayer = null
-                currentTrackPath = ""
-            }
+            onStopTimer.cancel()
+            playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, duration))
+            stop()
+            release()
+            mediaPlayer = null
+            currentTrackPath = ""
         }
         return 0
+    }
+
+    private fun setOnStopListener(endTime: Int) {
+        onStopTimer = Timer()
+        onStopTimer.schedule(object : TimerTask() {
+            override fun run() {
+                Timber.d("player-info setOnStopListener() run")
+                if (mediaPlayer != null && mediaPlayer!!.currentPosition > endTime) {
+                    Timber.d("player-info setOnStopListener() stopPlayback")
+                    stopPlayback()
+                }
+            }
+        }, 0, 10)
     }
 }
