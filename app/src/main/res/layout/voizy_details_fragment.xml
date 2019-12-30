@@ -56,12 +56,11 @@
         android:id="@+id/btn_details_playback"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:tint="@color/voizy_orange"
         app:layout_constraintBottom_toTopOf="@+id/tv_voizy_details_tags"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_voizy_details_title"
-        tools:tint="@android:color/black" />
+        android:tint="@color/voizy_orange" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_details_share_voizy"
