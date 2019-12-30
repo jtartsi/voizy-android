@@ -24,6 +24,7 @@
     <string name="error_audio_over_15_not_allowed">"Audio length of over 15s is not allowed"</string>
     <string name="info_no_results">"Oops! No results found."</string>
     <string name="next">"Next"</string>
-    <string name="audio_duration">"Duration: %1$ss"</string>
-    <string name="audio_start_pos">"Start position: %1$ss"</string>
+    <!--    <string name="audio_duration">"Duration: %1$ss"</string>-->
+    <string name="audio_duration">"Duration: "</string>
+    <string name="audio_start_pos">"Start position: "</string>
 </resources>

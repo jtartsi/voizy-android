@@ -107,7 +107,7 @@ class AudioClipFragment : BaseFragment() {
         sb_audio_clip_duration.max = maxInMillis.toInt()
         sb_audio_clip_duration.progress = maxInMillis.toInt()
 
-        updateAudioDurationText(maxInMillis)
+        tv_audio_clip_duration_value.text = formatAudioTime(maxInMillis)
 
         sb_audio_clip_duration.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
@@ -116,7 +116,7 @@ class AudioClipFragment : BaseFragment() {
                 selectedDuration: Int,
                 fromUser: Boolean
             ) {
-                updateAudioDurationText(selectedDuration.toLong())
+                tv_audio_clip_duration_value.text = formatAudioTime(selectedDuration.toLong())
 
                 if (fromUser) {
                     updateDurationPosition(selectedDuration)
@@ -135,7 +135,7 @@ class AudioClipFragment : BaseFragment() {
         val maxInMillis = importedData.durationInMillis
 
         sb_audio_clip_position.max = maxInMillis.toInt()
-        tv_audio_clip_position.text = getString(R.string.audio_start_pos, formatAudio(0))
+        tv_audio_clip_position_value.text = formatAudioTime(0)
 
         sb_audio_clip_position.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
@@ -145,7 +145,7 @@ class AudioClipFragment : BaseFragment() {
                 fromUser: Boolean
             ) {
 
-                updateStartPositionText(startPos.toLong())
+                tv_audio_clip_position_value.text = formatAudioTime(startPos.toLong())
 
                 if (fromUser) {
                     updateStartPosition(startPos)
@@ -205,18 +205,8 @@ class AudioClipFragment : BaseFragment() {
                 sb_audio_clip_duration.progress
     }
 
-    private fun updateAudioDurationText(timeInMs: Long) {
-        tv_audio_clip_duration.text =
-            getString(R.string.audio_duration, formatAudio(timeInMs))
-    }
-
-    private fun updateStartPositionText(timeInMs: Long) {
-        tv_audio_clip_position.text =
-            getString(R.string.audio_start_pos, formatAudio(timeInMs))
-    }
-
-    private fun formatAudio(timeInMillis: Long): String {
+    private fun formatAudioTime(timeInMillis: Long): String {
         val dateFormat = SimpleDateFormat("s.S")
-        return dateFormat.format(Date(timeInMillis).time)
+        return dateFormat.format(Date(timeInMillis).time).plus("s")
     }
 }

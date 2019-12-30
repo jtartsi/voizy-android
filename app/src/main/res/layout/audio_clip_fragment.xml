@@ -23,14 +23,22 @@
         android:id="@+id/tv_audio_clip_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_duration"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Duration: 11.7s"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:text="@string/audio_duration"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_audio_clip_duration_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_duration"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="11.7s" />
 
     <SeekBar
         android:id="@+id/sb_audio_clip_duration"
@@ -54,14 +62,22 @@
         android:id="@+id/tv_audio_clip_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_position"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Start position: 01:57"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:text="@string/audio_start_pos"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_audio_clip_position_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/sb_audio_clip_position"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="01:57" />
 
     <SeekBar
         android:id="@+id/sb_audio_clip_position"
