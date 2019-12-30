@@ -61,7 +61,7 @@ class RecordingFragment : BaseFragment() {
     //         .filter { it }
     //         .flatMap {
     //             val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
-    //             viewModel.saveReceivedFile(fileUri)
+    //             viewModel.saveImportedFile(fileUri)
     //         }
     //         .subscribeOn(Schedulers.io())
     //         .observeOn(AndroidSchedulers.mainThread())

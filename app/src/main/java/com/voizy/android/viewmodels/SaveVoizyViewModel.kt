@@ -37,13 +37,14 @@ class SaveVoizyViewModel(
 
     fun getPlaybackEvents(): Observable<PlaybackInfo> {
         return voizyPlayer.playbackEventStream
+            .withErrorHandling(TAG, "Error in playbackEventStream")
     }
 
     fun getTempVoizyDurationInMillis(): Observable<Long> {
         return Observable.defer {
             Observable.fromCallable {
-                localFileManager.getAudioDurationInMillis(localFileManager.getImportFilePath())
+                localFileManager.getAudioDurationInMillis(localFileManager.getTempFilePath())
             }
-        }
+        }.withErrorHandling(TAG, "Failed to get duration on preview voizy")
     }
 }

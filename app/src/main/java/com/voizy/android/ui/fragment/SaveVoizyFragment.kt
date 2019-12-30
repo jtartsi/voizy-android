@@ -47,7 +47,7 @@ class SaveVoizyFragment : BaseFragment() {
     }
 
     override fun useCustomBackPress(): Boolean {
-        return true
+        return false
     }
 
     override fun onBackPressed() {

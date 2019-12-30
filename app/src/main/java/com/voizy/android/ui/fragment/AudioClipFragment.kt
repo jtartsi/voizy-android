@@ -20,6 +20,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.audio_clip_fragment.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -49,6 +50,7 @@ class AudioClipFragment : BaseFragment() {
         super.onStart()
         initFileImport()
         initPlayback()
+        initClipAudio()
     }
 
     override fun onStop() {
@@ -62,7 +64,7 @@ class AudioClipFragment : BaseFragment() {
         Observable
             .defer {
                 val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
-                viewModel.saveReceivedFile(fileUri)
+                viewModel.saveImportedFile(fileUri)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +74,6 @@ class AudioClipFragment : BaseFragment() {
                 initStartPosSeek(it)
                 initMoveStartPosForward()
                 initMoveStartPosBackward()
-                initPlayback()
             }
     }
 
@@ -98,6 +99,26 @@ class AudioClipFragment : BaseFragment() {
                     btn_audio_clip_play.state = PlayPauseButton.State.PLAY_ICON
                 }
             }
+    }
+
+    private fun initClipAudio() {
+        RxView.clicks(btn_audio_clip_next)
+            .flatMap {
+                val startPosInMs = sb_audio_clip_position.progress.toLong()
+                val endPosInMs = startPosInMs + sb_audio_clip_duration.progress.toLong()
+                viewModel.clipAudio(startPosInMs, endPosInMs)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe({
+                Timber.d("audio-editor initClipAudio subscribe()")
+                fragmentManager!!.beginTransaction()
+                    .replace(R.id.fragment_container, SaveVoizyFragment(), SaveVoizyFragment.TAG)
+                    .addToBackStack(SaveVoizyFragment.TAG)
+                    .commit()
+            }, {
+                Timber.e(it, "audio-editor initClipAudio onError()")
+            })
     }
 
     private fun initDurationSeek(importedData: ImportedData) {

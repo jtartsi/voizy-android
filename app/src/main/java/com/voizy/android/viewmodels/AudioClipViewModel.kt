@@ -26,7 +26,7 @@ class AudioClipViewModel(
     }
 
     fun togglePlay(startPos: Int, endPos: Int): Observable<PlaybackInfo> {
-        return voizyPlayer.togglePlay(voizyRepository.getTempFilePath(), startPos, endPos)
+        return voizyPlayer.togglePlay(localFileManager.getImportFilePath(), startPos, endPos)
             .withErrorHandling(TAG, "Failed to togglePlay on preview voizy")
     }
 
@@ -35,7 +35,7 @@ class AudioClipViewModel(
             .withErrorHandling(TAG, "Failed to stopPlayback on preview voizy")
     }
 
-    fun saveReceivedFile(uri: Uri): Observable<ImportedData> {
+    fun saveImportedFile(uri: Uri): Observable<ImportedData> {
         return Observable
             .defer {
                 Observable.just(ImportedData(uri))
@@ -51,45 +51,20 @@ class AudioClipViewModel(
                             .getAudioDurationInMillis(it.accessibleFilePath)
                         it
                     }
-                    .flatMap { editAudioForUpload(it) }
+                // .flatMap { formatAudio(it) }
             }
             .withErrorHandling(TAG, "Failed to save received file")
     }
 
-    /**
-     * Clips to 15s, renames file and converts videos to audio
-     */
-    private fun editAudioForUpload(importedData: ImportedData): Observable<ImportedData> {
-        val outputPath = localFileManager.getTempFilePath()
-        localFileManager.deleteFile(outputPath)
-
-        val editObservable = when {
-            !isAudioTrackWithinLimit(importedData.durationInMillis) -> {
-                // importedData.durationInMillis = 15000
-                // ffmpegManager.clip(importedData.accessibleFilePath, outputPath)
-                // TODO audio-editor remove and reorganize this
-                localFileManager.renameToTempFile(importedData.accessibleFilePath)
-            }
-            isAudioTrackWithinLimit(importedData.durationInMillis)
-                && importedData.contentType == ImportedData.TYPE_VIDEO -> {
-                ffmpegManager.convertToAudio(importedData.accessibleFilePath, outputPath)
-            }
-            isAudioTrackWithinLimit(importedData.durationInMillis)
-                && importedData.contentType == ImportedData.TYPE_AUDIO -> {
-                localFileManager.renameToTempFile(importedData.accessibleFilePath)
-            }
-            else -> {
-                throw IllegalStateException("Editing file import failed")
-            }
-        }
-
-        return editObservable.map {
-            importedData.accessibleFilePath = it
-            importedData
-        }
-    }
-
-    private fun isAudioTrackWithinLimit(audioDurationInMillis: Long): Boolean {
-        return audioDurationInMillis < MAX_AUDIO_LENGTH_MS
+    fun clipAudio(startPosInMs: Long, endPosInMs: Long): Observable<String> {
+        return Observable.just(localFileManager.getTempFilePath())
+            .doOnNext { localFileManager.deleteFile(it) }
+            .switchMap {
+                ffmpegManager.clip(
+                    localFileManager.getImportFilePath(),
+                    localFileManager.getTempFilePath(),
+                    startPosInMs, endPosInMs
+                )
+            }.withErrorHandling(TAG, "Failed to clip received file")
     }
 }
