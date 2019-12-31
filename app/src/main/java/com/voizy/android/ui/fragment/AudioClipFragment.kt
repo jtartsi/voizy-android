@@ -156,7 +156,8 @@ class AudioClipFragment : BaseFragment() {
         val maxInMillis = importedData.durationInMillis
 
         sb_audio_clip_position.max = maxInMillis.toInt()
-        tv_audio_clip_position_value.text = formatAudioTime(0)
+        tv_audio_clip_position_value.text =
+            formatAudioTime(sb_audio_clip_position.progress.toLong())
 
         sb_audio_clip_position.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
