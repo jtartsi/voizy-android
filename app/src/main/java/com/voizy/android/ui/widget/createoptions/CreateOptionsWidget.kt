@@ -36,10 +36,19 @@ class CreateOptionsWidget : ConstraintLayout {
     }
 
     fun getButtonEvents(): Observable<CreateEvent> {
-        return RxView
-            .clicks(btn_choose_file)
-            .map { CreateEvent.CHOOSE_FILE }
+        return fileImportEvents()
+            .mergeWith(cloudPullEvents())
             .mergeWith(btn_rec_mic.getButtonEvents())
+    }
+
+    private fun fileImportEvents(): Observable<CreateEvent> {
+        return RxView.clicks(btn_choose_file)
+            .map { CreateEvent.CHOOSE_FILE }
+    }
+
+    private fun cloudPullEvents(): Observable<CreateEvent> {
+        return RxView.clicks(btn_choose_cloud)
+            .map { CreateEvent.CHOOSE_CLOUD }
     }
 
     private fun initOpenClose() {
@@ -62,6 +71,7 @@ class CreateOptionsWidget : ConstraintLayout {
     @SuppressLint("RestrictedApi")
     private fun showOptions() {
         btn_open_options.visibility = View.INVISIBLE
+        btn_choose_cloud.visibility = View.VISIBLE
         btn_choose_file.visibility = View.VISIBLE
         btn_close_options.visibility = View.VISIBLE
     }
@@ -69,6 +79,7 @@ class CreateOptionsWidget : ConstraintLayout {
     @SuppressLint("RestrictedApi")
     private fun hideOptions() {
         btn_open_options.visibility = View.VISIBLE
+        btn_choose_cloud.visibility = View.INVISIBLE
         btn_choose_file.visibility = View.INVISIBLE
         btn_close_options.visibility = View.INVISIBLE
     }

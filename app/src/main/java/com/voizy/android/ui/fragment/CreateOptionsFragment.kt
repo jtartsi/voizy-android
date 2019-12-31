@@ -62,6 +62,7 @@ class CreateOptionsFragment : Fragment() {
                     CreateEvent.START_REC_MIC -> startRecording()
                     CreateEvent.STOP_REC_MIC -> stopRecording()
                     CreateEvent.CHOOSE_FILE -> pickFile()
+                    CreateEvent.CHOOSE_CLOUD -> navigateToCloudPull()
                 }
             }
 
@@ -144,6 +145,10 @@ class CreateOptionsFragment : Fragment() {
             putExtra(Intent.EXTRA_MIME_TYPES, SupportedFileTypes.toArray())
         }
         activity!!.startActivityForResult(pickFileIntent, MainActivity.PICK_FILE_REQUEST_CODE)
+    }
+
+    private fun navigateToCloudPull() {
+        // TODO cloud-pull navigate to new fragment
     }
 
     private fun addRecordingFragment() {

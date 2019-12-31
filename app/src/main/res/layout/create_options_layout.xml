@@ -32,6 +32,19 @@
         android:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_choose_cloud"
+        style="@style/VoizyFloatingButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/round_cloud_black_48"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/btn_choose_file"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        android:tint="@color/voizy_orange" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_choose_file"
         style="@style/VoizyFloatingButtonStyle"
         android:layout_width="wrap_content"
@@ -41,7 +54,8 @@
         app:layout_constraintBottom_toTopOf="@id/btn_rec_mic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:tint="@color/voizy_orange" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_close_options"
