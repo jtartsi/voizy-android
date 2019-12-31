@@ -111,13 +111,12 @@ class AudioClipFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe({
-                Timber.d("audio-editor initClipAudio subscribe()")
                 fragmentManager!!.beginTransaction()
                     .replace(R.id.fragment_container, SaveVoizyFragment(), SaveVoizyFragment.TAG)
                     .addToBackStack(SaveVoizyFragment.TAG)
                     .commit()
             }, {
-                Timber.e(it, "audio-editor initClipAudio onError()")
+                Timber.e(it, "initClipAudio onError()")
             })
     }
 
@@ -166,7 +165,6 @@ class AudioClipFragment : BaseFragment() {
                 startPos: Int,
                 fromUser: Boolean
             ) {
-
                 tv_audio_clip_position_value.text = formatAudioTime(startPos.toLong())
 
                 if (fromUser) {
@@ -214,10 +212,8 @@ class AudioClipFragment : BaseFragment() {
         updateStartPosSecondaryProgress()
 
         if (startPos + sb_audio_clip_duration.progress > sb_audio_clip_position.max) {
-            val newDuration =
-                sb_audio_clip_position.max - startPos
-
-            sb_audio_clip_duration.progress = newDuration
+            sb_audio_clip_position.progress =
+                sb_audio_clip_position.max - sb_audio_clip_duration.progress
         }
     }
 
