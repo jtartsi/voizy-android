@@ -16,7 +16,7 @@ class AudioPlayer {
     private val playbackEvents: PublishSubject<PlaybackInfo> = PublishSubject.create()
     private var mediaPlayer: MediaPlayer? = null
     private var currentTrackPath: String = ""
-    private lateinit var onStopTimer: Timer
+    private var onStopTimer: Timer = Timer()
 
     val playbackEventStream = playbackEvents as Observable<PlaybackInfo>
 
