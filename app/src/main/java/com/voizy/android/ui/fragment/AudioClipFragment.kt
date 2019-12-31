@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.audio_clip_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.Date
 
 class AudioClipFragment : BaseFragment() {
 
@@ -224,7 +223,40 @@ class AudioClipFragment : BaseFragment() {
     }
 
     private fun formatAudioTime(timeInMillis: Long): String {
-        val dateFormat = SimpleDateFormat("s.S")
-        return dateFormat.format(Date(timeInMillis).time).plus("s")
+        Timber.d("formatAudioTime() timeInMillis $timeInMillis")
+        val stringBuilder = StringBuilder()
+        if (timeInMillis > 60000) {
+            Timber.d("formatAudioTime() >60s timeString $stringBuilder")
+            val timeFormat = SimpleDateFormat("mm:ss.S")
+            return stringBuilder.append(timeFormat.format(timeInMillis)).toString()
+        } else {
+            val timeFormat = SimpleDateFormat("s.S")
+            return stringBuilder.append(timeFormat.format(timeInMillis)).append("s").toString()
+        }
     }
+
+    // private fun formatAudioTime(timeInMillis: Long): String {
+    //     Timber.d("formatAudioTime() timeInMillis $timeInMillis")
+    //     val stringBuilder = StringBuilder()
+    //     if (timeInMillis > 60000) {
+    //         Timber.d("formatAudioTime() >60s")
+    //         val minutes = timeInMillis / 60000
+    //         stringBuilder.append(minutes).append("m ")
+    //         Timber.d("formatAudioTime() >60s timeString $stringBuilder")
+    //     }
+    //
+    //     val timeFormat = SimpleDateFormat("s.S")
+    //     val formattedTime = timeFormat.format(timeInMillis)
+    //     Timber.d("formatAudioTime() formattedTime $formattedTime")
+    //     stringBuilder.append(formattedTime)
+    //     Timber.d("formatAudioTime() final timeString $stringBuilder")
+    //     return stringBuilder.toString()
+    // }
+
+    // private fun formatAudioTime(timeInMillis: Long): String {
+    //     Timber.d("formatAudioTime() timeInMillis $timeInMillis")
+    //
+    //     val minuteFormat = SimpleDateFormat("mm:ss.S")
+    //     return minuteFormat.format(timeInMillis)
+    // }
 }
