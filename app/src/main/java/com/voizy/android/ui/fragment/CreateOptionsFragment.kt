@@ -145,6 +145,7 @@ class CreateOptionsFragment : Fragment() {
             putExtra(Intent.EXTRA_MIME_TYPES, SupportedFileTypes.toArray())
         }
         activity!!.startActivityForResult(pickFileIntent, MainActivity.PICK_FILE_REQUEST_CODE)
+        createOptions.state = CreateOptionsWidget.State.CLOSED
     }
 
     private fun navigateToCloudPull() {
@@ -157,6 +158,7 @@ class CreateOptionsFragment : Fragment() {
             )
             .addToBackStack(CloudVideoPullFragment.TAG)
             .commit()
+        createOptions.state = CreateOptionsWidget.State.CLOSED
     }
 
     private fun addRecordingFragment() {
