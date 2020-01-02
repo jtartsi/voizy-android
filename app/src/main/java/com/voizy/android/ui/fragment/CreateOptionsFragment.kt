@@ -148,7 +148,15 @@ class CreateOptionsFragment : Fragment() {
     }
 
     private fun navigateToCloudPull() {
-        // TODO cloud-pull navigate to new fragment
+        fragmentManager!!.beginTransaction()
+            .hide(this)
+            .replace(
+                R.id.fragment_container,
+                CloudVideoPullFragment(),
+                CloudVideoPullFragment.TAG
+            )
+            .addToBackStack(CloudVideoPullFragment.TAG)
+            .commit()
     }
 
     private fun addRecordingFragment() {

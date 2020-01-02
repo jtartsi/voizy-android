@@ -26,4 +26,5 @@
     <string name="next">"Next"</string>
     <string name="audio_duration">"Duration: "</string>
     <string name="audio_start_pos">"Start position: "</string>
+    <string name="hint_insert_url">"Insert video url"</string>
 </resources>
