@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.audio_clip_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.Date
 
 class AudioClipFragment : BaseFragment() {
 
@@ -224,7 +223,13 @@ class AudioClipFragment : BaseFragment() {
     }
 
     private fun formatAudioTime(timeInMillis: Long): String {
-        val dateFormat = SimpleDateFormat("s.S")
-        return dateFormat.format(Date(timeInMillis).time).plus("s")
+        val stringBuilder = StringBuilder()
+        return if (timeInMillis > 60000) {
+            val timeFormat = SimpleDateFormat("mm:ss.S")
+            stringBuilder.append(timeFormat.format(timeInMillis)).toString()
+        } else {
+            val timeFormat = SimpleDateFormat("s.S")
+            stringBuilder.append(timeFormat.format(timeInMillis)).append("s").toString()
+        }
     }
 }
