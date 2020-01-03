@@ -4,12 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.ui.widget.VoizyWebViewClient
+import com.voizy.android.utils.getScopeProvider
+import com.voizy.android.viewmodels.CloudVideoPullViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class CloudVideoPullFragment : BaseFragment() {
+
+    private val viewModel: CloudVideoPullViewModel by inject()
 
     companion object {
         public val TAG = CloudVideoPullFragment::class.java.simpleName
@@ -58,7 +67,32 @@ class CloudVideoPullFragment : BaseFragment() {
 
     private fun initLoadAndNavigateNext() {
         btn_cloud_video_pull_next.setOnClickListener {
-            Timber.d("video-pull Url in web view: ${wv_cloud_video_pull.url}")
+            Timber.d("cloud-pull Url in web view: ${wv_cloud_video_pull.url}")
+            viewModel.downloadVideo(wv_cloud_video_pull.url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(showloadingLayout())
+                .filter { it >= 100f }
+                .autoDisposable(getScopeProvider())
+                .subscribe {
+                    Timber.d("cloud-pull initLoadAndNavigateNext $it")
+                    fragmentManager!!.beginTransaction()
+                        .replace(
+                            R.id.fragment_container,
+                            AudioClipFragment(),
+                            AudioClipFragment.TAG
+                        )
+                        .addToBackStack(AudioClipFragment.TAG)
+                        .commit()
+                }
+        }
+    }
+
+    private fun showloadingLayout(): Consumer<Float> {
+        return Consumer {
+            if (layout_cloud_video_pull_loading_overlay.visibility != View.VISIBLE) {
+                layout_cloud_video_pull_loading_overlay.visibility = View.VISIBLE
+            }
         }
     }
 }

@@ -86,7 +86,7 @@ class LibraryFragmentViewModel(
             .downloadVoizy(voizy.remoteUrl, destinationFile)
             .map { Pair(voizy, it) }
             .subscribeOn(Schedulers.io())
-            .withErrorHandling(TAG, "Failed to download Voizy")
+            .withErrorHandling(TAG, "Failed to downloadVideo Voizy")
     }
 
     fun startVoizyShare(context: Context, voizy: Voizy, file: File) {
@@ -101,7 +101,7 @@ class LibraryFragmentViewModel(
                     context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 clipBoard.primaryClip = ClipData.newPlainText("voizy url", it)
             }
-            .withErrorHandling(TAG, "Failed to copy download url")
+            .withErrorHandling(TAG, "Failed to copy downloadVideo url")
     }
 
     private fun handlePlayAnalytics(voizy: Voizy): Consumer<PlaybackInfo> {

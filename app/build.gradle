@@ -81,6 +81,7 @@ dependencies {
     implementation "com.uber.autodispose:autodispose-lifecycle:$auto_dispose_version"
     implementation "com.uber.autodispose:autodispose-android-archcomponents:$auto_dispose_version"
     implementation "com.uber.autodispose:autodispose-android:$auto_dispose_version"
+    implementation "com.uber.autodispose:autodispose-rxlifecycle:$auto_dispose_version"
 
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
 
