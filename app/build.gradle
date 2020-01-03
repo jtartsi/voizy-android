@@ -91,6 +91,8 @@ dependencies {
 
     implementation 'com.arthenica:mobile-ffmpeg-full:4.3'
 
+    implementation 'com.github.yausername.youtubedl-android:library:0.7.+'
+
     testImplementation "androidx.paging:paging-common:$paging_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
