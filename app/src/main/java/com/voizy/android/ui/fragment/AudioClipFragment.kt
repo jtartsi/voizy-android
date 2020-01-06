@@ -1,6 +1,5 @@
 package com.voizy.android.ui.fragment
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -62,8 +61,8 @@ class AudioClipFragment : BaseFragment() {
     private fun initFileImport() {
         Observable
             .defer {
-                val fileUri = arguments!!.get(VoizyApp.KEY_DATA) as Uri
-                viewModel.saveImportedFile(fileUri)
+                val fileUri = arguments!!.getString(VoizyApp.KEY_DATA)
+                viewModel.getImportedData(fileUri)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -6,12 +6,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
+import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.ui.fragment.AudioClipFragment
 import com.voizy.android.ui.fragment.LibraryFragment
+import com.voizy.android.viewmodels.MainActivityViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import org.koin.android.ext.android.inject
 
 class MainActivity : BaseActivity() {
+
+    private val viewModel: MainActivityViewModel by inject()
 
     companion object {
         const val PICK_FILE_REQUEST_CODE = 100
@@ -26,7 +35,10 @@ class MainActivity : BaseActivity() {
             .add(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
             .commit()
 
-        initDataImport()
+        if (intent.action == Intent.ACTION_SEND) {
+            val uri = intent.clipData?.getItemAt(0)?.uri
+            saveImportedFile(uri)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -48,32 +60,36 @@ class MainActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_FILE_REQUEST_CODE) {
-            openFileInApp(data!!.data)
+            saveImportedFile(data!!.data)
         }
     }
 
-    private fun initDataImport() {
-        if (intent.action == Intent.ACTION_SEND) {
-            val uri = intent.clipData?.getItemAt(0)?.uri
-            openFileInApp(uri)
+    private fun saveImportedFile(uri: Uri?) {
+        uri?.let { uri ->
+            viewModel.saveImportedFile(uri)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .autoDisposable(AndroidLifecycleScopeProvider.from(this))
+                .subscribe(openFileConsumer())
         }
     }
 
-    private fun openFileInApp(uri: Uri?) {
-        val bundle = Bundle()
-        bundle.putString(VoizyApp.KEY_ACTION, Intent.ACTION_SEND)
-        bundle.putParcelable(VoizyApp.KEY_DATA, uri)
+    private fun openFileConsumer(): Consumer<String> {
+        return Consumer { filePath ->
+            val bundle = Bundle()
+            bundle.putSerializable(VoizyApp.KEY_DATA, filePath)
 
-        val audioClipFragment = AudioClipFragment()
-        audioClipFragment.arguments = bundle
+            val audioClipFragment = AudioClipFragment()
+            audioClipFragment.arguments = bundle
 
-        val createOptionsFragment =
-            supportFragmentManager.findFragmentById(R.id.record_button_fragment)
+            val createOptionsFragment =
+                supportFragmentManager.findFragmentById(R.id.record_button_fragment)
 
-        supportFragmentManager.beginTransaction()
-            .hide(createOptionsFragment!!)
-            .replace(R.id.fragment_container, audioClipFragment)
-            .addToBackStack(AudioClipFragment.TAG)
-            .commit()
+            supportFragmentManager.beginTransaction()
+                .hide(createOptionsFragment!!)
+                .replace(R.id.fragment_container, audioClipFragment)
+                .addToBackStack(AudioClipFragment.TAG)
+                .commit()
+        }
     }
 }

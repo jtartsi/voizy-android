@@ -1,6 +1,5 @@
 package com.voizy.android.viewmodels
 
-import android.net.Uri
 import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.FFmpegManager
 import com.voizy.android.audio.PlaybackInfo
@@ -34,24 +33,17 @@ class AudioClipViewModel(
             .withErrorHandling(TAG, "Failed to stopPlayback on preview voizy")
     }
 
-    fun saveImportedFile(uri: Uri): Observable<ImportedData> {
+    fun getImportedData(filePath: String): Observable<ImportedData> {
         return Observable
             .defer {
-                Observable.just(ImportedData(uri))
-                    .map {
-                        it.accessibleFilePath = localFileManager.saveUriContentToFile(
-                            it.uri,
-                            localFileManager.getImportFilePath()
-                        )
-                        it
-                    }
+                Observable.just(ImportedData(filePath))
                     .map {
                         it.durationInMillis = localFileManager
-                            .getAudioDurationInMillis(it.accessibleFilePath)
+                            .getAudioDurationInMillis(it.filePath)
                         it
                     }
             }
-            .withErrorHandling(TAG, "Failed to save received file")
+            .withErrorHandling(TAG, "Failed to get ImportedData")
     }
 
     fun clipAudio(startPosInMs: Long, endPosInMs: Long): Observable<String> {
