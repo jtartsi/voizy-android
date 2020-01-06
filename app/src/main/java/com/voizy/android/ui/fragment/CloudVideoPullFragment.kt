@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
+import com.voizy.android.VoizyApp
 import com.voizy.android.ui.widget.VoizyWebViewClient
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.CloudVideoPullViewModel
@@ -28,6 +29,18 @@ class CloudVideoPullFragment : BaseFragment() {
         return TAG
     }
 
+    override fun useCustomBackPress(): Boolean {
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (isLoadingOverlayVisible()) {
+            showLoadingLayout(false)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +53,7 @@ class CloudVideoPullFragment : BaseFragment() {
         super.onStart()
         initWebView()
         initShortcutButtons()
-        initLoadAndNavigateNext()
+        initVideoDownload()
     }
 
     private fun initWebView() {
@@ -65,34 +78,59 @@ class CloudVideoPullFragment : BaseFragment() {
         }
     }
 
-    private fun initLoadAndNavigateNext() {
+    private fun initVideoDownload() {
         btn_cloud_video_pull_next.setOnClickListener {
             Timber.d("cloud-pull Url in web view: ${wv_cloud_video_pull.url}")
+            showLoadingLayout(true)
             viewModel.downloadVideo(wv_cloud_video_pull.url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(showloadingLayout())
-                .filter { it >= 100f }
                 .autoDisposable(getScopeProvider())
-                .subscribe {
-                    Timber.d("cloud-pull initLoadAndNavigateNext $it")
-                    fragmentManager!!.beginTransaction()
-                        .replace(
-                            R.id.fragment_container,
-                            AudioClipFragment(),
-                            AudioClipFragment.TAG
-                        )
-                        .addToBackStack(AudioClipFragment.TAG)
-                        .commit()
-                }
+                .subscribe(videoDownloadConsumer())
         }
     }
 
-    private fun showloadingLayout(): Consumer<Float> {
-        return Consumer {
-            if (layout_cloud_video_pull_loading_overlay.visibility != View.VISIBLE) {
-                layout_cloud_video_pull_loading_overlay.visibility = View.VISIBLE
-            }
+    private fun videoDownloadConsumer(): Consumer<String> {
+        return Consumer { filePath ->
+            Timber.d("cloud-pull videoDownloadConsumer progress $filePath")
+
+            val bundle = Bundle()
+            bundle.putString(VoizyApp.KEY_DATA, filePath)
+            val audioClipFragment = AudioClipFragment()
+            audioClipFragment.arguments = bundle
+
+            fragmentManager!!.beginTransaction()
+                .replace(
+                    R.id.fragment_container,
+                    audioClipFragment,
+                    AudioClipFragment.TAG
+                )
+                .addToBackStack(AudioClipFragment.TAG)
+                .commit()
         }
+    }
+
+    private fun showLoadingLayout(show: Boolean) {
+        if (show) {
+            layout_cloud_video_pull_loading_overlay.visibility = View.VISIBLE
+            setUiEnabled(false)
+        } else {
+            layout_cloud_video_pull_loading_overlay.visibility = View.GONE
+            setUiEnabled(true)
+        }
+    }
+
+    private fun isLoadingOverlayVisible(): Boolean {
+        return layout_cloud_video_pull_loading_overlay.visibility == View.VISIBLE
+    }
+
+    private fun setUiEnabled(enabled: Boolean) {
+        wv_cloud_video_pull.isClickable = enabled
+        wv_cloud_video_pull.isEnabled = enabled
+        et_cloud_video_pull_url.isEnabled = enabled
+        btn_cloud_video_pull_next.isClickable = enabled
+        btn_cloud_video_pull_youtube.isClickable = enabled
+        btn_cloud_video_pull_vimeo.isClickable = enabled
+        btn_cloud_video_pull_twitch.isClickable = enabled
     }
 }

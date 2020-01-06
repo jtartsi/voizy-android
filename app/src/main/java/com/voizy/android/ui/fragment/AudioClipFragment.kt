@@ -61,8 +61,8 @@ class AudioClipFragment : BaseFragment() {
     private fun initFileImport() {
         Observable
             .defer {
-                val fileUri = arguments!!.getString(VoizyApp.KEY_DATA)
-                viewModel.getImportedData(fileUri)
+                val filePath = arguments!!.getString(VoizyApp.KEY_DATA)
+                viewModel.getImportedData(filePath)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -112,6 +112,9 @@ class VoizyDetailsFragment : BaseFragment() {
                     AudioClipFragment.TAG,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
+                fragmentManager!!.popBackStack(
+                    CloudVideoPullFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
             }
     }
 }

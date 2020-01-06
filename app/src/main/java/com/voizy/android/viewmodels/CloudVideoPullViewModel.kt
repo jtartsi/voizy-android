@@ -17,11 +17,10 @@ class CloudVideoPullViewModel(
         private val TAG = CloudVideoPullViewModel::class.java.simpleName
     }
 
-    fun downloadVideo(url: String): Observable<Float> {
+    fun downloadVideo(url: String): Observable<String> {
         Timber.d("cloud-pull downloadVideo()")
         return Observable
-            .create<Float> { emitter ->
-                emitter.onNext(0f)
+            .create<String> { emitter ->
                 fileManager.deleteFile(fileManager.getImportFilePath())
                 val downloadFile = File(fileManager.getImportFilePath())
 
@@ -36,9 +35,9 @@ class CloudVideoPullViewModel(
                 }
 
                 youtubeDL.execute(request) { progress, etaInSeconds ->
-                    Timber.d("cloud-pull downloadVideo() prgress $progress $etaInSeconds")
-                    emitter.onNext(progress)
+                    Timber.d("cloud-pull downloadVideo() progress $progress $etaInSeconds")
                     if (progress == 100.toFloat()) {
+                        emitter.onNext(downloadFile.absolutePath)
                         emitter.onComplete()
                     }
                 }
