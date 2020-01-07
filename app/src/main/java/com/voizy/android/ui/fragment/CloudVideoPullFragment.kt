@@ -35,6 +35,7 @@ class CloudVideoPullFragment : BaseFragment() {
 
     override fun onBackPressed() {
         if (isLoadingOverlayVisible()) {
+            viewModel.cancelDownload()
             showLoadingLayout(false)
         } else {
             super.onBackPressed()
@@ -63,7 +64,6 @@ class CloudVideoPullFragment : BaseFragment() {
             et_cloud_video_pull_url.setText(url)
         }
         wv_cloud_video_pull.webViewClient = webViewClient
-        wv_cloud_video_pull.loadUrl("https://google.com")
     }
 
     private fun initShortcutButtons() {
@@ -80,9 +80,8 @@ class CloudVideoPullFragment : BaseFragment() {
 
     private fun initVideoDownload() {
         btn_cloud_video_pull_next.setOnClickListener {
-            Timber.d("cloud-pull Url in web view: ${wv_cloud_video_pull.url}")
             showLoadingLayout(true)
-            viewModel.downloadVideo(wv_cloud_video_pull.url)
+            viewModel.downloadVideo(et_cloud_video_pull_url.text.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .autoDisposable(getScopeProvider())

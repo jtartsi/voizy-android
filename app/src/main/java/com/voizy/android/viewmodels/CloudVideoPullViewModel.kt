@@ -1,10 +1,12 @@
 package com.voizy.android.viewmodels
 
 import com.voizy.android.middleware.local.LocalFileManager
+import com.voizy.android.utils.toPair
 import com.voizy.android.utils.withErrorHandling
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 import java.io.File
 
@@ -13,12 +15,18 @@ class CloudVideoPullViewModel(
     private val fileManager: LocalFileManager
 ) : DisposingViewModel() {
 
+    private val cancelEvents = BehaviorSubject.create<Boolean>()
+
     companion object {
         private val TAG = CloudVideoPullViewModel::class.java.simpleName
     }
 
+    fun cancelDownload() {
+        cancelEvents.onNext(true)
+    }
+
     fun downloadVideo(url: String): Observable<String> {
-        Timber.d("cloud-pull downloadVideo()")
+        cancelEvents.onNext(false)
         return Observable
             .create<String> { emitter ->
                 fileManager.deleteFile(fileManager.getImportFilePath())
@@ -41,6 +49,10 @@ class CloudVideoPullViewModel(
                         emitter.onComplete()
                     }
                 }
-            }.withErrorHandling(TAG, "Failed to download video")
+            }
+            .zipWith(cancelEvents, toPair<String, Boolean>())
+            .filter { !it.second }
+            .map { it.first }
+            .withErrorHandling(TAG, "Failed to download video")
     }
 }
