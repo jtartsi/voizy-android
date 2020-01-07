@@ -60,7 +60,6 @@ class CloudVideoPullViewModel(
                 }
 
                 youtubeDL.execute(request) { progress, etaInSeconds ->
-                    Timber.d("cloud-pull downloadVideo() progress $progress $etaInSeconds")
                     if (progress == 100.toFloat()) {
                         emitter.onNext(downloadFile.absolutePath)
                         emitter.onComplete()
@@ -76,7 +75,7 @@ class CloudVideoPullViewModel(
 
     private fun <T> errorHandler(): (throwable: Throwable) -> Observable<T> {
         return {
-            Timber.d("cloud-pull errorHandler $it")
+            Timber.d("download error handler $it")
             when (it) {
                 is DownloadDurationOverLimit -> {
                     errorQueue.onNext(context.getString(R.string.error_downloading_duration_over_limit))

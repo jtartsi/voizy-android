@@ -4,7 +4,6 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.util.Timer
 import java.util.TimerTask
 
@@ -104,9 +103,7 @@ class AudioPlayer {
         onStopTimer = Timer()
         onStopTimer.schedule(object : TimerTask() {
             override fun run() {
-                Timber.d("player-info setOnStopListener() run")
                 if (mediaPlayer != null && mediaPlayer!!.currentPosition > endTime) {
-                    Timber.d("player-info setOnStopListener() stopPlayback")
                     stopPlayback()
                 }
             }
