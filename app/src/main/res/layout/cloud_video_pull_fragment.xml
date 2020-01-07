@@ -37,21 +37,9 @@
             android:background="@android:color/transparent"
             android:src="@drawable/round_home_black_48"
             app:layout_constraintBottom_toTopOf="@+id/et_cloud_video_pull_url"
-            app:layout_constraintEnd_toStartOf="@+id/btn_cloud_video_pull_soundcloud"
+            app:layout_constraintEnd_toStartOf="@+id/btn_cloud_video_pull_youtube"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageButton
-            android:id="@+id/btn_cloud_video_pull_soundcloud"
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/soundcloud_logo"
-            app:layout_constraintStart_toEndOf="@id/btn_cloud_video_pull_home"
-            app:layout_constraintBottom_toTopOf="@+id/et_cloud_video_pull_url"
-            app:layout_constraintEnd_toStartOf="@+id/btn_cloud_video_pull_youtube"
-            app:layout_constraintHorizontal_bias="0.5" />
 
         <ImageButton
             android:id="@+id/btn_cloud_video_pull_youtube"
@@ -61,9 +49,21 @@
             android:background="@android:color/transparent"
             android:src="@drawable/youtube_social_icon_white"
             app:layout_constraintBottom_toTopOf="@+id/et_cloud_video_pull_url"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_cloud_video_pull_soundcloud"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/btn_cloud_video_pull_soundcloud" />
+            app:layout_constraintStart_toEndOf="@id/btn_cloud_video_pull_home" />
+
+        <ImageButton
+            android:id="@+id/btn_cloud_video_pull_soundcloud"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="4dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/soundcloud_logo"
+            app:layout_constraintStart_toEndOf="@id/btn_cloud_video_pull_youtube"
+            app:layout_constraintBottom_toTopOf="@+id/et_cloud_video_pull_url"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" />
 
         <EditText
             android:id="@+id/et_cloud_video_pull_url"

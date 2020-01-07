@@ -21,7 +21,10 @@ class CloudVideoPullViewModel(
     private val downloadQueue = PublishSubject.create<String>()
     val downloadEvents = downloadQueue
         .observeOn(Schedulers.io())
-        .flatMap { downloadVideo(it) }
+        .flatMap { downloadVideo(it) }!!
+
+    private val errorQueue = PublishSubject.create<String>()
+    val downloadErrors = errorQueue as Observable<String>
 
     companion object {
         private val TAG = CloudVideoPullViewModel::class.java.simpleName
