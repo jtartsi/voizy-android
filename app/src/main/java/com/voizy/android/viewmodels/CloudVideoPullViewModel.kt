@@ -6,7 +6,9 @@ import com.voizy.android.utils.withErrorHandling
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 
@@ -16,16 +18,24 @@ class CloudVideoPullViewModel(
 ) : DisposingViewModel() {
 
     private val cancelEvents = BehaviorSubject.create<Boolean>()
+    private val downloadQueue = PublishSubject.create<String>()
+    val downloadEvents = downloadQueue
+        .observeOn(Schedulers.io())
+        .flatMap { downloadVideo(it) }
 
     companion object {
         private val TAG = CloudVideoPullViewModel::class.java.simpleName
+    }
+
+    fun download(url: String) {
+        downloadQueue.onNext(url)
     }
 
     fun cancelDownload() {
         cancelEvents.onNext(true)
     }
 
-    fun downloadVideo(url: String): Observable<String> {
+    private fun downloadVideo(url: String): Observable<String> {
         cancelEvents.onNext(false)
         return Observable
             .create<String> { emitter ->

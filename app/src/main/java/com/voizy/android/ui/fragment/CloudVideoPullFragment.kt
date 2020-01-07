@@ -1,9 +1,11 @@
 package com.voizy.android.ui.fragment
 
+import android.app.FragmentManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.VoizyApp
@@ -12,7 +14,6 @@ import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.CloudVideoPullViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -22,7 +23,7 @@ class CloudVideoPullFragment : BaseFragment() {
     private val viewModel: CloudVideoPullViewModel by inject()
 
     companion object {
-        public val TAG = CloudVideoPullFragment::class.java.simpleName
+        val TAG = CloudVideoPullFragment::class.java.simpleName
     }
 
     override fun getFragmentTag(): String {
@@ -38,7 +39,7 @@ class CloudVideoPullFragment : BaseFragment() {
             viewModel.cancelDownload()
             showLoadingLayout(false)
         } else {
-            super.onBackPressed()
+            fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
 
@@ -61,32 +62,42 @@ class CloudVideoPullFragment : BaseFragment() {
         wv_cloud_video_pull.settings.javaScriptEnabled = true
         val webViewClient = VoizyWebViewClient()
         webViewClient.pageChangedListener = { url ->
-            et_cloud_video_pull_url.setText(url)
+            if (isResumed) {
+                et_cloud_video_pull_url.setText(url)
+            }
         }
         wv_cloud_video_pull.webViewClient = webViewClient
+        wv_cloud_video_pull.loadUrl("https://google.com")
     }
 
     private fun initShortcutButtons() {
+        btn_cloud_video_pull_home.setOnClickListener {
+            wv_cloud_video_pull.loadUrl("https://google.com")
+        }
+        btn_cloud_video_pull_soundcloud.setOnClickListener {
+            wv_cloud_video_pull.loadUrl("https://soundcloud.com")
+        }
         btn_cloud_video_pull_youtube.setOnClickListener {
             wv_cloud_video_pull.loadUrl("https://youtube.com")
         }
         btn_cloud_video_pull_vimeo.setOnClickListener {
             wv_cloud_video_pull.loadUrl("https://vimeo.com/watch")
         }
-        btn_cloud_video_pull_twitch.setOnClickListener {
-            wv_cloud_video_pull.loadUrl("https://twitch.com")
-        }
     }
 
     private fun initVideoDownload() {
-        btn_cloud_video_pull_next.setOnClickListener {
-            showLoadingLayout(true)
-            viewModel.downloadVideo(et_cloud_video_pull_url.text.toString())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .autoDisposable(getScopeProvider())
-                .subscribe(videoDownloadConsumer())
-        }
+        viewModel.downloadEvents
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(videoDownloadConsumer())
+
+        RxView.clicks(btn_cloud_video_pull_next)
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                showLoadingLayout(true)
+                wv_cloud_video_pull.loadUrl("https://voizyapp.com")
+                viewModel.download(et_cloud_video_pull_url.text.toString())
+            }
     }
 
     private fun videoDownloadConsumer(): Consumer<String> {
@@ -128,8 +139,9 @@ class CloudVideoPullFragment : BaseFragment() {
         wv_cloud_video_pull.isEnabled = enabled
         et_cloud_video_pull_url.isEnabled = enabled
         btn_cloud_video_pull_next.isClickable = enabled
+        btn_cloud_video_pull_home.isClickable = enabled
         btn_cloud_video_pull_youtube.isClickable = enabled
+        btn_cloud_video_pull_soundcloud.isClickable = enabled
         btn_cloud_video_pull_vimeo.isClickable = enabled
-        btn_cloud_video_pull_twitch.isClickable = enabled
     }
 }
