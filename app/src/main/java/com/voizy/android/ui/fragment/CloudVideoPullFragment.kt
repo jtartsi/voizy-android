@@ -80,9 +80,6 @@ class CloudVideoPullFragment : BaseFragment() {
         btn_cloud_video_pull_youtube.setOnClickListener {
             wv_cloud_video_pull.loadUrl("https://youtube.com")
         }
-        btn_cloud_video_pull_vimeo.setOnClickListener {
-            wv_cloud_video_pull.loadUrl("https://vimeo.com/watch")
-        }
     }
 
     private fun initVideoDownload() {
@@ -142,6 +139,5 @@ class CloudVideoPullFragment : BaseFragment() {
         btn_cloud_video_pull_home.isClickable = enabled
         btn_cloud_video_pull_youtube.isClickable = enabled
         btn_cloud_video_pull_soundcloud.isClickable = enabled
-        btn_cloud_video_pull_vimeo.isClickable = enabled
     }
 }
