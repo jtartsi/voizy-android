@@ -1,5 +1,8 @@
 package com.voizy.android.viewmodels
 
+import android.content.Context
+import com.voizy.android.R
+import com.voizy.android.error.DownloadDurationOverLimit
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.utils.toPair
 import com.voizy.android.utils.withErrorHandling
@@ -13,6 +16,7 @@ import timber.log.Timber
 import java.io.File
 
 class CloudVideoPullViewModel(
+    private val context: Context,
     private val youtubeDL: YoutubeDL,
     private val fileManager: LocalFileManager
 ) : DisposingViewModel() {
@@ -28,6 +32,7 @@ class CloudVideoPullViewModel(
 
     companion object {
         private val TAG = CloudVideoPullViewModel::class.java.simpleName
+        private const val DOWNLOAD_DURATION_LIMIT = 900
     }
 
     fun download(url: String) {
@@ -50,9 +55,8 @@ class CloudVideoPullViewModel(
                 request.setOption("-f", "bestaudio")
 
                 val videoInfo = youtubeDL.getInfo(url)
-                Timber.d("cloud-pull downloadVideo() videoInfo: $videoInfo}")
-                for (videoFormat in videoInfo.formats) {
-                    Timber.d("cloud-pull VIDEO FORMAT: $videoFormat")
+                if (videoInfo.duration > DOWNLOAD_DURATION_LIMIT) {
+                    throw DownloadDurationOverLimit("Download duration over the limit of 15 minutes")
                 }
 
                 youtubeDL.execute(request) { progress, etaInSeconds ->
@@ -63,9 +67,25 @@ class CloudVideoPullViewModel(
                     }
                 }
             }
+            .onErrorResumeNext(errorHandler())
             .zipWith(cancelEvents, toPair<String, Boolean>())
             .filter { !it.second }
             .map { it.first }
             .withErrorHandling(TAG, "Failed to download video")
+    }
+
+    private fun <T> errorHandler(): (throwable: Throwable) -> Observable<T> {
+        return {
+            Timber.d("cloud-pull errorHandler $it")
+            when (it) {
+                is DownloadDurationOverLimit -> {
+                    errorQueue.onNext(context.getString(R.string.error_downloading_duration_over_limit))
+                }
+                else -> {
+                    errorQueue.onNext(context.getString(R.string.error_downloading_link))
+                }
+            }
+            Observable.empty()
+        }
     }
 }

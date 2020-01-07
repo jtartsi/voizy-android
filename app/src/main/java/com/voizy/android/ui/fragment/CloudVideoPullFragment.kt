@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
@@ -16,7 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class CloudVideoPullFragment : BaseFragment() {
 
@@ -83,6 +83,11 @@ class CloudVideoPullFragment : BaseFragment() {
     }
 
     private fun initVideoDownload() {
+        viewModel.downloadErrors
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe(downloadErrorConsumer())
+
         viewModel.downloadEvents
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
@@ -92,14 +97,13 @@ class CloudVideoPullFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 showLoadingLayout(true)
-                wv_cloud_video_pull.loadUrl("https://voizyapp.com")
                 viewModel.download(et_cloud_video_pull_url.text.toString())
             }
     }
 
     private fun videoDownloadConsumer(): Consumer<String> {
         return Consumer { filePath ->
-            Timber.d("cloud-pull videoDownloadConsumer progress $filePath")
+            wv_cloud_video_pull.loadUrl("")
 
             val bundle = Bundle()
             bundle.putString(VoizyApp.KEY_DATA, filePath)
@@ -114,6 +118,13 @@ class CloudVideoPullFragment : BaseFragment() {
                 )
                 .addToBackStack(AudioClipFragment.TAG)
                 .commit()
+        }
+    }
+
+    private fun downloadErrorConsumer(): Consumer<String> {
+        return Consumer {
+            showLoadingLayout(false)
+            Snackbar.make(view!!, it, Snackbar.LENGTH_SHORT).show()
         }
     }
 

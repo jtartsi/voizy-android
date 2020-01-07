@@ -28,4 +28,6 @@
     <string name="audio_start_pos">"Start position: "</string>
     <string name="hint_insert_url">"Insert video url"</string>
     <string name="downloading_percentage">"Downloading %d"</string>
+    <string name="error_downloading_link">"Cannot download content from this link"</string>
+    <string name="error_downloading_duration_over_limit">"Unable download content, maximum limit is 15 minutes"</string>
 </resources>
