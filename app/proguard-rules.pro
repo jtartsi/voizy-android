@@ -45,8 +45,18 @@
 # Don't warn about those in case this app is linking against an older
 # platform version.  We know about them, and they are safe.
 -dontwarn android.support.**
--dontwarn com.fasterxml.jackson.**
 
 -keepnames public interface com.uber.autodispose.lifecycle.CorrespondingEventsFunction { *; }
 
 -keep class com.voizy.android.middleware.firebase.models.** { *; }
+
+# Proguard configuration for Jackson 2.x (fasterxml package instead of codehaus package)
+-keep class com.fasterxml.jackson.databind.ObjectMapper {
+    public <methods>;
+    protected <methods>;
+}
+-keep class com.fasterxml.jackson.databind.ObjectWriter {
+    public ** writeValueAsString(**);
+}
+-keepnames class com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
