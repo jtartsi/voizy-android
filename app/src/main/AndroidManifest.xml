@@ -6,10 +6,6 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <meta-data
-        android:name="firebase_analytics_collection_deactivated"
-        android:value="true" />
-
     <application
         android:name=".VoizyApp"
         android:allowBackup="true"
