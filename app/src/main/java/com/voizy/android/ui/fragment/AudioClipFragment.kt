@@ -191,11 +191,9 @@ class AudioClipFragment : BaseFragment() {
         btn_audio_clip_rwd.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    Timber.d("winding action_down")
                     longPressWind(-50)
                 }
                 MotionEvent.ACTION_UP -> {
-                    Timber.d("winding action_up")
                     longPressWindHandler.removeCallbacksAndMessages(null)
                 }
             }
@@ -212,11 +210,9 @@ class AudioClipFragment : BaseFragment() {
         btn_audio_clip_ffwd.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    Timber.d("winding action_down")
                     longPressWind(50)
                 }
                 MotionEvent.ACTION_UP -> {
-                    Timber.d("winding action_up")
                     longPressWindHandler.removeCallbacksAndMessages(null)
                 }
             }
@@ -225,9 +221,7 @@ class AudioClipFragment : BaseFragment() {
     }
 
     private fun longPressWind(delta: Int) {
-        Timber.d("winding longPressWind delta $delta")
         longPressWindHandler.postDelayed({
-            Timber.d("winding longPressWind postDelayed delta $delta")
             sb_audio_clip_position.progress = sb_audio_clip_position.progress + delta
             longPressWind((delta * 1.1).toInt())
         }, 200)
