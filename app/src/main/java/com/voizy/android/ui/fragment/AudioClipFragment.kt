@@ -61,6 +61,13 @@ class AudioClipFragment : BaseFragment() {
             .subscribe()
     }
 
+    private fun replay() {
+        viewModel.stopPlayback()
+        val startPos = sb_audio_clip_position.progress
+        val endPos = sb_audio_clip_position.progress + sb_audio_clip_duration.progress
+        viewModel.togglePlay(startPos, endPos)
+    }
+
     private fun initFileImport() {
         Observable
             .defer {
@@ -177,6 +184,8 @@ class AudioClipFragment : BaseFragment() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Timber.d("audio-editor onStopTrackingTouch()")
+                replay()
             }
         })
         updateStartPosSecondaryProgress()
@@ -194,6 +203,7 @@ class AudioClipFragment : BaseFragment() {
                     longPressWind(-50)
                 }
                 MotionEvent.ACTION_UP -> {
+                    replay()
                     longPressWindHandler.removeCallbacksAndMessages(null)
                 }
             }
@@ -213,6 +223,7 @@ class AudioClipFragment : BaseFragment() {
                     longPressWind(50)
                 }
                 MotionEvent.ACTION_UP -> {
+                    replay()
                     longPressWindHandler.removeCallbacksAndMessages(null)
                 }
             }
