@@ -15,7 +15,7 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 
-class CloudVideoPullViewModel(
+class YoutubeDownloadViewModel(
     private val context: Context,
     private val youtubeDL: YoutubeDL,
     private val fileManager: LocalFileManager
@@ -31,7 +31,7 @@ class CloudVideoPullViewModel(
     val downloadErrors = errorQueue as Observable<String>
 
     companion object {
-        private val TAG = CloudVideoPullViewModel::class.java.simpleName
+        private val TAG = YoutubeDownloadViewModel::class.java.simpleName
         private const val DOWNLOAD_DURATION_LIMIT = 900
     }
 
@@ -47,23 +47,27 @@ class CloudVideoPullViewModel(
         cancelEvents.onNext(false)
         return Observable
             .create<String> { emitter ->
-                fileManager.deleteFile(fileManager.getImportFilePath())
-                val downloadFile = File(fileManager.getImportFilePath())
+                try {
+                    fileManager.deleteFile(fileManager.getImportFilePath())
+                    val downloadFile = File(fileManager.getImportFilePath())
 
-                val request = YoutubeDLRequest(url)
-                request.setOption("-o", downloadFile.absolutePath)
-                request.setOption("-f", "bestaudio")
+                    val request = YoutubeDLRequest(url)
+                    request.setOption("-o", downloadFile.absolutePath)
+                    request.setOption("-f", "bestaudio")
 
-                val videoInfo = youtubeDL.getInfo(url)
-                if (videoInfo.duration > DOWNLOAD_DURATION_LIMIT) {
-                    throw DownloadDurationOverLimit("Download duration over the limit of 15 minutes")
-                }
-
-                youtubeDL.execute(request) { progress, etaInSeconds ->
-                    if (progress == 100.toFloat()) {
-                        emitter.onNext(downloadFile.absolutePath)
-                        emitter.onComplete()
+                    val videoInfo = youtubeDL.getInfo(url)
+                    if (videoInfo.duration > DOWNLOAD_DURATION_LIMIT) {
+                        throw DownloadDurationOverLimit("Download duration over the limit of 15 minutes")
                     }
+
+                    youtubeDL.execute(request) { progress, etaInSeconds ->
+                        if (progress == 100.toFloat()) {
+                            emitter.onNext(downloadFile.absolutePath)
+                            emitter.onComplete()
+                        }
+                    }
+                } catch (exception: InterruptedException) {
+                    Timber.e(exception, "YoutubeDL process interrupted")
                 }
             }
             .onErrorResumeNext(errorHandler())

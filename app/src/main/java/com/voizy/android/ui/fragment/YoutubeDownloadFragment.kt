@@ -12,18 +12,18 @@ import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.ui.widget.VoizyWebViewClient
 import com.voizy.android.utils.getScopeProvider
-import com.voizy.android.viewmodels.CloudVideoPullViewModel
+import com.voizy.android.viewmodels.YoutubeDownloadViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
 import org.koin.android.ext.android.inject
 
-class CloudVideoPullFragment : BaseFragment() {
+class YoutubeDownloadFragment : BaseFragment() {
 
-    private val viewModel: CloudVideoPullViewModel by inject()
+    private val viewModel: YoutubeDownloadViewModel by inject()
 
     companion object {
-        val TAG = CloudVideoPullFragment::class.java.simpleName
+        val TAG = YoutubeDownloadFragment::class.java.simpleName
     }
 
     override fun getFragmentTag(): String {
