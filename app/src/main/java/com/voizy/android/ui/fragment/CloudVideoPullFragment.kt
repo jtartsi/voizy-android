@@ -54,7 +54,6 @@ class CloudVideoPullFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         initWebView()
-        initShortcutButtons()
         initVideoDownload()
     }
 
@@ -67,19 +66,7 @@ class CloudVideoPullFragment : BaseFragment() {
             }
         }
         wv_cloud_video_pull.webViewClient = webViewClient
-        wv_cloud_video_pull.loadUrl("https://google.com")
-    }
-
-    private fun initShortcutButtons() {
-        btn_cloud_video_pull_home.setOnClickListener {
-            wv_cloud_video_pull.loadUrl("https://google.com")
-        }
-        btn_cloud_video_pull_soundcloud.setOnClickListener {
-            wv_cloud_video_pull.loadUrl("https://soundcloud.com")
-        }
-        btn_cloud_video_pull_youtube.setOnClickListener {
-            wv_cloud_video_pull.loadUrl("https://youtube.com")
-        }
+        wv_cloud_video_pull.loadUrl("https://youtube.com")
     }
 
     private fun initVideoDownload() {
@@ -147,8 +134,5 @@ class CloudVideoPullFragment : BaseFragment() {
         wv_cloud_video_pull.isEnabled = enabled
         et_cloud_video_pull_url.isEnabled = enabled
         btn_cloud_video_pull_next.isClickable = enabled
-        btn_cloud_video_pull_home.isClickable = enabled
-        btn_cloud_video_pull_youtube.isClickable = enabled
-        btn_cloud_video_pull_soundcloud.isClickable = enabled
     }
 }

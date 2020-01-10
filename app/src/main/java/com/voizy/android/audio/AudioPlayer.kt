@@ -4,6 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.util.Timer
 import java.util.TimerTask
 
@@ -24,7 +25,9 @@ class AudioPlayer {
         startPos: Int = 0,
         endPos: Int = 0
     ): Observable<PlaybackInfo> {
+        Timber.d("replay-iss togglePlay()")
         return Observable.defer {
+            Timber.d("replay-iss togglePlay() defer")
             val playbackInfo: PlaybackInfo = if (isPlaying && currentTrackPath == path) {
                 val audioLength = stopPlayback()
                 PlaybackInfo(PlaybackEvent.STOP, audioLength)
@@ -38,7 +41,9 @@ class AudioPlayer {
     }
 
     fun stop(): Observable<Int> {
+        Timber.d("replay-iss stop()")
         return Observable.defer {
+            Timber.d("replay-iss stop() defer")
             val durationInMillis = stopPlayback()
             val playbackInfo = PlaybackInfo(PlaybackEvent.STOP, durationInMillis)
             playbackEvents.onNext(playbackInfo)
@@ -51,6 +56,7 @@ class AudioPlayer {
         startPos: Int = 0,
         endPos: Int = 0
     ): Int {
+        Timber.d("replay-iss startPlayback()")
         currentTrackPath = filePath
 
         var durationInMillis: Int = -1
@@ -63,6 +69,7 @@ class AudioPlayer {
         mediaPlayer = MediaPlayer()
 
         mediaPlayer?.apply {
+            Timber.d("replay-iss startPlayback() apply()")
             setDataSource(filePath)
             setAudioAttributes(audioAttributes)
 
@@ -83,11 +90,13 @@ class AudioPlayer {
 
             prepare()
             durationInMillis = duration
+            Timber.d("replay-iss startPlayback() apply() -done")
         }
         return durationInMillis
     }
 
     fun stopPlayback(): Int {
+        Timber.d("replay-iss stopPlayback()")
         mediaPlayer?.apply {
             onStopTimer.cancel()
             playbackEvents.onNext(PlaybackInfo(PlaybackEvent.STOP, duration))
@@ -95,6 +104,7 @@ class AudioPlayer {
             release()
             mediaPlayer = null
             currentTrackPath = ""
+            Timber.d("replay-iss stopPlayback() apply done")
         }
         return 0
     }

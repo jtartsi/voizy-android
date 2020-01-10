@@ -1,7 +1,9 @@
 package com.voizy.android.ui.fragment
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -25,6 +27,7 @@ import java.text.SimpleDateFormat
 class AudioClipFragment : BaseFragment() {
 
     private val viewModel: AudioClipViewModel by inject()
+    private val longPressWindHandler = Handler()
 
     companion object {
         public val TAG = AudioClipFragment::class.java.simpleName
@@ -54,6 +57,16 @@ class AudioClipFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         viewModel.stopPlayback()
+            .autoDisposable(getScopeProvider())
+            .subscribe()
+    }
+
+    private fun replay() {
+        val startPos = sb_audio_clip_position.progress
+        val endPos = sb_audio_clip_position.progress + sb_audio_clip_duration.progress
+
+        viewModel.stopPlayback()
+            .flatMap { viewModel.togglePlay(startPos, endPos) }
             .autoDisposable(getScopeProvider())
             .subscribe()
     }
@@ -174,6 +187,8 @@ class AudioClipFragment : BaseFragment() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Timber.d("audio-editor onStopTrackingTouch()")
+                replay()
             }
         })
         updateStartPosSecondaryProgress()
@@ -184,6 +199,19 @@ class AudioClipFragment : BaseFragment() {
             sb_audio_clip_position.progress = sb_audio_clip_position.progress - MOVE_ON_BUTTON_MS
             updateDurationPosition(sb_audio_clip_duration.progress)
         }
+
+        btn_audio_clip_rwd.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    longPressWind(-50)
+                }
+                MotionEvent.ACTION_UP -> {
+                    replay()
+                    longPressWindHandler.removeCallbacksAndMessages(null)
+                }
+            }
+            false
+        }
     }
 
     private fun initMoveStartPosForward() {
@@ -191,6 +219,26 @@ class AudioClipFragment : BaseFragment() {
             sb_audio_clip_position.progress = sb_audio_clip_position.progress + MOVE_ON_BUTTON_MS
             updateDurationPosition(sb_audio_clip_duration.progress)
         }
+
+        btn_audio_clip_ffwd.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    longPressWind(50)
+                }
+                MotionEvent.ACTION_UP -> {
+                    replay()
+                    longPressWindHandler.removeCallbacksAndMessages(null)
+                }
+            }
+            false
+        }
+    }
+
+    private fun longPressWind(delta: Int) {
+        longPressWindHandler.postDelayed({
+            sb_audio_clip_position.progress = sb_audio_clip_position.progress + delta
+            longPressWind((delta * 1.1).toInt())
+        }, 200)
     }
 
     private fun updateDurationPosition(durationPos: Int) {
