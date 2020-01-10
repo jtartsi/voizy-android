@@ -69,7 +69,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Projects/voizy/assets/res/drawable-xxxhdpi/round_add_black_48.png" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/launcher-icon_3@2x.png" />
                                       <entry key="outputName" value="plus" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="fe9100" />
@@ -111,6 +111,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="scalingPercent" value="76" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -143,7 +144,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="foregroundAssetType" value="CLIP_ART" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Downloads/launcher-icon_3@2x.png" />
                                       <entry key="outputName" value="voizy_launcher" />
                                     </map>
                                   </option>
@@ -219,11 +220,6 @@
                                 </PersistentState>
                               </value>
                             </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>
