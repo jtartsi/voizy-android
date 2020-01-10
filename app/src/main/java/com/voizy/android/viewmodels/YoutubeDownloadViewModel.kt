@@ -47,23 +47,27 @@ class YoutubeDownloadViewModel(
         cancelEvents.onNext(false)
         return Observable
             .create<String> { emitter ->
-                fileManager.deleteFile(fileManager.getImportFilePath())
-                val downloadFile = File(fileManager.getImportFilePath())
+                try {
+                    fileManager.deleteFile(fileManager.getImportFilePath())
+                    val downloadFile = File(fileManager.getImportFilePath())
 
-                val request = YoutubeDLRequest(url)
-                request.setOption("-o", downloadFile.absolutePath)
-                request.setOption("-f", "bestaudio")
+                    val request = YoutubeDLRequest(url)
+                    request.setOption("-o", downloadFile.absolutePath)
+                    request.setOption("-f", "bestaudio")
 
-                val videoInfo = youtubeDL.getInfo(url)
-                if (videoInfo.duration > DOWNLOAD_DURATION_LIMIT) {
-                    throw DownloadDurationOverLimit("Download duration over the limit of 15 minutes")
-                }
-
-                youtubeDL.execute(request) { progress, etaInSeconds ->
-                    if (progress == 100.toFloat()) {
-                        emitter.onNext(downloadFile.absolutePath)
-                        emitter.onComplete()
+                    val videoInfo = youtubeDL.getInfo(url)
+                    if (videoInfo.duration > DOWNLOAD_DURATION_LIMIT) {
+                        throw DownloadDurationOverLimit("Download duration over the limit of 15 minutes")
                     }
+
+                    youtubeDL.execute(request) { progress, etaInSeconds ->
+                        if (progress == 100.toFloat()) {
+                            emitter.onNext(downloadFile.absolutePath)
+                            emitter.onComplete()
+                        }
+                    }
+                } catch (exception: InterruptedException) {
+                    Timber.e(exception, "YoutubeDL process interrupted")
                 }
             }
             .onErrorResumeNext(errorHandler())
