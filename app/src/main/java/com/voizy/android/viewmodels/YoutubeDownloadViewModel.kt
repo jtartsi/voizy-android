@@ -15,7 +15,7 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 
-class CloudVideoPullViewModel(
+class YoutubeDownloadViewModel(
     private val context: Context,
     private val youtubeDL: YoutubeDL,
     private val fileManager: LocalFileManager
@@ -31,7 +31,7 @@ class CloudVideoPullViewModel(
     val downloadErrors = errorQueue as Observable<String>
 
     companion object {
-        private val TAG = CloudVideoPullViewModel::class.java.simpleName
+        private val TAG = YoutubeDownloadViewModel::class.java.simpleName
         private const val DOWNLOAD_DURATION_LIMIT = 900
     }
 

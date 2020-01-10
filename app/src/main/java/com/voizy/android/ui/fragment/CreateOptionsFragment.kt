@@ -153,10 +153,10 @@ class CreateOptionsFragment : Fragment() {
             .hide(this)
             .replace(
                 R.id.fragment_container,
-                CloudVideoPullFragment(),
-                CloudVideoPullFragment.TAG
+                YoutubeDownloadFragment(),
+                YoutubeDownloadFragment.TAG
             )
-            .addToBackStack(CloudVideoPullFragment.TAG)
+            .addToBackStack(YoutubeDownloadFragment.TAG)
             .commit()
         createOptions.state = CreateOptionsWidget.State.CLOSED
     }
