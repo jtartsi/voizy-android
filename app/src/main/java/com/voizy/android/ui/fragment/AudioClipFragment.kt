@@ -62,10 +62,13 @@ class AudioClipFragment : BaseFragment() {
     }
 
     private fun replay() {
-        viewModel.stopPlayback()
         val startPos = sb_audio_clip_position.progress
         val endPos = sb_audio_clip_position.progress + sb_audio_clip_duration.progress
-        viewModel.togglePlay(startPos, endPos)
+
+        viewModel.stopPlayback()
+            .flatMap { viewModel.togglePlay(startPos, endPos) }
+            .autoDisposable(getScopeProvider())
+            .subscribe()
     }
 
     private fun initFileImport() {
