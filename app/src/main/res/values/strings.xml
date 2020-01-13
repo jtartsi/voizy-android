@@ -30,4 +30,7 @@
     <string name="downloading_percentage">"Downloading %d"</string>
     <string name="error_downloading_link">"Cannot download content from this link"</string>
     <string name="error_downloading_duration_over_limit">"Unable download content, maximum limit is 15 minutes"</string>
+    <string name="agree_on_terms">"Agree on terms shown above"</string>
+    <string name="agree_on_terms_by_ticking">"Agree on terms by ticking the checkbox"</string>
+    <string name="confirm">"Confirm"</string>
 </resources>

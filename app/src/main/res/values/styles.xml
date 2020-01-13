@@ -19,6 +19,7 @@
         <item name="android:background">@drawable/voizy_button_ripples</item>
         <item name="android:textColor">@color/voizy_orange</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:padding">15dp</item>
     </style>
 
     <style name="VoizyTheme.Launcher" parent="VoizyTheme">
