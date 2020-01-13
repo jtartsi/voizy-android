@@ -35,7 +35,7 @@
         app:layout_constraintStart_toEndOf="@+id/cb_user_terms_agree"
         app:layout_constraintTop_toTopOf="@+id/cb_user_terms_agree"
         android:textSize="18sp"
-        tools:text="Agree on terms shown above" />
+        android:text="@string/agree_on_terms" />
 
     <Button
         android:id="@+id/btn_user_agreement_confirm"
@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="AGREE ON TERMS" />
+        android:text="@string/confirm" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
