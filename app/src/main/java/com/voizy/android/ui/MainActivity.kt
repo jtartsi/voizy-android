@@ -12,6 +12,7 @@ import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.ui.fragment.AudioClipFragment
 import com.voizy.android.ui.fragment.LibraryFragment
+import com.voizy.android.ui.fragment.UserTermsFragment
 import com.voizy.android.utils.PreferencesStore
 import com.voizy.android.viewmodels.MainActivityViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,13 +34,17 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
-            .commit()
+        if (!prefsStore.userTermsAgreed.value) {
+            showUserTermsAgreement()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
+                .commit()
 
-        if (intent.action == Intent.ACTION_SEND) {
-            val uri = intent.clipData?.getItemAt(0)?.uri
-            saveImportedFile(uri)
+            if (intent.action == Intent.ACTION_SEND) {
+                val uri = intent.clipData?.getItemAt(0)?.uri
+                saveImportedFile(uri)
+            }
         }
     }
 
@@ -89,15 +94,19 @@ class MainActivity : BaseActivity() {
 
             supportFragmentManager.beginTransaction()
                 .hide(createOptionsFragment!!)
-                .replace(R.id.fragment_container, audioClipFragment)
+                .replace(R.id.fragment_container, audioClipFragment, AudioClipFragment.TAG)
                 .addToBackStack(AudioClipFragment.TAG)
                 .commit()
         }
     }
 
-    private fun checkUserAgreement() {
-        if (!prefsStore.userTermsAgreed.value) {
-            // TODO user-terms launch user terms fragment
-        }
+    private fun showUserTermsAgreement() {
+        val createOptionsFragment =
+            supportFragmentManager.findFragmentById(R.id.record_button_fragment)
+
+        supportFragmentManager.beginTransaction()
+            .hide(createOptionsFragment!!)
+            .replace(R.id.fragment_container, UserTermsFragment(), UserTermsFragment.TAG)
+            .commit()
     }
 }
