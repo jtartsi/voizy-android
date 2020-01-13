@@ -12,6 +12,7 @@ import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.ui.fragment.AudioClipFragment
 import com.voizy.android.ui.fragment.LibraryFragment
+import com.voizy.android.utils.PreferencesStore
 import com.voizy.android.viewmodels.MainActivityViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
@@ -21,6 +22,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : BaseActivity() {
 
     private val viewModel: MainActivityViewModel by inject()
+    private val prefsStore: PreferencesStore by inject()
 
     companion object {
         const val PICK_FILE_REQUEST_CODE = 100
@@ -90,6 +92,12 @@ class MainActivity : BaseActivity() {
                 .replace(R.id.fragment_container, audioClipFragment)
                 .addToBackStack(AudioClipFragment.TAG)
                 .commit()
+        }
+    }
+
+    private fun checkUserAgreement() {
+        if (!prefsStore.userTermsAgreed.value) {
+            // TODO user-terms launch user terms fragment
         }
     }
 }

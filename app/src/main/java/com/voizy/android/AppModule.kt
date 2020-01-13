@@ -14,6 +14,7 @@ import com.voizy.android.middleware.firebase.collections.VoizysCollection
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.ShareRepository
 import com.voizy.android.middleware.repositories.VoizyRepository
+import com.voizy.android.utils.PreferencesStore
 import com.voizy.android.utils.ShareManager
 import com.voizy.android.viewmodels.AudioClipViewModel
 import com.voizy.android.viewmodels.CreateOptionsViewModel
@@ -36,6 +37,7 @@ val appLogicsModule = module {
     single { AudioRecorder() }
     single { LocalFileManager(get()) }
     single { FFmpegManager() }
+    single { PreferencesStore(get()) }
 }
 
 val repositoryModule = module {
