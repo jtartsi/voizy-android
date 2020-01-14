@@ -12,7 +12,7 @@ class AudioRecorder {
     private var mediaRecorder: MediaRecorder? = null
 
     enum class RecordingEvent {
-        START_FAILED, STARTED, STOP, STOP_FAILED, STOP_UNDER_MINIMUM_TIME, FILE_RECEIVED
+        START_FAILED, STARTED, STOP, STOP_FAILED, STOP_UNDER_MINIMUM_TIME
     }
 
     private val fileReceivedEvents: PublishSubject<RecordingEvent> = PublishSubject.create()

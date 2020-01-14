@@ -47,6 +47,11 @@ class AudioClipFragment : BaseFragment() {
         return inflater.inflate(R.layout.audio_clip_fragment, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.logAudioEditorOpened()
+    }
+
     override fun onStart() {
         super.onStart()
         initFileImport()

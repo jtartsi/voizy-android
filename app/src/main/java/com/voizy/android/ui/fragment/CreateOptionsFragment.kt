@@ -85,10 +85,10 @@ class CreateOptionsFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (
-                    it.first == AudioRecorder.RecordingEvent.STOP ||
-                    it.first == AudioRecorder.RecordingEvent.FILE_RECEIVED &&
+                    it.first == AudioRecorder.RecordingEvent.STOP &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
+                    viewModel.logMicrophoneRecording()
                     fragmentManager!!.beginTransaction()
                         .hide(this)
                         .commit()
@@ -139,6 +139,7 @@ class CreateOptionsFragment : Fragment() {
     }
 
     private fun pickFile() {
+        viewModel.logFileImportSelected()
         val pickFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "*/*"
@@ -149,6 +150,7 @@ class CreateOptionsFragment : Fragment() {
     }
 
     private fun navigateToCloudPull() {
+        viewModel.logYoutubeDlSelected()
         fragmentManager!!.beginTransaction()
             .hide(this)
             .replace(

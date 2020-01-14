@@ -3,6 +3,7 @@ package com.voizy.android.viewmodels
 import android.content.Context
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.audio.AudioRecorder
+import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.local.LocalFileManager
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -10,7 +11,8 @@ import io.reactivex.schedulers.Schedulers
 
 class CreateOptionsViewModel(
     private val context: Context,
-    private val voizyRecorder: AudioRecorder
+    private val voizyRecorder: AudioRecorder,
+    private val firebaseAnalytics: VoizyFirebaseAnalytics
 ) : DisposingViewModel() {
 
     companion object {
@@ -35,5 +37,17 @@ class CreateOptionsViewModel(
 
     fun getRecordingEvents(): Observable<AudioRecorder.RecordingEvent> {
         return voizyRecorder.getRecordingEvents()
+    }
+
+    fun logMicrophoneRecording() {
+        firebaseAnalytics.logRecordMicrophone()
+    }
+
+    fun logYoutubeDlSelected() {
+        firebaseAnalytics.logYoutubeDLSelected()
+    }
+
+    fun logFileImportSelected() {
+        firebaseAnalytics.logFileImportSelected()
     }
 }

@@ -5,7 +5,10 @@ import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 
-class MainActivityViewModel(private val localFileManager: LocalFileManager) : DisposingViewModel() {
+class MainActivityViewModel(
+    private val localFileManager: LocalFileManager
+) :
+    DisposingViewModel() {
 
     companion object {
         private val TAG = MainActivityViewModel::class.java.simpleName
