@@ -101,14 +101,26 @@
 
         <ProgressBar
             android:id="@+id/pb_cloud_video_pull_loader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:progressDrawable="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.44" />
+
+        <TextView
+            android:id="@+id/tv_cloud_video_pull_dl_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/pb_cloud_video_pull_loader"
+            app:layout_constraintStart_toStartOf="@+id/pb_cloud_video_pull_loader"
+            app:layout_constraintTop_toBottomOf="@+id/pb_cloud_video_pull_loader"
+            android:textColor="@color/voizy_orange"
+            android:textSize="24sp"
+            tools:text="50%" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
