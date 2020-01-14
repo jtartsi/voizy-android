@@ -10,7 +10,6 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
         private const val SAVE_VOIZY_CANCEL = "save_voizy_cancel"
         private const val PLAY_VOIZY = "play_voizy"
         private const val SHARE_TO = "choose_share_location"
-        private const val OPEN_CREATE_OPTIONS = "open_create_options"
         private const val EDIT_SCREEN_OPEN = "edit_screen_open"
         private const val YOUTUBE_DL_SELECTED = "youtube_dl_selected"
         private const val FILE_IMPORT_SELECTED = "file_import_selected"
@@ -57,10 +56,6 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
         val params = Bundle()
         params.putString(FirebaseAnalytics.Param.SEARCH_TERM, searchTerm)
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, params)
-    }
-
-    fun logOpenCreateOptions() {
-        firebaseAnalytics.logEvent(OPEN_CREATE_OPTIONS, Bundle())
     }
 
     fun logEditScreenOpen() {
