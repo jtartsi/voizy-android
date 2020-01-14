@@ -21,7 +21,7 @@ class SaveVoizyViewModel(
     }
 
     fun saveVoizy(voizy: Voizy) {
-        voizyFirebaseAnalytics.logRecordingSave()
+        voizyFirebaseAnalytics.logSaveVoizy()
         voizyRepository.saveVoizy(voizy)
     }
 
