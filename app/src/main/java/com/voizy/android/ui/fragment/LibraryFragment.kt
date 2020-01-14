@@ -174,6 +174,10 @@ class LibraryFragment : BaseFragment() {
                 voizyRecyclerView.scrollToPosition(0)
                 voizyListAdapter.submitList(null)
                 viewModel.loadVoizys(searchText.toString())
+
+                val headlineVisiblity =
+                    if (searchText.isNullOrEmpty()) View.VISIBLE else View.GONE
+                tv_library_headline.visibility = headlineVisiblity
             }
         })
     }

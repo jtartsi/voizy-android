@@ -33,4 +33,5 @@
     <string name="agree_on_terms">"Agree on terms shown above"</string>
     <string name="agree_on_terms_by_ticking">"Agree on terms by ticking the checkbox"</string>
     <string name="confirm">"Confirm"</string>
+    <string name="trending">"Trending"</string>
 </resources>
