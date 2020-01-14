@@ -27,7 +27,6 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class LibraryFragment : BaseFragment() {
@@ -158,7 +157,6 @@ class LibraryFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("search-change initResultsState() $it")
                 if (it == NetworkState.LOADING) {
                     layout_no_results.visibility = View.GONE
                 } else {
@@ -176,12 +174,9 @@ class LibraryFragment : BaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                Timber.d("search-change initLibraryHeader().subscribe() ${it.first}, ${it.second}")
                 if (it.first.isNullOrEmpty() && it.second != NetworkState.LOADING) {
-                    Timber.d("search-change initLibraryHeader().subscribe() visible")
                     tv_library_headline.visibility = View.VISIBLE
                 } else {
-                    Timber.d("search-change initLibraryHeader().subscribe() gone")
                     tv_library_headline.visibility = View.GONE
                 }
             }
@@ -191,30 +186,10 @@ class LibraryFragment : BaseFragment() {
         searchTextChanges
             .autoDisposable(getScopeProvider())
             .subscribe { searchText ->
-                Timber.d("search-change initSearch().subscribe() $searchText")
                 voizyRecyclerView.scrollToPosition(0)
                 voizyListAdapter.submitList(null)
                 viewModel.loadVoizys(searchText.toString())
             }
-        // et_search.addTextChangedListener(object : TextWatcher {
-        //     override fun afterTextChanged(s: Editable?) {
-        //     }
-        //
-        //     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        //     }
-        //
-        //     override fun onTextChanged(
-        //         searchText: CharSequence?,
-        //         start: Int,
-        //         before: Int,
-        //         count: Int
-        //     ) {
-        //         voizyRecyclerView.scrollToPosition(0)
-        //         voizyListAdapter.submitList(null)
-        //         viewModel.loadVoizys(searchText.toString())
-        //
-        //     }
-        // })
     }
 
     private fun initCopyToClipBoard() {
