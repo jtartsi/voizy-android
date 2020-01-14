@@ -147,7 +147,7 @@ class SaveVoizyFragment : BaseFragment() {
 
     private fun backPressConsumer(): Consumer<Timed<String>> {
         return Consumer {
-            voizyFirebaseAnalytics.logRecordingCancel()
+            voizyFirebaseAnalytics.logSaveVoizyCancel()
             fragmentManager!!.popBackStackImmediate(
                 RecordingFragment.TAG,
                 FragmentManager.POP_BACK_STACK_INCLUSIVE

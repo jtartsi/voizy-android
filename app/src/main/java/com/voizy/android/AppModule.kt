@@ -56,7 +56,7 @@ val repositoryModule = module {
 val viewModels = module {
     viewModel { MainActivityViewModel(get()) }
     viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
-    viewModel { CreateOptionsViewModel(get(), get()) }
+    viewModel { CreateOptionsViewModel(get(), get(), get()) }
     viewModel { RecordingViewModel(get()) }
     viewModel { YoutubeDownloadViewModel(get(), get(), get()) }
     viewModel { AudioClipViewModel(get(), get(), get(), get()) }

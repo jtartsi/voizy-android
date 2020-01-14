@@ -3,17 +3,17 @@ package com.voizy.android.viewmodels
 import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.FFmpegManager
 import com.voizy.android.audio.PlaybackInfo
+import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.local.LocalFileManager
-import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.ui.model.ImportedData
 import com.voizy.android.utils.withErrorHandling
 import io.reactivex.Observable
 
 class AudioClipViewModel(
     private val voizyPlayer: AudioPlayer,
-    private val voizyRepository: VoizyRepository,
     private val ffmpegManager: FFmpegManager,
-    private val localFileManager: LocalFileManager
+    private val localFileManager: LocalFileManager,
+    private val firebaseAnalytics: VoizyFirebaseAnalytics
 ) : DisposingViewModel() {
 
     val playbackEvents: Observable<PlaybackInfo>
@@ -56,5 +56,9 @@ class AudioClipViewModel(
                     startPosInMs, endPosInMs
                 )
             }.withErrorHandling(TAG, "Failed to clip received file")
+    }
+
+    fun logAudioEditorOpened() {
+        firebaseAnalytics.logEditScreenOpen()
     }
 }

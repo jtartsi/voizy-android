@@ -2,14 +2,13 @@ package com.voizy.android.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.PlaybackEvent
@@ -19,12 +18,16 @@ import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.getScopeProvider
+import com.voizy.android.utils.toPair
 import com.voizy.android.viewmodels.LibraryFragmentViewModel
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
+import java.util.concurrent.TimeUnit
 
 class LibraryFragment : BaseFragment() {
 
@@ -40,6 +43,7 @@ class LibraryFragment : BaseFragment() {
     private lateinit var voizyListAdapter: VoizyListAdapter
     private val shareRequests = PublishSubject.create<Voizy>()
     private val clipBoardRequests = PublishSubject.create<Voizy>()
+    private lateinit var searchTextChanges: Observable<CharSequence>
 
     companion object {
         val TAG = LibraryFragment::class.java.simpleName
@@ -61,6 +65,10 @@ class LibraryFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         voizyRecyclerView = view.findViewById(R.id.rv_voizy_list)
+        searchTextChanges = RxTextView.textChanges(et_search)
+            .toFlowable(BackpressureStrategy.LATEST)
+            .toObservable()
+            .share()
     }
 
     override fun onStart() {
@@ -69,6 +77,7 @@ class LibraryFragment : BaseFragment() {
         initLoader()
         initVoizyListing()
         initSearch()
+        initLibraryHeader()
         initShare()
         initCopyToClipBoard()
         initPrivacyPolicy()
@@ -157,29 +166,30 @@ class LibraryFragment : BaseFragment() {
             }
     }
 
+    private fun initLibraryHeader() {
+        Observable.combineLatest(
+            searchTextChanges.delay(1, TimeUnit.SECONDS),
+            viewModel.initialLoading, toPair()
+        )
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                if (it.first.isNullOrEmpty() && it.second != NetworkState.LOADING) {
+                    tv_library_headline.visibility = View.VISIBLE
+                } else {
+                    tv_library_headline.visibility = View.GONE
+                }
+            }
+    }
+
     private fun initSearch() {
-        et_search.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(
-                searchText: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
+        searchTextChanges
+            .autoDisposable(getScopeProvider())
+            .subscribe { searchText ->
                 voizyRecyclerView.scrollToPosition(0)
                 voizyListAdapter.submitList(null)
                 viewModel.loadVoizys(searchText.toString())
-
-                val headlineVisiblity =
-                    if (searchText.isNullOrEmpty()) View.VISIBLE else View.GONE
-                tv_library_headline.visibility = headlineVisiblity
             }
-        })
     }
 
     private fun initCopyToClipBoard() {
