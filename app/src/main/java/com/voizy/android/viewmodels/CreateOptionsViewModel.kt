@@ -38,7 +38,7 @@ class CreateOptionsViewModel(
     fun getRecordingEvents(): Observable<AudioRecorder.RecordingEvent> {
         return voizyRecorder.getRecordingEvents()
     }
-    
+
     fun logMicrophoneRecording() {
         firebaseAnalytics.logRecordMicrophone()
     }
