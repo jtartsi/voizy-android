@@ -38,7 +38,7 @@ class LibraryFragmentViewModel(
 
     private val voizyResults = searchKeyword
         .debounce(500, TimeUnit.MILLISECONDS)
-        .doOnNext { firebaseAnalytics.logSearch(it) }
+        .doOnNext { logSearchEvent(it) }
         .map { voizyRepository.voizys(it) }
         .share()
 
@@ -111,6 +111,12 @@ class LibraryFragmentViewModel(
             ) {
                 firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
             }
+        }
+    }
+
+    private fun logSearchEvent(searchKeyword: String) {
+        if (searchKeyword.isNullOrEmpty()) {
+            firebaseAnalytics.logSearch(searchKeyword)
         }
     }
 }
