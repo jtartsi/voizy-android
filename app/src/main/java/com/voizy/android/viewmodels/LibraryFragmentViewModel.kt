@@ -20,7 +20,6 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 import java.util.concurrent.TimeUnit
-import java.util.function.Consumer
 
 class LibraryFragmentViewModel(
     private val voizyRepository: VoizyRepository,
@@ -38,7 +37,7 @@ class LibraryFragmentViewModel(
 
     private val voizyResults = searchKeyword
         .debounce(500, TimeUnit.MILLISECONDS)
-        .doOnNext { logSearchEvent(it) }
+        .doOnNext { handleSearchAnalytics(it) }
         .map { voizyRepository.voizys(it) }
         .share()
 
@@ -69,10 +68,8 @@ class LibraryFragmentViewModel(
 
     fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
         return voizyRepository.getDownloadUrl(voizy.remoteUrl)
-            .flatMap {
-                voizyPlayer.togglePlay(it)
-            }
-            .doOnNext { handlePlayAnalytics(voizy) }
+            .flatMap { voizyPlayer.togglePlay(it) }
+            .doOnNext { handlePlayAnalytics(voizy, it) }
             .withErrorHandling(TAG, "Failed to toggle startPlayback Voizy ${voizy.name}")
     }
 
@@ -104,17 +101,15 @@ class LibraryFragmentViewModel(
             .withErrorHandling(TAG, "Failed to copy downloadVideo url")
     }
 
-    private fun handlePlayAnalytics(voizy: Voizy): Consumer<PlaybackInfo> {
-        return Consumer {
-            if (it.playbackEvent == PlaybackEvent.START ||
-                it.playbackEvent == PlaybackEvent.SWITCH
-            ) {
-                firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
-            }
+    private fun handlePlayAnalytics(voizy: Voizy, playbackInfo: PlaybackInfo) {
+        if (playbackInfo.playbackEvent == PlaybackEvent.START ||
+            playbackInfo.playbackEvent == PlaybackEvent.SWITCH
+        ) {
+            firebaseAnalytics.logPlayVoizy(voizy.id, voizy.name)
         }
     }
 
-    private fun logSearchEvent(searchKeyword: String) {
+    private fun handleSearchAnalytics(searchKeyword: String) {
         if (searchKeyword.isNullOrEmpty()) {
             firebaseAnalytics.logSearch(searchKeyword)
         }
