@@ -85,8 +85,7 @@ class CreateOptionsFragment : Fragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (
-                    it.first == AudioRecorder.RecordingEvent.STOP ||
-                    it.first == AudioRecorder.RecordingEvent.FILE_RECEIVED &&
+                    it.first == AudioRecorder.RecordingEvent.STOP &&
                     it.second.getFragmentTag() == RecordingFragment.TAG
                 ) {
                     fragmentManager!!.beginTransaction()
