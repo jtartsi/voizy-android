@@ -23,9 +23,11 @@ class YoutubeDownloadViewModel(
 
     private val cancelEvents = BehaviorSubject.create<Boolean>()
     private val downloadQueue = PublishSubject.create<String>()
-    val downloadEvents = downloadQueue
+    val downloadCompletedEvents = downloadQueue
         .observeOn(Schedulers.io())
         .flatMap { downloadVideo(it) }!!
+    private val downloadProgressSubject = PublishSubject.create<Float>()
+    val downloadProgressEvents: Observable<Float> = downloadProgressSubject
 
     private val errorQueue = PublishSubject.create<String>()
     val downloadErrors = errorQueue as Observable<String>
@@ -61,6 +63,7 @@ class YoutubeDownloadViewModel(
                     }
 
                     youtubeDL.execute(request) { progress, etaInSeconds ->
+                        downloadProgressSubject.onNext(progress)
                         if (progress == 100.toFloat()) {
                             emitter.onNext(downloadFile.absolutePath)
                             emitter.onComplete()

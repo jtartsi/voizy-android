@@ -75,7 +75,12 @@ class YoutubeDownloadFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe(downloadErrorConsumer())
 
-        viewModel.downloadEvents
+        viewModel.downloadProgressEvents
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { tv_cloud_video_pull_dl_percentage.text = it.toString().plus("%") }
+
+        viewModel.downloadCompletedEvents
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe(videoDownloadConsumer())
