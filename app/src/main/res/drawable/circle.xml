@@ -4,10 +4,10 @@
 
     <stroke
         android:width="15dp"
-        android:color="@color/voizy_orange_t50" />
+        android:color="@color/dark_transparent_overlay" />
 
     <size
-        android:width="75dp"
-        android:height="75dp" />
+        android:width="85dp"
+        android:height="85dp" />
 
 </shape>

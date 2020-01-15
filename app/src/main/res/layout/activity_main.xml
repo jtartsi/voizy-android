@@ -18,12 +18,12 @@
 
     </FrameLayout>
 
-    <fragment
-        android:id="@+id/record_button_fragment"
-        android:name="com.voizy.android.ui.fragment.CreateOptionsFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/record_button_fragment"-->
+    <!--        android:name="com.voizy.android.ui.fragment.CreateOptionsFragment"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

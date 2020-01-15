@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.voizy.android.R
 
 class CreateVoizyFragment : BaseFragment() {
 
@@ -20,6 +21,6 @@ class CreateVoizyFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.create_voizy_fragment, container, false)
     }
 }
