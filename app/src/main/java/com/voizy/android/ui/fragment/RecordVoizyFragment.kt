@@ -1,6 +1,7 @@
 package com.voizy.android.ui.fragment
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -34,6 +35,7 @@ class RecordVoizyFragment : BaseFragment() {
 
     private lateinit var recButtonEvents: Observable<MotionEvent>
     private lateinit var recStartEvents: Observable<MotionEvent>
+    private lateinit var recStopEvents: Observable<MotionEvent>
 
     companion object {
         val TAG = RecordVoizyFragment::class.java.simpleName
@@ -62,13 +64,21 @@ class RecordVoizyFragment : BaseFragment() {
 
         recStartEvents = recButtonEvents
             .filter { hasMicrophonePermission() }
+            .filter { it.action == MotionEvent.ACTION_DOWN }
+            .share()
+
+        recStopEvents = recButtonEvents
+            .filter { hasMicrophonePermission() }
+            .filter { it.action == MotionEvent.ACTION_UP }
+            .share()
     }
 
     override fun onStart() {
         super.onStart()
         initRequestMicrophonePermission()
         initRecording()
-        initRecTime()
+        initRecordingTime()
+        initRecDotAnimation()
         initNavigateToSaveFragment()
     }
 
@@ -88,37 +98,46 @@ class RecordVoizyFragment : BaseFragment() {
     private fun initRecording() {
         recStartEvents
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                when (it.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        startRecording()
-                        Timber.d("initRecording down")
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        stopRecording()
-                        Timber.d("initRecording up")
-                    }
-                }
-            }
+            .subscribe { viewModel.startRecording() }
+
+        recStopEvents
+            .autoDisposable(getScopeProvider())
+            .subscribe { viewModel.stopRecording() }
     }
 
-    private fun initRecTime() {
+    private fun initRecordingTime() {
         showTimeText(0)
         recStartEvents
-            .filter { it.action == MotionEvent.ACTION_DOWN }
-            // .debounce( 1000, TimeUnit.MILLISECONDS)
-            .doOnNext { Timber.d("initRecTime().doOnNext()") }
+            .doOnNext {
+                tv_recording_time.visibility = View.VISIBLE
+                stopTimer.postDelayed({
+                    // TODO voizy-create make this better
+                    viewModel.stopRecording()
+                    stopTimer.removeCallbacksAndMessages(null)
+                }, MAX_RECORDING_TIME_MS)
+            }
             .switchMap {
                 Observable.intervalRange(
-                    1L, 15, 1L, 1L,
-                    TimeUnit.SECONDS, AndroidSchedulers.mainThread()
+                    100L, 15000, 100L, 100L,
+                    TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()
                 )
             }
-            .doOnNext { Timber.d("initRecTime().doOnNext2()") }
+            .doOnNext { Timber.d("initRecordingTime().doOnNext2()") }
             .autoDisposable(getScopeProvider())
             .subscribe {
                 showTimeText(it.toInt())
             }
+
+        recStopEvents
+            .autoDisposable(getScopeProvider())
+            .subscribe { stopTimer.removeCallbacksAndMessages(null) }
+    }
+
+    private fun initRecDotAnimation() {
+        ValueAnimator()
+        iv_recording_indicator.animation
+
+        recStartEvents
     }
 
     private fun initNavigateToSaveFragment() {
@@ -145,17 +164,6 @@ class RecordVoizyFragment : BaseFragment() {
             }
     }
 
-    private fun startRecording() {
-        tv_recording_time.visibility = View.VISIBLE
-        stopTimer.postDelayed({ stopRecording() }, MAX_RECORDING_TIME_MS)
-        viewModel.startRecording()
-    }
-
-    private fun stopRecording() {
-        stopTimer.removeCallbacksAndMessages(null)
-        viewModel.stopRecording()
-    }
-
     private fun hasMicrophonePermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             context!!,
@@ -174,11 +182,19 @@ class RecordVoizyFragment : BaseFragment() {
             .commit()
     }
 
-    private fun showTimeText(timeInSeconds: Int) {
-        Timber.d("showTimeText() $timeInSeconds")
-        val inMillis = (timeInSeconds).toLong() * 1000
-        val dateFormatter = SimpleDateFormat("mm:ss")
-        val timeString = dateFormatter.format(Date(inMillis))
-        tv_recording_time.text = timeString.plus(" / 00:15")
+    private fun showTimeText(timeInMs: Int) {
+        Timber.d("showTimeText() $timeInMs")
+        val inMillis = (timeInMs).toLong()
+        val dateFormatter = SimpleDateFormat("s.S")
+        val timeString = dateFormatter.format(Date(inMillis)).plus("s")
+        tv_recording_time.text = timeString
     }
+
+    // private fun showTimeText(timeInSeconds: Int) {
+    //     Timber.d("showTimeText() $timeInSeconds")
+    //     val inMillis = (timeInSeconds).toLong() * 1000
+    //     val dateFormatter = SimpleDateFormat("mm:ss")
+    //     val timeString = dateFormatter.format(Date(inMillis))
+    //     tv_recording_time.text = timeString.plus(" / 00:15")
+    // }
 }
