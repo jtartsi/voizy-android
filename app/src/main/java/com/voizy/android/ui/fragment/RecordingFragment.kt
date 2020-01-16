@@ -91,7 +91,7 @@ class RecordingFragment : BaseFragment() {
         val inMillis = (timeInSeconds).toLong() * 1000
         val dateFormatter = SimpleDateFormat("mm:ss")
         val timeString = dateFormatter.format(Date(inMillis))
-        tv_recording_time.text = timeString.plus(" / 00:15")
+        tv_recording_time_old.text = timeString.plus(" / 00:15")
     }
 
     private fun navigateToSaveLayoutFragment() {

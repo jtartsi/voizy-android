@@ -22,7 +22,6 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Timed
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.recording_fragment.tv_recording_time
 import kotlinx.android.synthetic.main.save_voizy_fragment.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
