@@ -15,6 +15,7 @@
         app:layout_constraintEnd_toStartOf="@+id/tv_recording_time"
         app:layout_constraintTop_toTopOf="@+id/tv_recording_time"
         android:layout_marginEnd="20dp"
+        android:visibility="gone"
         android:src="@drawable/record_red_dot" />
 
     <TextView
@@ -61,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <!--    <ImageButton-->
     <!--        android:id="@+id/imageButton"-->

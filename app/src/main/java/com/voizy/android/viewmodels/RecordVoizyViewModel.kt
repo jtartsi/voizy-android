@@ -6,6 +6,7 @@ import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.local.LocalFileManager
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.atomic.AtomicBoolean
 
 class RecordVoizyViewModel(
     private val context: Context,
@@ -15,22 +16,26 @@ class RecordVoizyViewModel(
 
     val recordingEvents = voizyRecorder.getRecordingEvents()
 
+    val recording = AtomicBoolean()
+
     companion object {
         private val TAG = RecordVoizyViewModel::class.java.simpleName
     }
 
     init {
+        recording.set(false)
+
         recordingEvents
             .filter { it == AudioRecorder.RecordingEvent.STOP }
-            .subscribe {
-                firebaseAnalytics.logRecordMicrophone()
-            }
+            .subscribe { firebaseAnalytics.logRecordMicrophone() }
+            .autoDispose()
     }
 
     fun startRecording() {
         Observable
             .defer {
                 Observable.fromCallable {
+                    recording.set(true)
                     val filename = "${context.filesDir}/".plus(LocalFileManager.TMP_VOIZY_FILE_NAME)
                     voizyRecorder.startRecording(filename)
                 }
@@ -40,6 +45,7 @@ class RecordVoizyViewModel(
     }
 
     fun stopRecording() {
+        recording.set(false)
         voizyRecorder.stopRecording()
     }
 }
