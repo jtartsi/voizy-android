@@ -1,7 +1,6 @@
 package com.voizy.android.ui.fragment
 
 import android.Manifest
-import android.animation.ValueAnimator
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
@@ -106,6 +107,7 @@ class RecordVoizyFragment : BaseFragment() {
     }
 
     private fun initRecordingTime() {
+        val updatePeriodInMs = 100L
         showTimeText(0)
         recStartEvents
             .doOnNext {
@@ -116,16 +118,18 @@ class RecordVoizyFragment : BaseFragment() {
                     stopTimer.removeCallbacksAndMessages(null)
                 }, MAX_RECORDING_TIME_MS)
             }
+            .doOnNext { Timber.d("TimeText doOnNext()") }
             .switchMap {
                 Observable.intervalRange(
-                    100L, 15000, 100L, 100L,
+                    0L, 15000, 0L, updatePeriodInMs,
                     TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()
                 )
             }
-            .doOnNext { Timber.d("initRecordingTime().doOnNext2()") }
+            .map { it * updatePeriodInMs }
             .autoDisposable(getScopeProvider())
             .subscribe {
-                showTimeText(it.toInt())
+                Timber.d("TimeText value $it")
+                showTimeText(it)
             }
 
         recStopEvents
@@ -134,10 +138,19 @@ class RecordVoizyFragment : BaseFragment() {
     }
 
     private fun initRecDotAnimation() {
-        ValueAnimator()
-        iv_recording_indicator.animation
+        val blinkingAnimation = AlphaAnimation(1f, 0f)
+        blinkingAnimation.repeatMode = Animation.REVERSE
+        blinkingAnimation.repeatCount = Animation.INFINITE
+        blinkingAnimation.duration = 500
+        iv_recording_indicator.animation = blinkingAnimation
 
-        recStartEvents
+        recStartEvents.autoDisposable(getScopeProvider())
+            .subscribe {
+                blinkingAnimation.reset()
+                blinkingAnimation.start()
+            }
+        recStopEvents.autoDisposable(getScopeProvider())
+            .subscribe { blinkingAnimation.cancel() }
     }
 
     private fun initNavigateToSaveFragment() {
@@ -182,9 +195,9 @@ class RecordVoizyFragment : BaseFragment() {
             .commit()
     }
 
-    private fun showTimeText(timeInMs: Int) {
+    private fun showTimeText(timeInMs: Long) {
         Timber.d("showTimeText() $timeInMs")
-        val inMillis = (timeInMs).toLong()
+        val inMillis = (timeInMs)
         val dateFormatter = SimpleDateFormat("s.S")
         val timeString = dateFormatter.format(Date(inMillis)).plus("s")
         tv_recording_time.text = timeString
