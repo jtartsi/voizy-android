@@ -14,7 +14,8 @@ class RecordVoizyViewModel(
     private val firebaseAnalytics: VoizyFirebaseAnalytics
 ) : DisposingViewModel() {
 
-    val recordingEvents = voizyRecorder.getRecordingEvents()
+    val recordingEvents: Observable<AudioRecorder.RecordingEvent> =
+        voizyRecorder.getRecordingEvents().share()
 
     val recording = AtomicBoolean()
 
