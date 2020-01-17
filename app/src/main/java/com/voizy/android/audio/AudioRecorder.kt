@@ -15,8 +15,8 @@ class AudioRecorder {
         START_FAILED, STARTED, STOP, STOP_FAILED, STOP_UNDER_MINIMUM_TIME
     }
 
-    private val fileReceivedEvents: PublishSubject<RecordingEvent> = PublishSubject.create()
     private val recordingActionRequests: PublishSubject<String> = PublishSubject.create()
+    private val autoStopMaxReached: PublishSubject<RecordingEvent> = PublishSubject.create()
     private val recordingEventsStream: Observable<RecordingEvent> = recordingActionRequests
         .serialize()
         .switchMap { Observable.just(it) }
@@ -39,7 +39,7 @@ class AudioRecorder {
 
     fun getRecordingEvents(): Observable<RecordingEvent> {
         return recordingEventsStream
-            .mergeWith(fileReceivedEvents)
+            .mergeWith(autoStopMaxReached)
     }
 
     private fun record(fileName: String): Observable<RecordingEvent> {
@@ -53,14 +53,23 @@ class AudioRecorder {
                     setAudioSamplingRate(96000)
                     setAudioEncodingBitRate(128000)
                     setAudioChannels(2)
+                    setMaxDuration(MAX_RECORDING_TIME_MS.toInt())
 
                     prepare()
                     start()
                     recordStartTime = Date().time
+
+                    setOnInfoListener { mr, what, extra ->
+                        if (MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED == what) {
+                            autoStopMaxReached.onNext(RecordingEvent.STOP)
+                        }
+                    }
                 }
             }
         }
-            .map { RecordingEvent.STARTED }
+            .map {
+                RecordingEvent.STARTED
+            }
             .onErrorReturn { RecordingEvent.START_FAILED }
     }
 
@@ -97,5 +106,9 @@ class AudioRecorder {
     private fun isOverMinimumTime(): Boolean {
         val recordingLength = Date().time - recordStartTime
         return recordingLength > 1000
+    }
+
+    companion object {
+        const val MAX_RECORDING_TIME_MS = 15000L
     }
 }
