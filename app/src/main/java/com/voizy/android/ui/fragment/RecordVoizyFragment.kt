@@ -36,7 +36,6 @@ class RecordVoizyFragment : BaseFragment() {
 
     companion object {
         val TAG = RecordVoizyFragment::class.java.simpleName
-        private const val MAX_RECORDING_TIME_MS = 2000L
     }
 
     override fun getFragmentTag(): String {
@@ -77,7 +76,6 @@ class RecordVoizyFragment : BaseFragment() {
         initRecordingTime()
         initRecDotAnimation()
         initStopRecording()
-        // initAutoStop()
     }
 
     private fun initRequestMicrophonePermission() {
@@ -123,7 +121,7 @@ class RecordVoizyFragment : BaseFragment() {
     private fun timerObservable(): Observable<Long> {
         return Observable
             .intervalRange(
-                0L, MAX_RECORDING_TIME_MS, 0L, 100,
+                0L, AudioRecorder.MAX_RECORDING_TIME_MS, 0L, 100,
                 TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()
             )
             .takeWhile { viewModel.recording.get() }
