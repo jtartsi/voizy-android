@@ -1,6 +1,7 @@
 package com.voizy.android.ui.fragment
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.AudioRecorder
+import com.voizy.android.ui.MainActivity
+import com.voizy.android.utils.SupportedFileTypes
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.showTimeSecondsAndTenths
 import com.voizy.android.viewmodels.RecordVoizyViewModel
@@ -76,6 +79,8 @@ class RecordVoizyFragment : BaseFragment() {
         initRecordingTime()
         initRecDotAnimation()
         initStopRecording()
+        initOpenYoutubeDL()
+        initOpenFileImport()
     }
 
     private fun initRequestMicrophonePermission() {
@@ -191,5 +196,38 @@ class RecordVoizyFragment : BaseFragment() {
             )
             .addToBackStack(SaveVoizyFragment.TAG)
             .commit()
+    }
+
+    private fun initOpenFileImport() {
+        RxView.clicks(btn_open_file_import)
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                viewModel.logFileImportSelected()
+                val pickFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_MIME_TYPES, SupportedFileTypes.toArray())
+                }
+                activity!!.startActivityForResult(
+                    pickFileIntent,
+                    MainActivity.PICK_FILE_REQUEST_CODE
+                )
+            }
+    }
+
+    private fun initOpenYoutubeDL() {
+        RxView.clicks(btn_open_youtube_dl)
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                viewModel.logYoutubeDLSelected()
+                fragmentManager!!.beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        YoutubeDownloadFragment(),
+                        YoutubeDownloadFragment.TAG
+                    )
+                    .addToBackStack(YoutubeDownloadFragment.TAG)
+                    .commit()
+            }
     }
 }

@@ -49,4 +49,12 @@ class RecordVoizyViewModel(
         recording.set(false)
         voizyRecorder.stopRecording()
     }
+
+    fun logYoutubeDLSelected() {
+        firebaseAnalytics.logYoutubeDLSelected()
+    }
+
+    fun logFileImportSelected() {
+        firebaseAnalytics.logFileImportSelected()
+    }
 }
