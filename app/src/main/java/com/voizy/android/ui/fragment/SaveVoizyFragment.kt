@@ -147,8 +147,7 @@ class SaveVoizyFragment : BaseFragment() {
         return Consumer {
             voizyFirebaseAnalytics.logSaveVoizyCancel()
             fragmentManager!!.popBackStackImmediate(
-                RecordingFragment.TAG,
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
+                TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
             )
         }
     }
