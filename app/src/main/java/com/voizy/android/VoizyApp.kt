@@ -1,6 +1,7 @@
 package com.voizy.android
 
 import android.app.Application
+import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yausername.youtubedl_android.YoutubeDL
 import io.reactivex.Completable
@@ -24,6 +25,8 @@ class VoizyApp : Application() {
         val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
         firebaseAnalytics.setUserProperty("locale", Locale.getDefault().toString())
+
+        AppEventsLogger.newLogger(this).logEvent("APP_OPEN_TEST")
 
         initAndUpdateYoutubeDl()
 
