@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
@@ -83,7 +84,7 @@ class LibraryFragment : BaseFragment() {
         initPrivacyPolicy()
         initPlayback()
         initResultsState()
-        initShowCreateOptions()
+        initCreateButton()
     }
 
     override fun onStop() {
@@ -233,20 +234,18 @@ class LibraryFragment : BaseFragment() {
         }
     }
 
-    private fun initShowCreateOptions() {
-        fragmentManager!!.addOnBackStackChangedListener {
-            val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
-            if (topFragment != null &&
-                topFragment is BaseFragment &&
-                topFragment.tag == TAG
-            ) {
-                var createOptionsFragment =
-                    fragmentManager!!.findFragmentById(R.id.record_button_fragment)!!
-
+    private fun initCreateButton() {
+        RxView.clicks(fab_create_voizy)
+            .autoDisposable(getScopeProvider())
+            .subscribe {
                 fragmentManager!!.beginTransaction()
-                    .show(createOptionsFragment)
+                    .replace(
+                        R.id.fragment_container,
+                        RecordVoizyFragment(),
+                        RecordVoizyFragment.TAG
+                    )
+                    .addToBackStack(RecordVoizyFragment.TAG)
                     .commit()
             }
-        }
     }
 }

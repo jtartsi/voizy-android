@@ -21,7 +21,7 @@ class VoizyDetailsFragment : BaseFragment() {
     private val viewModel: VoizyDetailsViewModel by inject()
 
     companion object {
-        public val TAG = RecordingFragment::class.java.simpleName
+        val TAG = VoizyDetailsFragment::class.java.simpleName
     }
 
     override fun getFragmentTag(): String {
@@ -33,9 +33,7 @@ class VoizyDetailsFragment : BaseFragment() {
     }
 
     override fun onBackPressed() {
-        fragmentManager!!.popBackStack(
-            RecordingFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+        close()
     }
 
     override fun onCreateView(
@@ -101,20 +99,25 @@ class VoizyDetailsFragment : BaseFragment() {
             .switchMap { viewModel.deleteLocalFile() }
             .autoDisposable(getScopeProvider())
             .subscribe {
-                fragmentManager!!.popBackStack(
-                    TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
-                fragmentManager!!.popBackStack(
-                    RecordingFragment.TAG,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
-                fragmentManager!!.popBackStack(
-                    AudioClipFragment.TAG,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
-                fragmentManager!!.popBackStack(
-                    YoutubeDownloadFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
+                close()
             }
+    }
+
+    private fun close() {
+        fragmentManager!!.popBackStack(
+            TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+        fragmentManager!!.popBackStack(
+            SaveVoizyFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+        fragmentManager!!.popBackStack(
+            AudioClipFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+        fragmentManager!!.popBackStack(
+            YoutubeDownloadFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+        fragmentManager!!.popBackStack(
+            RecordVoizyFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
 }

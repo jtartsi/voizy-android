@@ -89,11 +89,7 @@ class MainActivity : BaseActivity() {
             val audioClipFragment = AudioClipFragment()
             audioClipFragment.arguments = bundle
 
-            val createOptionsFragment =
-                supportFragmentManager.findFragmentById(R.id.record_button_fragment)
-
             supportFragmentManager.beginTransaction()
-                .hide(createOptionsFragment!!)
                 .replace(R.id.fragment_container, audioClipFragment, AudioClipFragment.TAG)
                 .addToBackStack(AudioClipFragment.TAG)
                 .commit()
@@ -101,11 +97,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun showUserTermsAgreement() {
-        val createOptionsFragment =
-            supportFragmentManager.findFragmentById(R.id.record_button_fragment)
-
         supportFragmentManager.beginTransaction()
-            .hide(createOptionsFragment!!)
             .replace(R.id.fragment_container, UserTermsFragment(), UserTermsFragment.TAG)
             .commit()
     }
