@@ -110,7 +110,7 @@ class LibraryFragmentViewModel(
     }
 
     private fun handleSearchAnalytics(searchKeyword: String) {
-        if (searchKeyword.isNullOrEmpty()) {
+        if (!searchKeyword.isNullOrEmpty()) {
             firebaseAnalytics.logSearch(searchKeyword)
         }
     }
