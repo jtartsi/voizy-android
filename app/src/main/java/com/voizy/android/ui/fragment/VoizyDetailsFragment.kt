@@ -96,7 +96,6 @@ class VoizyDetailsFragment : BaseFragment() {
 
     private fun initFinish() {
         RxView.clicks(btn_details_finish)
-            .switchMap { viewModel.deleteLocalFile() }
             .autoDisposable(getScopeProvider())
             .subscribe {
                 close()
@@ -104,20 +103,26 @@ class VoizyDetailsFragment : BaseFragment() {
     }
 
     private fun close() {
-        fragmentManager!!.popBackStack(
-            TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-        fragmentManager!!.popBackStack(
-            SaveVoizyFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-        fragmentManager!!.popBackStack(
-            AudioClipFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-        fragmentManager!!.popBackStack(
-            YoutubeDownloadFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-        fragmentManager!!.popBackStack(
-            RecordVoizyFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+
+        viewModel.deleteLocalFile()
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                fragmentManager!!.popBackStack(
+                    TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+                fragmentManager!!.popBackStack(
+                    SaveVoizyFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+                fragmentManager!!.popBackStack(
+                    AudioClipFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+                fragmentManager!!.popBackStack(
+                    YoutubeDownloadFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+                fragmentManager!!.popBackStack(
+                    RecordVoizyFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+            }
     }
 }
