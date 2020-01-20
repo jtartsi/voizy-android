@@ -85,7 +85,6 @@ class LibraryFragment : BaseFragment() {
         initPlayback()
         initResultsState()
         initCreateButton()
-        // initShowCreateOptions()
     }
 
     override fun onStop() {
@@ -249,23 +248,4 @@ class LibraryFragment : BaseFragment() {
                     .commit()
             }
     }
-
-    // TODO create-voizy remove these
-    // private fun initShowCreateOptions() {
-    //     fragmentManager!!.addOnBackStackChangedListener {
-    //         val topFragment = fragmentManager!!.findFragmentById(R.id.fragment_container)
-    //         if (topFragment != null &&
-    //             topFragment is BaseFragment &&
-    //             topFragment.tag == TAG
-    //         ) {
-    //
-    //             var createOptionsFragment =
-    //                 fragmentManager!!.findFragmentById(R.id.record_button_fragment)!!
-    //
-    //             fragmentManager!!.beginTransaction()
-    //                 .show(createOptionsFragment)
-    //                 .commit()
-    //         }
-    //     }
-    // }
 }

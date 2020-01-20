@@ -41,15 +41,6 @@ class UserTermsFragment : BaseFragment() {
         btn_user_agreement_confirm.setOnClickListener {
             if (cb_user_terms_agree.isChecked) {
                 prefsStore.userTermsAgreed.value = true
-
-                // TODO remove this
-                // val createOptionsFragment =
-                //     fragmentManager!!.findFragmentById(R.id.record_button_fragment)
-                //
-                // fragmentManager!!.beginTransaction()
-                //     .show(createOptionsFragment!!)
-                //     .add(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
-                //     .commit()
             } else {
                 Snackbar.make(
                     view!!, getString(R.string.agree_on_terms_by_ticking), Snackbar.LENGTH_SHORT
