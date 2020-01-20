@@ -122,16 +122,16 @@
 
     </RelativeLayout>
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/test_button"
+        android:id="@+id/fab_create_voizy"
+        style="@style/VoizyFloatingButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:src="@drawable/round_add_black_48"
+        app:fabCustomSize="@dimen/fab_size_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="8dp"
-        android:visibility="gone"
-        android:src="@android:drawable/ic_input_add" />
+        app:maxImageSize="@dimen/fab_src_size_big"
+        android:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

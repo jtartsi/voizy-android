@@ -16,18 +16,16 @@ import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.widget.PlayPauseButton
 import com.voizy.android.utils.getScopeProvider
+import com.voizy.android.utils.showTimeSecondsAndTenths
 import com.voizy.android.viewmodels.SaveVoizyViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Timed
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.recording_fragment.tv_recording_time
 import kotlinx.android.synthetic.main.save_voizy_fragment.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -149,8 +147,7 @@ class SaveVoizyFragment : BaseFragment() {
         return Consumer {
             voizyFirebaseAnalytics.logSaveVoizyCancel()
             fragmentManager!!.popBackStackImmediate(
-                RecordingFragment.TAG,
-                FragmentManager.POP_BACK_STACK_INCLUSIVE
+                TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
             )
         }
     }
@@ -177,10 +174,6 @@ class SaveVoizyFragment : BaseFragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                val dateFormatter = SimpleDateFormat("mm:ss")
-                val timeString = dateFormatter.format(Date(it))
-                tv_recording_time.text = timeString.plus(" / 00:15")
-            }
+            .subscribe { tv_recording_time.showTimeSecondsAndTenths(it) }
     }
 }
