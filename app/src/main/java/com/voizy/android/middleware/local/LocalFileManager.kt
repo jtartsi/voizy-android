@@ -18,7 +18,7 @@ class LocalFileManager(private val context: Context) {
         private val TAG = LocalFileManager::class.java.simpleName
 
         const val TMP_IMPORT_FILE_NAME = "source.mp3"
-        const val TMP_VOIZY_FILE_NAME = "voizy_tmp.mp3"
+        const val TMP_VOIZY_FILE_NAME = "voizy.mp3"
         const val VOIZY_FILE_PREFIX = "voizy_"
         const val MP3_FILE_EXT = ".mp3"
     }
