@@ -155,7 +155,7 @@ class AudioClipFragment : BaseFragment() {
                 tv_audio_clip_duration_value.text = formatAudioTime(selectedDuration.toLong())
 
                 if (fromUser) {
-                    updateDurationPosition(selectedDuration)
+                    updateStartPos(selectedDuration)
                 }
             }
 
@@ -184,7 +184,7 @@ class AudioClipFragment : BaseFragment() {
                 tv_audio_clip_position_value.text = formatAudioTime(startPos.toLong())
 
                 if (fromUser) {
-                    updateStartPosition(startPos)
+                    updateDurationPos(startPos)
                 }
             }
 
@@ -192,7 +192,6 @@ class AudioClipFragment : BaseFragment() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                Timber.d("audio-editor onStopTrackingTouch()")
                 replay()
             }
         })
@@ -202,7 +201,7 @@ class AudioClipFragment : BaseFragment() {
     private fun initMoveStartPosBackward() {
         btn_audio_clip_rwd.setOnClickListener {
             sb_audio_clip_position.progress = sb_audio_clip_position.progress - MOVE_ON_BUTTON_MS
-            updateDurationPosition(sb_audio_clip_duration.progress)
+            updateStartPos(sb_audio_clip_duration.progress)
         }
 
         btn_audio_clip_rwd.setOnTouchListener { v, event ->
@@ -222,7 +221,7 @@ class AudioClipFragment : BaseFragment() {
     private fun initMoveStartPosForward() {
         btn_audio_clip_ffwd.setOnClickListener {
             sb_audio_clip_position.progress = sb_audio_clip_position.progress + MOVE_ON_BUTTON_MS
-            updateDurationPosition(sb_audio_clip_duration.progress)
+            updateStartPos(sb_audio_clip_duration.progress)
         }
 
         btn_audio_clip_ffwd.setOnTouchListener { v, event ->
@@ -246,7 +245,7 @@ class AudioClipFragment : BaseFragment() {
         }, 200)
     }
 
-    private fun updateDurationPosition(durationPos: Int) {
+    private fun updateStartPos(durationPos: Int) {
         updateStartPosSecondaryProgress()
 
         if (durationPos + sb_audio_clip_position.progress
@@ -259,7 +258,7 @@ class AudioClipFragment : BaseFragment() {
         }
     }
 
-    private fun updateStartPosition(startPos: Int) {
+    private fun updateDurationPos(startPos: Int) {
         updateStartPosSecondaryProgress()
 
         if (startPos + sb_audio_clip_duration.progress > sb_audio_clip_position.max) {

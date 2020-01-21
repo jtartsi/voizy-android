@@ -2,6 +2,7 @@ package com.voizy.android.audio
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Build
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.util.Timer
@@ -68,7 +69,11 @@ class AudioPlayer {
 
             setOnPreparedListener {
                 if (startPos > 0) {
-                    seekTo(startPos)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        seekTo(startPos.toLong(), MediaPlayer.SEEK_CLOSEST)
+                    } else {
+                        seekTo(startPos)
+                    }
                 }
                 start()
             }
