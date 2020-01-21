@@ -100,7 +100,7 @@
         app:layout_constraintEnd_toEndOf="@+id/rv_voizy_list"
         app:layout_constraintStart_toStartOf="@+id/rv_voizy_list"
         app:layout_constraintTop_toBottomOf="@+id/progress_initial_loader"
-        app:layout_constraintVertical_bias="0.20"
+        app:layout_constraintVertical_bias="0.05"
         android:visibility="gone">
 
         <ImageView
@@ -111,6 +111,7 @@
             android:src="@drawable/no_results" />
 
         <TextView
+            android:id="@+id/tv_no_results_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/info_no_results"
@@ -118,6 +119,19 @@
             android:letterSpacing="0.01"
             android:lineSpacingExtra="5.5sp"
             android:textSize="25sp"
+            android:textColor="@color/voizy_orange" />
+
+        <Button
+            android:id="@+id/btn_no_results_create"
+            style="@style/VoizyTheme.BorderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_no_results_info"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:letterSpacing="0.01"
+            android:lineSpacingExtra="5.5sp"
+            android:text="@string/create"
             android:textColor="@color/voizy_orange" />
 
     </RelativeLayout>
