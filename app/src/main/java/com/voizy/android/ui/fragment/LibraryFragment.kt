@@ -24,6 +24,7 @@ import com.voizy.android.viewmodels.LibraryFragmentViewModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
@@ -85,6 +86,7 @@ class LibraryFragment : BaseFragment() {
         initPlayback()
         initResultsState()
         initCreateButton()
+        initNoResultsCreate()
     }
 
     override fun onStop() {
@@ -237,15 +239,25 @@ class LibraryFragment : BaseFragment() {
     private fun initCreateButton() {
         RxView.clicks(fab_create_voizy)
             .autoDisposable(getScopeProvider())
-            .subscribe {
-                fragmentManager!!.beginTransaction()
-                    .replace(
-                        R.id.fragment_container,
-                        RecordVoizyFragment(),
-                        RecordVoizyFragment.TAG
-                    )
-                    .addToBackStack(RecordVoizyFragment.TAG)
-                    .commit()
-            }
+            .subscribe(createConsumer())
+    }
+
+    private fun initNoResultsCreate() {
+        RxView.clicks(btn_no_results_create)
+            .autoDisposable(getScopeProvider())
+            .subscribe(createConsumer())
+    }
+
+    private fun createConsumer(): Consumer<Any> {
+        return Consumer {
+            fragmentManager!!.beginTransaction()
+                .replace(
+                    R.id.fragment_container,
+                    RecordVoizyFragment(),
+                    RecordVoizyFragment.TAG
+                )
+                .addToBackStack(RecordVoizyFragment.TAG)
+                .commit()
+        }
     }
 }

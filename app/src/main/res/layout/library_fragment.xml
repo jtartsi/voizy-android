@@ -111,7 +111,7 @@
             android:src="@drawable/no_results" />
 
         <TextView
-            android:id="@+id/tv_no_results"
+            android:id="@+id/tv_no_results_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/info_no_results"
@@ -122,10 +122,11 @@
             android:textColor="@color/voizy_orange" />
 
         <Button
+            android:id="@+id/btn_no_results_create"
             style="@style/VoizyTheme.BorderButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_no_results"
+            android:layout_below="@+id/tv_no_results_info"
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:letterSpacing="0.01"
