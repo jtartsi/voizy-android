@@ -18,6 +18,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -67,10 +68,14 @@ class LibraryFragmentViewModel(
     }
 
     fun togglePlay(voizy: Voizy): Observable<PlaybackInfo> {
-        return voizyRepository.getDownloadUrl(voizy.remoteUrl)
-            .flatMap { voizyPlayer.togglePlay(it) }
+        Timber.d("cdn-url togglePlay() ${voizy.playbackUrl}")
+        return voizyPlayer.togglePlay(voizy.playbackUrl)
             .doOnNext { handlePlayAnalytics(voizy, it) }
             .withErrorHandling(TAG, "Failed to toggle startPlayback Voizy ${voizy.name}")
+        // return voizyRepository.getDownloadUrl(voizy.remoteUrl)
+        //     .flatMap { voizyPlayer.togglePlay(it) }
+        //     .doOnNext { handlePlayAnalytics(voizy, it) }
+        //     .withErrorHandling(TAG, "Failed to toggle startPlayback Voizy ${voizy.name}")
     }
 
     fun releasePlayer() {
