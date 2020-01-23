@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/voizy_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/VoizyTheme.Launcher"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true">
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
