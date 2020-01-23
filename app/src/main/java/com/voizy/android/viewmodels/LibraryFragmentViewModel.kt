@@ -72,10 +72,6 @@ class LibraryFragmentViewModel(
         return voizyPlayer.togglePlay(voizy.playbackUrl)
             .doOnNext { handlePlayAnalytics(voizy, it) }
             .withErrorHandling(TAG, "Failed to toggle startPlayback Voizy ${voizy.name}")
-        // return voizyRepository.getDownloadUrl(voizy.remoteUrl)
-        //     .flatMap { voizyPlayer.togglePlay(it) }
-        //     .doOnNext { handlePlayAnalytics(voizy, it) }
-        //     .withErrorHandling(TAG, "Failed to toggle startPlayback Voizy ${voizy.name}")
     }
 
     fun releasePlayer() {
