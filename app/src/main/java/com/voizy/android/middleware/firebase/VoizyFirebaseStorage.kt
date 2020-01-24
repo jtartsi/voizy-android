@@ -25,7 +25,8 @@ class VoizyFirebaseStorage(
 
         val firebaseFileName = voizy.name.plus(Date().time).plus(".mp3")
 
-        val uploadRef = storageRef.child(VOIZYS_PATH).child(firebaseFileName)
+        val uploadRef = storageRef.child(VOIZYS_PATH)
+            .child(Uri.encode(firebaseFileName, "UTF-8"))
         val stream = FileInputStream(File(voizy.localPath)) as InputStream
 
         return uploadRef.putStream(stream).toObservable()
