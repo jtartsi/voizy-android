@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.os.Build
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.util.Timer
 import java.util.TimerTask
 
@@ -75,6 +76,7 @@ class AudioPlayer {
                         seekTo(startPos)
                     }
                 }
+                Timber.d("cdn-url prepared start()")
                 start()
             }
 
