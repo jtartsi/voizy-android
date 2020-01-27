@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "870971280314",
+    "firebase_url": "https://voizy-development.firebaseio.com",
+    "project_id": "voizy-development",
+    "storage_bucket": "voizy-development.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870971280314:android:6141b34f067740ded7eb83",
+        "android_client_info": {
+          "package_name": "com.voizy.android.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870971280314-e85ali84kg2h3bd974fv2dc0t81594vi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdZYl8zxtyySAdvIY_smEql2FzEBUjRvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870971280314-e85ali84kg2h3bd974fv2dc0t81594vi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
