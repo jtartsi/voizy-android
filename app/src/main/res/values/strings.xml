@@ -22,7 +22,7 @@
     <string name="hold_to_record_guide">"Hold to record, release to finish"</string>
     <string name="url_copied_to_clipboard">"Voizy url copied to clipboard"</string>
     <string name="error_audio_over_15_not_allowed">"Audio length of over 15s is not allowed"</string>
-    <string name="info_no_results">"Oops! No results found."</string>
+    <string name="info_no_results">"Oops! No results found. \n Why not add it yourself"</string>
     <string name="next">"Next"</string>
     <string name="audio_duration">"Duration: "</string>
     <string name="audio_start_pos">"Start position: "</string>
@@ -34,5 +34,5 @@
     <string name="agree_on_terms_by_ticking">"Agree on terms by ticking the checkbox"</string>
     <string name="confirm">"Confirm"</string>
     <string name="trending">"Trending"</string>
-    <string name="create">"Create"</string>
+    <string name="add">"Add"</string>
 </resources>
