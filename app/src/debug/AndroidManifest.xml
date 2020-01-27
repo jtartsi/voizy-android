@@ -5,6 +5,7 @@
 
     <application
         tools:replace="android:label"
+        android:authorities="com.voizy.android.debug"
         android:label="voizy-debug" />
 
     <meta-data
