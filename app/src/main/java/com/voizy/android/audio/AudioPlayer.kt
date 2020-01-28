@@ -26,11 +26,19 @@ class AudioPlayer {
         startPos: Int = 0,
         endPos: Int = 0
     ): Observable<PlaybackInfo> {
+        Timber.d("playback-iss togglePlay()")
         return Observable.defer {
             val playbackInfo: PlaybackInfo = if (isPlaying && currentTrackPath == path) {
+                Timber.d("playback-iss togglePlay() -> stop()")
                 val audioLength = stopPlayback()
                 PlaybackInfo(PlaybackEvent.STOP, audioLength)
+            } else if (isPlaying && currentTrackPath != path) {
+                Timber.d("playback-iss togglePlay() -> switch()")
+                stopPlayback()
+                val audioLength = startPlayback(path, startPos, endPos)
+                PlaybackInfo(PlaybackEvent.SWITCH, audioLength)
             } else {
+                Timber.d("playback-iss togglePlay() -> start()")
                 val audioLength = startPlayback(path, startPos, endPos)
                 PlaybackInfo(PlaybackEvent.START, audioLength)
             }
@@ -76,7 +84,7 @@ class AudioPlayer {
                         seekTo(startPos)
                     }
                 }
-                Timber.d("cdn-url prepared start()")
+                Timber.d("playback-iss startPlayback()")
                 start()
             }
 
@@ -102,6 +110,7 @@ class AudioPlayer {
             release()
             mediaPlayer = null
             currentTrackPath = ""
+            Timber.d("playback-iss stopPlayback()")
         }
         return 0
     }
