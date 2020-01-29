@@ -5,7 +5,6 @@ import android.media.MediaPlayer
 import android.os.Build
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.atomic.AtomicBoolean
@@ -82,7 +81,6 @@ class AudioPlayer {
                         seekTo(startPos)
                     }
                 }
-                Timber.d("playback-iss startPlayback()")
                 start()
             }
 
@@ -109,7 +107,6 @@ class AudioPlayer {
             release()
             mediaPlayer = null
             currentTrackPath = ""
-            Timber.d("playback-iss stopPlayback()")
         }
         return 0
     }
