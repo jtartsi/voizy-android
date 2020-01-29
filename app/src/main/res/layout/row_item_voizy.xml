@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    android:addStatesFromChildren="true">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_voizy_row_title"

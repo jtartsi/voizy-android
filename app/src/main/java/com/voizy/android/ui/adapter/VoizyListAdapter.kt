@@ -68,10 +68,24 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
                 holder.itemView.setOnClickListener {
                     onPlayEvent(holder, position, getItem(position)!!)
                 }
+                holder.tvTitle.setOnClickListener {
+                    onPlayEvent(holder, position, getItem(position)!!)
+                }
+                holder.tvTags.setOnClickListener {
+                    onPlayEvent(holder, position, getItem(position)!!)
+                }
                 holder.btnShare.setOnClickListener {
                     onShareEvent(holder, position, getItem(position)!!)
                 }
                 holder.itemView.setOnLongClickListener {
+                    onLongPress(holder, position, getItem(position)!!)
+                    true
+                }
+                holder.tvTitle.setOnLongClickListener {
+                    onLongPress(holder, position, getItem(position)!!)
+                    true
+                }
+                holder.tvTags.setOnLongClickListener {
                     onLongPress(holder, position, getItem(position)!!)
                     true
                 }
