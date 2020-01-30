@@ -24,6 +24,7 @@ class ShareManager(private val shareRepository: ShareRepository) {
     fun startVoizyShare(context: Context, voizy: Voizy, file: File) {
         val fileUri: Uri? = getFileUri(context, file)
         val sendIntent: Intent = Intent().apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, fileUri)
             type = "audio/*"
