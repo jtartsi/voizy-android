@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
-import java.net.URLEncoder
 import java.util.Date
 
 class VoizyFirebaseStorage(
@@ -25,9 +24,9 @@ class VoizyFirebaseStorage(
     fun uploadVoizy(voizy: Voizy): Observable<Pair<Boolean, Voizy>> {
 
         val firebaseFileName = voizy.name.plus(Date().time).plus(".mp3")
-        val encodedFirebaseFileName = URLEncoder.encode(firebaseFileName, "UTF-8")
 
-        val uploadRef = storageRef.child(VOIZYS_PATH).child(encodedFirebaseFileName)
+        val uploadRef = storageRef.child(VOIZYS_PATH)
+            .child(Uri.encode(firebaseFileName, "UTF-8"))
         val stream = FileInputStream(File(voizy.localPath)) as InputStream
 
         return uploadRef.putStream(stream).toObservable()

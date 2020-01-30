@@ -14,6 +14,7 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
         private const val YOUTUBE_DL_SELECTED = "youtube_dl_selected"
         private const val FILE_IMPORT_SELECTED = "file_import_selected"
         private const val RECORD_MICROPHONE = "record_microphone"
+        private const val USER_TERMS_AGREED = "user_terms_agreed"
     }
 
     fun logAppOpen() {
@@ -72,5 +73,9 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
 
     fun logRecordMicrophone() {
         firebaseAnalytics.logEvent(RECORD_MICROPHONE, Bundle())
+    }
+
+    fun logUserTermsAgreed() {
+        firebaseAnalytics.logEvent(USER_TERMS_AGREED, Bundle())
     }
 }

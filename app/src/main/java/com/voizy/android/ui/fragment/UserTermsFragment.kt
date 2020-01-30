@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
 import com.voizy.android.R
+import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.utils.PreferencesStore
 import kotlinx.android.synthetic.main.user_terms_fragment.*
 import org.koin.android.ext.android.inject
 
 class UserTermsFragment : BaseFragment() {
 
+    private val firebaseAnalytics: VoizyFirebaseAnalytics by inject()
     private val prefsStore: PreferencesStore by inject()
 
     companion object {
@@ -40,7 +42,13 @@ class UserTermsFragment : BaseFragment() {
 
         btn_user_agreement_confirm.setOnClickListener {
             if (cb_user_terms_agree.isChecked) {
+                firebaseAnalytics.logUserTermsAgreed()
+
                 prefsStore.userTermsAgreed.value = true
+
+                fragmentManager!!.beginTransaction()
+                    .add(R.id.fragment_container, LibraryFragment(), LibraryFragment.TAG)
+                    .commit()
             } else {
                 Snackbar.make(
                     view!!, getString(R.string.agree_on_terms_by_ticking), Snackbar.LENGTH_SHORT

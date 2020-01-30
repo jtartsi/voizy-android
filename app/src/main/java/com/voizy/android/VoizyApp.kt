@@ -1,6 +1,7 @@
 package com.voizy.android
 
 import android.app.Application
+import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yausername.youtubedl_android.YoutubeDL
 import io.reactivex.Completable
@@ -9,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
+import java.util.Locale
 
 class VoizyApp : Application() {
 
@@ -20,10 +22,11 @@ class VoizyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        FirebaseAnalytics.getInstance(this)
-            .logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
+        val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
+        firebaseAnalytics.setUserProperty("locale", Locale.getDefault().toString())
 
-        Timber.d("launching application")
+        AppEventsLogger.newLogger(this).logEvent("APP_OPEN_TEST")
 
         initAndUpdateYoutubeDl()
 

@@ -19,7 +19,8 @@ data class Voizy(
     @ServerTimestamp val createdAt: Timestamp = Timestamp.now(), // For uploading to Firestore
     val locale: String = "",
     val localeLang: String = "",
-    val localeCountry: String = ""
+    val localeCountry: String = "",
+    val playbackUrl: String = ""
 ) {
 
     @get:Exclude
