@@ -124,7 +124,6 @@ class YoutubeDownloadFragment : BaseFragment() {
         if (show) {
             layout_cloud_video_pull_loading_overlay.visibility = View.VISIBLE
             setUiEnabled(false)
-            tv_cloud_video_pull_dl_percentage.text = "0%"
         } else {
             layout_cloud_video_pull_loading_overlay.visibility = View.GONE
             setUiEnabled(true)
