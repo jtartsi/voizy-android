@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:background="?android:attr/selectableItemBackground"
-    android:addStatesFromChildren="true">
+    android:addStatesFromChildren="true"
+    tools:background="@android:color/white">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_voizy_row_title"
@@ -73,7 +74,18 @@
         android:id="@+id/view" />
 
     <ProgressBar
-        android:id="@+id/pb_voizy_row_progress"
+        android:id="@+id/pb_voizy_loading_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:progressTint="@color/voizy_orange"
+        android:progressBackgroundTint="@android:color/transparent"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/pb_voizy_play_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"

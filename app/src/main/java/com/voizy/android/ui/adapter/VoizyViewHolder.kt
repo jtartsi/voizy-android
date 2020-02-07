@@ -17,7 +17,8 @@ class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     val tvTitle: TextView = view.findViewById(R.id.tv_voizy_row_title)
     val tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
-    val progressBar: ProgressBar = view.findViewById(R.id.pb_voizy_row_progress)
+    val loadingProgressBar: ProgressBar = view.findViewById(R.id.pb_voizy_loading_progress)
+    val playProgressBar: ProgressBar = view.findViewById(R.id.pb_voizy_play_progress)
     val btnShare: ImageButton = view.findViewById(R.id.btn_share)
 
     companion object {
@@ -32,14 +33,18 @@ class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bindTo(voizy: Voizy) {
         tvTitle.text = voizy.name
         tvTags.text = voizy.hashTags
-        progressBar.progress = 0
-        progressBar.max = 0
+        playProgressBar.progress = 0
+        playProgressBar.max = 0
     }
 
-    fun animateProgress(durationInMillis: Int) {
-        progressBar.max = durationInMillis
+    fun showLoadingProgress(visible: Boolean) {
+        loadingProgressBar.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    fun animatePlayProgress(durationInMillis: Int) {
+        playProgressBar.max = durationInMillis
         val progressAnimator = ObjectAnimator.ofInt(
-            progressBar,
+            playProgressBar,
             "progress",
             0,
             durationInMillis
@@ -49,8 +54,8 @@ class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         progressAnimator.start()
         progressAnimator.addListener(
             onEnd = {
-                progressBar.progress = 0
-                progressBar.max = 0
+                playProgressBar.progress = 0
+                playProgressBar.max = 0
             }
         )
     }
