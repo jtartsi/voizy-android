@@ -38,6 +38,7 @@ class LibraryFragmentViewModel(
 
     private val voizyResults = searchKeyword
         .debounce(500, TimeUnit.MILLISECONDS)
+        .map { it.toLowerCase() }
         .doOnNext { handleSearchAnalytics(it) }
         .map { voizyRepository.voizys(it) }
         .share()
