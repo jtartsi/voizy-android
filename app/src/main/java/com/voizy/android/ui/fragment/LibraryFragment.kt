@@ -96,11 +96,14 @@ class LibraryFragment : BaseFragment() {
 
     private fun initPlayback() {
         voizyListAdapter.onPlayEvent = { viewHolder: VoizyViewHolder, i: Int, voizy: Voizy ->
+            voizyListAdapter.showLoadingIndicator(viewHolder, true)
+
             viewModel.togglePlay(voizy)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .autoDisposable(getScopeProvider())
                 .subscribe {
+                    voizyListAdapter.clearLoadingState()
                     when (it.playbackEvent) {
                         PlaybackEvent.START -> {
                             voizyListAdapter.showPlayingIndicator(

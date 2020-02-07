@@ -34,6 +34,7 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
     ) -> Unit
 
     private var playingViewHolder: VoizyViewHolder? = null
+    private var loadingViewHolder: VoizyViewHolder? = null
 
     var networkState: NetworkState? = null
         set(value) {
@@ -103,13 +104,24 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
     }
 
     fun showPlayingIndicator(viewHolder: VoizyViewHolder, audioLengthInMillis: Int) {
-        viewHolder.animateProgress(audioLengthInMillis)
+        viewHolder.animatePlayProgress(audioLengthInMillis)
         playingViewHolder = viewHolder
+    }
+
+    fun showLoadingIndicator(viewHolder: VoizyViewHolder, visible: Boolean) {
+        viewHolder.showLoadingProgress(visible)
+        loadingViewHolder = viewHolder
+    }
+
+    fun clearLoadingState() {
+        loadingViewHolder?.let {
+            it.showLoadingProgress(false)
+        }
     }
 
     fun clearPlayingState() {
         playingViewHolder?.let {
-            it.animateProgress(0)
+            it.animatePlayProgress(0)
         }
     }
 
