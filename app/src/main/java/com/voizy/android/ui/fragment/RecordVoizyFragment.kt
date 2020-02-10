@@ -26,7 +26,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.record_voizy_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class RecordVoizyFragment : BaseFragment() {
@@ -141,7 +140,6 @@ class RecordVoizyFragment : BaseFragment() {
 
         viewModel.recordingEvents
             .filter { it == AudioRecorder.RecordingEvent.STARTED }
-            .doOnNext { Timber.d("rec-iss initRecDotAnimation $it") }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
@@ -153,7 +151,6 @@ class RecordVoizyFragment : BaseFragment() {
 
         viewModel.recordingEvents
             .filter { it == AudioRecorder.RecordingEvent.STOP_UNDER_MINIMUM_TIME }
-            .doOnNext { Timber.d("rec-iss initRecDotAnimation $it") }
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
