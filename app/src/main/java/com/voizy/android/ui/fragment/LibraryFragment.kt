@@ -84,9 +84,9 @@ class LibraryFragment : BaseFragment() {
         initCopyToClipBoard()
         initPrivacyPolicy()
         initPlayback()
-        initResultsState()
+        initNoResultsInfo()
         initCreateButton()
-        initNoResultsCreate()
+        initNoResultsCreateAction()
     }
 
     override fun onStop() {
@@ -158,16 +158,21 @@ class LibraryFragment : BaseFragment() {
             }
     }
 
-    private fun initResultsState() {
+    private fun initNoResultsInfo() {
         viewModel.initialLoading
+            .withLatestFrom(viewModel.voizys, toPair())
             .observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe {
-                if (it == NetworkState.LOADING) {
+                if (it.first == NetworkState.LOADING) {
                     layout_no_results.visibility = View.GONE
                 } else {
                     layout_no_results.visibility =
-                        if (voizyListAdapter.itemCount > 0) View.GONE else View.VISIBLE
+                        if (it.second.loadedCount > 0) {
+                            View.GONE
+                        } else {
+                            View.VISIBLE
+                        }
                 }
             }
     }
@@ -245,7 +250,7 @@ class LibraryFragment : BaseFragment() {
             .subscribe(createConsumer())
     }
 
-    private fun initNoResultsCreate() {
+    private fun initNoResultsCreateAction() {
         RxView.clicks(btn_no_results_create)
             .autoDisposable(getScopeProvider())
             .subscribe(createConsumer())
