@@ -96,30 +96,35 @@
         android:id="@+id/layout_no_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/rv_voizy_list"
         app:layout_constraintStart_toStartOf="@+id/rv_voizy_list"
         app:layout_constraintTop_toBottomOf="@+id/progress_initial_loader"
-        app:layout_constraintVertical_bias="0.05"
-        android:visibility="gone">
+        app:layout_constraintVertical_bias="0.0">
 
         <ImageView
             android:id="@+id/iv_no_results"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
             android:src="@drawable/no_results" />
 
         <TextView
             android:id="@+id/tv_no_results_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/info_no_results"
             android:layout_below="@+id/iv_no_results"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:gravity="center_horizontal"
             android:letterSpacing="0.01"
             android:lineSpacingExtra="5.5sp"
-            android:textSize="23sp"
-            android:textColor="@color/voizy_orange" />
+            android:text="@string/info_no_results"
+            android:textColor="@color/voizy_orange"
+            android:textSize="21sp" />
 
         <Button
             android:id="@+id/btn_no_results_create"
@@ -127,8 +132,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_no_results_info"
-            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:letterSpacing="0.01"
             android:lineSpacingExtra="5.5sp"
             android:text="@string/add"
