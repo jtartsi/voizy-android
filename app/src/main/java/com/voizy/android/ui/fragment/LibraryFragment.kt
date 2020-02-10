@@ -84,8 +84,8 @@ class LibraryFragment : BaseFragment() {
         initCopyToClipBoard()
         initPrivacyPolicy()
         initPlayback()
-        initNoResultsInfo()
         initCreateButton()
+        initNoResultsInfo()
         initNoResultsCreateAction()
     }
 
@@ -155,25 +155,6 @@ class LibraryFragment : BaseFragment() {
             .subscribe {
                 progress_initial_loader.visibility =
                     if (it == NetworkState.LOADING) View.VISIBLE else View.INVISIBLE
-            }
-    }
-
-    private fun initNoResultsInfo() {
-        viewModel.initialLoading
-            .withLatestFrom(viewModel.voizys, toPair())
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                if (it.first == NetworkState.LOADING) {
-                    layout_no_results.visibility = View.GONE
-                } else {
-                    layout_no_results.visibility =
-                        if (it.second.loadedCount > 0) {
-                            View.GONE
-                        } else {
-                            View.VISIBLE
-                        }
-                }
             }
     }
 
@@ -248,6 +229,26 @@ class LibraryFragment : BaseFragment() {
         RxView.clicks(fab_create_voizy)
             .autoDisposable(getScopeProvider())
             .subscribe(createConsumer())
+    }
+
+    private fun initNoResultsInfo() {
+        viewModel.initialLoading
+            .withLatestFrom(viewModel.voizys, toPair())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                if (it.first == NetworkState.LOADING) {
+                    layout_no_results.visibility = View.GONE
+                } else {
+                    if (it.second.loadedCount > 0) {
+                        layout_no_results.visibility = View.GONE
+                    } else {
+                        tv_no_results_info.text =
+                            getString(R.string.info_no_results, et_search.text.toString())
+                        layout_no_results.visibility = View.VISIBLE
+                    }
+                }
+            }
     }
 
     private fun initNoResultsCreateAction() {
