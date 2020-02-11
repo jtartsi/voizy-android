@@ -9,7 +9,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.PlaybackEvent
-import com.voizy.android.ui.widget.PlayPauseButton
+import com.voizy.android.ui.widget.PlaybackButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.VoizyDetailsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -80,9 +80,9 @@ class VoizyDetailsFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (it.playbackEvent == PlaybackEvent.START) {
-                    btn_details_playback.state = PlayPauseButton.State.STOP_ICON
+                    btn_details_playback.state = PlaybackButton.State.STOP_ICON
                 } else if (it.playbackEvent == PlaybackEvent.STOP) {
-                    btn_details_playback.state = PlayPauseButton.State.PLAY_ICON
+                    btn_details_playback.state = PlaybackButton.State.PLAY_ICON
                 }
             }
     }

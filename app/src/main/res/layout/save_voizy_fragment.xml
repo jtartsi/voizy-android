@@ -40,8 +40,8 @@
         app:layout_constraintVertical_bias="0.25"
         android:text="0.0s" />
 
-    <com.voizy.android.ui.widget.PlayPauseButton
-        android:id="@+id/btn_playback"
+    <com.voizy.android.ui.widget.PlaybackButton
+        android:id="@+id/btn_voizy_row_playback"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginTop="50dp"

@@ -12,9 +12,11 @@ import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.ui.widget.PlaybackButton
 
 class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+    val btnPlayback: PlaybackButton = view.findViewById(R.id.btn_voizy_row_playback)
     val tvTitle: TextView = view.findViewById(R.id.tv_voizy_row_title)
     val tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
     val loadingProgressBar: ProgressBar = view.findViewById(R.id.pb_voizy_loading_progress)

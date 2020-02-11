@@ -14,7 +14,7 @@ import com.voizy.android.R
 import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
 import com.voizy.android.middleware.firebase.models.Voizy
-import com.voizy.android.ui.widget.PlayPauseButton
+import com.voizy.android.ui.widget.PlaybackButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.showTimeSecondsAndTenths
 import com.voizy.android.viewmodels.SaveVoizyViewModel
@@ -76,7 +76,7 @@ class SaveVoizyFragment : BaseFragment() {
     }
 
     private fun initPlayback() {
-        RxView.clicks(btn_playback)
+        RxView.clicks(btn_voizy_row_playback)
             .flatMap { viewModel.togglePlay() }
             .autoDisposable(getScopeProvider())
             .subscribe()
@@ -86,9 +86,9 @@ class SaveVoizyFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (it.playbackEvent == PlaybackEvent.START) {
-                    btn_playback.state = PlayPauseButton.State.STOP_ICON
+                    btn_voizy_row_playback.state = PlaybackButton.State.STOP_ICON
                 } else if (it.playbackEvent == PlaybackEvent.STOP) {
-                    btn_playback.state = PlayPauseButton.State.PLAY_ICON
+                    btn_voizy_row_playback.state = PlaybackButton.State.PLAY_ICON
                 }
             }
     }

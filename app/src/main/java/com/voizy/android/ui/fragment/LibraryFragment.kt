@@ -17,6 +17,7 @@ import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.WebViewActivity
 import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
+import com.voizy.android.ui.widget.PlaybackButton
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.toPair
@@ -96,7 +97,9 @@ class LibraryFragment : BaseFragment() {
 
     private fun initPlayback() {
         voizyListAdapter.onPlayEvent = { viewHolder: VoizyViewHolder, i: Int, voizy: Voizy ->
+
             voizyListAdapter.showLoadingIndicator(viewHolder, true)
+            viewHolder.btnPlayback.state = PlaybackButton.State.STOP_ICON
 
             viewModel.togglePlay(voizy)
                 .subscribeOn(Schedulers.io())
@@ -104,15 +107,13 @@ class LibraryFragment : BaseFragment() {
                 .autoDisposable(getScopeProvider())
                 .subscribe {
                     voizyListAdapter.clearLoadingState()
+
                     when (it.playbackEvent) {
                         PlaybackEvent.START -> {
                             voizyListAdapter.showPlayingIndicator(
                                 viewHolder,
                                 it.audioDurationInMs
                             )
-                        }
-                        PlaybackEvent.STOP -> {
-                            voizyListAdapter.clearPlayingState()
                         }
                         PlaybackEvent.SWITCH -> {
                             voizyListAdapter.clearPlayingState()
@@ -123,6 +124,13 @@ class LibraryFragment : BaseFragment() {
                         }
                     }
                 }
+
+            viewModel.playbackEvents
+                .filter { it.playbackEvent == PlaybackEvent.STOP }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .autoDisposable(getScopeProvider())
+                .subscribe { voizyListAdapter.clearPlayingState() }
         }
     }
 
