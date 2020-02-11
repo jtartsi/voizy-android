@@ -96,7 +96,7 @@
         android:id="@+id/layout_no_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/rv_voizy_list"
         app:layout_constraintStart_toStartOf="@+id/rv_voizy_list"
