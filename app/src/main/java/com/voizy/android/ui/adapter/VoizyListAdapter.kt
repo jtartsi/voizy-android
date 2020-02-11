@@ -65,21 +65,10 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is VoizyViewHolder -> {
-
                 holder.bindTo(getItem(position)!!)
                 holder.btnPlayback.setOnClickListener {
                     onPlayEvent(holder, position, getItem(position)!!)
                 }
-                // TODO playback button remove this
-                // holder.itemView.setOnClickListener {
-                //     onPlayEvent(holder, position, getItem(position)!!)
-                // }
-                // holder.tvTitle.setOnClickListener {
-                //     onPlayEvent(holder, position, getItem(position)!!)
-                // }
-                // holder.tvTags.setOnClickListener {
-                //     onPlayEvent(holder, position, getItem(position)!!)
-                // }
                 holder.btnShare.setOnClickListener {
                     onShareEvent(holder, position, getItem(position)!!)
                 }
