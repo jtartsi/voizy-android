@@ -129,7 +129,7 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
 
     fun clearPlayingState() {
         playingViewHolder?.let {
-            it.animatePlayProgress(0)
+            it.clearPlayProgress()
             it.btnPlayback.state = PlaybackButton.State.PLAY_ICON
         }
     }
