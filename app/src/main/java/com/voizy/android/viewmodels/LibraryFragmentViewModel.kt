@@ -59,6 +59,8 @@ class LibraryFragmentViewModel(
         .share()
         .withErrorHandling(TAG, "failed to get initialLoading state")
 
+    val playbackEvents = voizyPlayer.playbackEventStream
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()

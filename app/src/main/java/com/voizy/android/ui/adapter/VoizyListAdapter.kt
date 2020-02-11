@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.ui.widget.PlaybackButton
 import com.voizy.android.utils.NetworkState
 
 class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
@@ -64,15 +65,8 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is VoizyViewHolder -> {
-
                 holder.bindTo(getItem(position)!!)
-                holder.itemView.setOnClickListener {
-                    onPlayEvent(holder, position, getItem(position)!!)
-                }
-                holder.tvTitle.setOnClickListener {
-                    onPlayEvent(holder, position, getItem(position)!!)
-                }
-                holder.tvTags.setOnClickListener {
+                holder.btnPlayback.setOnClickListener {
                     onPlayEvent(holder, position, getItem(position)!!)
                 }
                 holder.btnShare.setOnClickListener {
@@ -106,6 +100,9 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
     fun showPlayingIndicator(viewHolder: VoizyViewHolder, audioLengthInMillis: Int) {
         viewHolder.animatePlayProgress(audioLengthInMillis)
         playingViewHolder = viewHolder
+        playingViewHolder?.let {
+            it.btnPlayback.state = PlaybackButton.State.STOP_ICON
+        }
     }
 
     fun showLoadingIndicator(viewHolder: VoizyViewHolder, visible: Boolean) {
@@ -121,7 +118,8 @@ class VoizyListAdapter : PagedListAdapter<Voizy, RecyclerView.ViewHolder>(
 
     fun clearPlayingState() {
         playingViewHolder?.let {
-            it.animatePlayProgress(0)
+            it.clearPlayProgress()
+            it.btnPlayback.state = PlaybackButton.State.PLAY_ICON
         }
     }
 

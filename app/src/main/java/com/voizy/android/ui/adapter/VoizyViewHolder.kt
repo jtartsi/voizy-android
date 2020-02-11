@@ -8,18 +8,21 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
 import com.voizy.android.R
 import com.voizy.android.middleware.firebase.models.Voizy
+import com.voizy.android.ui.widget.PlaybackButton
 
 class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+    val btnPlayback: PlaybackButton = view.findViewById(R.id.btn_voizy_row_playback)
     val tvTitle: TextView = view.findViewById(R.id.tv_voizy_row_title)
     val tvTags: TextView = view.findViewById(R.id.tv_voizy_row_tags)
     val loadingProgressBar: ProgressBar = view.findViewById(R.id.pb_voizy_loading_progress)
     val playProgressBar: ProgressBar = view.findViewById(R.id.pb_voizy_play_progress)
     val btnShare: ImageButton = view.findViewById(R.id.btn_share)
+
+    private var progressAnimator: ObjectAnimator? = null
 
     companion object {
         fun create(parent: ViewGroup): VoizyViewHolder {
@@ -43,20 +46,19 @@ class VoizyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun animatePlayProgress(durationInMillis: Int) {
         playProgressBar.max = durationInMillis
-        val progressAnimator = ObjectAnimator.ofInt(
+        progressAnimator = ObjectAnimator.ofInt(
             playProgressBar,
             "progress",
             0,
             durationInMillis
         )
-        progressAnimator.duration = durationInMillis.toLong()
-        progressAnimator.interpolator = LinearInterpolator()
-        progressAnimator.start()
-        progressAnimator.addListener(
-            onEnd = {
-                playProgressBar.progress = 0
-                playProgressBar.max = 0
-            }
-        )
+        progressAnimator?.duration = durationInMillis.toLong()
+        progressAnimator?.interpolator = LinearInterpolator()
+        progressAnimator?.start()
+    }
+
+    fun clearPlayProgress() {
+        progressAnimator?.cancel()
+        playProgressBar.progress = 0
     }
 }
