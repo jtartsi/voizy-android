@@ -17,6 +17,7 @@ import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.WebViewActivity
 import com.voizy.android.ui.adapter.VoizyListAdapter
 import com.voizy.android.ui.adapter.VoizyViewHolder
+import com.voizy.android.ui.widget.PlaybackButton
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.toPair
@@ -84,9 +85,9 @@ class LibraryFragment : BaseFragment() {
         initCopyToClipBoard()
         initPrivacyPolicy()
         initPlayback()
-        initResultsState()
         initCreateButton()
-        initNoResultsCreate()
+        initNoResultsInfo()
+        initNoResultsCreateAction()
     }
 
     override fun onStop() {
@@ -96,20 +97,23 @@ class LibraryFragment : BaseFragment() {
 
     private fun initPlayback() {
         voizyListAdapter.onPlayEvent = { viewHolder: VoizyViewHolder, i: Int, voizy: Voizy ->
+
+            voizyListAdapter.showLoadingIndicator(viewHolder, true)
+            viewHolder.btnPlayback.state = PlaybackButton.State.STOP_ICON
+
             viewModel.togglePlay(voizy)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .autoDisposable(getScopeProvider())
                 .subscribe {
+                    voizyListAdapter.clearLoadingState()
+
                     when (it.playbackEvent) {
                         PlaybackEvent.START -> {
                             voizyListAdapter.showPlayingIndicator(
                                 viewHolder,
                                 it.audioDurationInMs
                             )
-                        }
-                        PlaybackEvent.STOP -> {
-                            voizyListAdapter.clearPlayingState()
                         }
                         PlaybackEvent.SWITCH -> {
                             voizyListAdapter.clearPlayingState()
@@ -120,6 +124,13 @@ class LibraryFragment : BaseFragment() {
                         }
                     }
                 }
+
+            viewModel.playbackEvents
+                .filter { it.playbackEvent == PlaybackEvent.STOP }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .autoDisposable(getScopeProvider())
+                .subscribe { voizyListAdapter.clearPlayingState() }
         }
     }
 
@@ -152,20 +163,6 @@ class LibraryFragment : BaseFragment() {
             .subscribe {
                 progress_initial_loader.visibility =
                     if (it == NetworkState.LOADING) View.VISIBLE else View.INVISIBLE
-            }
-    }
-
-    private fun initResultsState() {
-        viewModel.initialLoading
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                if (it == NetworkState.LOADING) {
-                    layout_no_results.visibility = View.GONE
-                } else {
-                    layout_no_results.visibility =
-                        if (voizyListAdapter.itemCount > 0) View.GONE else View.VISIBLE
-                }
             }
     }
 
@@ -242,7 +239,27 @@ class LibraryFragment : BaseFragment() {
             .subscribe(createConsumer())
     }
 
-    private fun initNoResultsCreate() {
+    private fun initNoResultsInfo() {
+        viewModel.initialLoading
+            .withLatestFrom(viewModel.voizys, toPair())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                if (it.first == NetworkState.LOADING) {
+                    layout_no_results.visibility = View.GONE
+                } else {
+                    if (it.second.loadedCount > 0) {
+                        layout_no_results.visibility = View.GONE
+                    } else {
+                        tv_no_results_info.text =
+                            getString(R.string.info_no_results, et_search.text.toString())
+                        layout_no_results.visibility = View.VISIBLE
+                    }
+                }
+            }
+    }
+
+    private fun initNoResultsCreateAction() {
         RxView.clicks(btn_no_results_create)
             .autoDisposable(getScopeProvider())
             .subscribe(createConsumer())

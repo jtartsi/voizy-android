@@ -13,7 +13,7 @@ import com.voizy.android.R
 import com.voizy.android.VoizyApp
 import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.ui.model.ImportedData
-import com.voizy.android.ui.widget.PlayPauseButton
+import com.voizy.android.ui.widget.PlaybackButton
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.AudioClipViewModel
 import io.reactivex.Observable
@@ -110,9 +110,9 @@ class AudioClipFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (it.playbackEvent == PlaybackEvent.START) {
-                    btn_audio_clip_play.state = PlayPauseButton.State.STOP_ICON
+                    btn_audio_clip_play.state = PlaybackButton.State.STOP_ICON
                 } else if (it.playbackEvent == PlaybackEvent.STOP) {
-                    btn_audio_clip_play.state = PlayPauseButton.State.PLAY_ICON
+                    btn_audio_clip_play.state = PlaybackButton.State.PLAY_ICON
                 }
             }
     }

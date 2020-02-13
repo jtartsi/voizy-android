@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:background="@android:color/white">
 
-    <com.voizy.android.ui.widget.PlayPauseButton
+    <com.voizy.android.ui.widget.PlaybackButton
         android:id="@+id/btn_audio_clip_play"
         android:layout_width="75dp"
         android:layout_height="75dp"

@@ -38,6 +38,7 @@ class LibraryFragmentViewModel(
 
     private val voizyResults = searchKeyword
         .debounce(500, TimeUnit.MILLISECONDS)
+        .map { it.toLowerCase() }
         .doOnNext { handleSearchAnalytics(it) }
         .map { voizyRepository.voizys(it) }
         .share()
@@ -57,6 +58,8 @@ class LibraryFragmentViewModel(
         .flatMap { it.initialLoading }
         .share()
         .withErrorHandling(TAG, "failed to get initialLoading state")
+
+    val playbackEvents = voizyPlayer.playbackEventStream
 
     override fun onCleared() {
         super.onCleared()

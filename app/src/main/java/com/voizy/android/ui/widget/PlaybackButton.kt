@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.widget.ImageButton
 import com.voizy.android.R
 
-class PlayPauseButton : ImageButton {
+class PlaybackButton : ImageButton {
 
     private val playDrawable: Drawable
     private val stopDrawable: Drawable
