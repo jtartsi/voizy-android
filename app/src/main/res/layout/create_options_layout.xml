@@ -1,73 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:animateLayoutChanges="true">
+<androidx.viewpager.widget.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pager_create_voizy"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@color/white">
 
-    <com.voizy.android.ui.widget.createoptions.RecordButton
-        android:id="@+id/btn_rec_mic"
-        style="@style/VoizyFloatingButtonStyle"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs_create_voizy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/round_mic_black_48"
-        app:fabCustomSize="@dimen/fab_size_big"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="@dimen/fab_src_size_big"
-        android:tint="@android:color/white"
-        android:backgroundTint="@color/voizy_orange" />
+        android:foregroundGravity="bottom" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_open_options"
-        style="@style/VoizyFloatingButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/round_add_black_48"
-        app:fabCustomSize="@dimen/fab_size_big"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="@dimen/fab_src_size_big"
-        android:visibility="visible" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_choose_cloud"
-        style="@style/VoizyFloatingButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/round_cloud_black_48"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/btn_choose_file"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="parent"
-        android:tint="@color/voizy_orange" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_choose_file"
-        style="@style/VoizyFloatingButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/round_folder_black_48"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/btn_rec_mic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="parent"
-        android:tint="@color/voizy_orange" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_close_options"
-        style="@style/VoizyFloatingButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/round_clear_black_48"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_rec_mic"
-        android:tint="@android:color/darker_gray" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.viewpager.widget.ViewPager>

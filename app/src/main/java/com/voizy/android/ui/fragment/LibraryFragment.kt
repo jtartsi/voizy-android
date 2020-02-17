@@ -270,10 +270,10 @@ class LibraryFragment : BaseFragment() {
             fragmentManager!!.beginTransaction()
                 .replace(
                     R.id.fragment_container,
-                    RecordVoizyFragment(),
-                    RecordVoizyFragment.TAG
+                    CreateOptionsFragment(),
+                    CreateOptionsFragment.TAG
                 )
-                .addToBackStack(RecordVoizyFragment.TAG)
+                .addToBackStack(CreateOptionsFragment.TAG)
                 .commit()
         }
     }
