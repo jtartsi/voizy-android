@@ -85,7 +85,7 @@ class YoutubeDownloadFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe(videoDownloadConsumer())
 
-        RxView.clicks(btn_download)
+        RxView.clicks(btn_cloud_video_pull_next)
             .autoDisposable(getScopeProvider())
             .subscribe {
                 showLoadingLayout(true)
@@ -137,7 +137,7 @@ class YoutubeDownloadFragment : BaseFragment() {
     private fun setUiEnabled(enabled: Boolean) {
         wv_cloud_video_pull.isClickable = enabled
         wv_cloud_video_pull.isEnabled = enabled
-        btn_download.isEnabled = enabled
+        btn_cloud_video_pull_next.isEnabled = enabled
         // et_cloud_video_pull_url.isEnabled = enabled
         // btn_cloud_video_pull_next.isClickable = enabled
     }
