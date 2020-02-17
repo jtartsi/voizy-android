@@ -21,7 +21,7 @@ import com.voizy.android.ui.widget.PlaybackButton
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.utils.toPair
-import com.voizy.android.viewmodels.LibraryFragmentViewModel
+import com.voizy.android.viewmodels.LibraryViewModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,7 +41,7 @@ class LibraryFragment : BaseFragment() {
     override fun onBackPressed() {
     }
 
-    private val viewModel: LibraryFragmentViewModel by inject()
+    private val viewModel: LibraryViewModel by inject()
     private lateinit var voizyRecyclerView: RecyclerView
     private lateinit var voizyListAdapter: VoizyListAdapter
     private val shareRequests = PublishSubject.create<Voizy>()
@@ -50,10 +50,6 @@ class LibraryFragment : BaseFragment() {
 
     companion object {
         val TAG = LibraryFragment::class.java.simpleName
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

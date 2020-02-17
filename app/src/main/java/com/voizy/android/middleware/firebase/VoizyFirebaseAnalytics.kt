@@ -13,7 +13,8 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
         private const val EDIT_SCREEN_OPEN = "edit_screen_open"
         private const val YOUTUBE_DL_SELECTED = "youtube_dl_selected"
         private const val FILE_IMPORT_SELECTED = "file_import_selected"
-        private const val RECORD_MICROPHONE = "record_microphone"
+        private const val RECORD_MICROPHONE_SELECTED = "record_microphone_selected"
+        private const val RECORD_MICROPHONE_FINISHED = "record_microphone_finished"
         private const val USER_TERMS_AGREED = "user_terms_agreed"
     }
 
@@ -71,8 +72,12 @@ class VoizyFirebaseAnalytics(val firebaseAnalytics: FirebaseAnalytics) {
         firebaseAnalytics.logEvent(FILE_IMPORT_SELECTED, Bundle())
     }
 
+    fun logRecordMicrophoneSelected() {
+        firebaseAnalytics.logEvent(RECORD_MICROPHONE_SELECTED, Bundle())
+    }
+
     fun logRecordMicrophone() {
-        firebaseAnalytics.logEvent(RECORD_MICROPHONE, Bundle())
+        firebaseAnalytics.logEvent(RECORD_MICROPHONE_FINISHED, Bundle())
     }
 
     fun logUserTermsAgreed() {

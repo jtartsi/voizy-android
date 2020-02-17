@@ -1,13 +1,16 @@
 package com.voizy.android.ui.adapter
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.voizy.android.R
+import com.voizy.android.ui.fragment.BlankFragment
 import com.voizy.android.ui.fragment.RecordVoizyFragment
 import com.voizy.android.ui.fragment.YoutubeDownloadFragment
-import timber.log.Timber
 
 class CreateOptionsAdapter(
+    private val context: Context,
     fragmentManger: FragmentManager
 ) : FragmentPagerAdapter(fragmentManger, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
@@ -19,49 +22,55 @@ class CreateOptionsAdapter(
         youtubeDownloadFragment = YoutubeDownloadFragment()
     }
 
+    enum class CreateOptions(val value: Int) {
+        FILE(0),
+        RECORD(1),
+        DOWNLOAD(2)
+    }
+
     override fun getPageTitle(position: Int): CharSequence? {
         when (position) {
-            0 -> {
-                Timber.d("options-pager getItem() $position return file")
-                return "File"
+            CreateOptions.FILE.value -> {
+                // Timber.d("options-pager getItem() $position return file") // TODO pager-todo clean this file
+                return context.getString(R.string.file)
             }
-            1 -> {
-                Timber.d("options-pager getItem() $position return record")
-                return "Record"
+            CreateOptions.RECORD.value -> {
+                // Timber.d("options-pager getItem() $position return record")
+                return context.getString(R.string.record)
             }
-            2 -> {
-                Timber.d("options-pager getItem() $position return download")
-                return "Download"
+            CreateOptions.DOWNLOAD.value -> {
+                // Timber.d("options-pager getItem() $position return download")
+                return context.getString(R.string.download)
             }
             else -> {
-                Timber.d("options-pager getItem() $position return other")
-                return "Record"
+                // Timber.d("options-pager getItem() $position return other")
+                return context.getString(R.string.record)
             }
         }
     }
 
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> {
-                Timber.d("options-pager getItem() $position return file")
+            CreateOptions.FILE.value -> {
+                // Timber.d("options-pager getItem() $position return file")
+                return BlankFragment()
+            }
+            CreateOptions.RECORD.value -> {
+                // Timber.d("options-pager getItem() $position return record")
                 return RecordVoizyFragment()
             }
-            1 -> {
-                Timber.d("options-pager getItem() $position return record")
-                return RecordVoizyFragment()
-            }
-            2 -> {
-                Timber.d("options-pager getItem() $position return download")
+            CreateOptions.DOWNLOAD.value -> {
+                // Timber.d("options-pager getItem() $position return download")
                 return YoutubeDownloadFragment()
             }
             else -> {
-                Timber.d("options-pager getItem() $position return other")
+                // Timber.d("options-pager getItem() $position return other")
                 return RecordVoizyFragment()
             }
         }
     }
 
     override fun getCount(): Int {
-        return 3
+        return CreateOptions.values().size
     }
 }
