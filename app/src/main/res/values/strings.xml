@@ -35,4 +35,7 @@
     <string name="confirm">"Confirm"</string>
     <string name="trending">"Trending"</string>
     <string name="add">"Add"</string>
+    <string name="file">"File"</string>
+    <string name="record">"Record"</string>
+    <string name="download">"Download"</string>
 </resources>
