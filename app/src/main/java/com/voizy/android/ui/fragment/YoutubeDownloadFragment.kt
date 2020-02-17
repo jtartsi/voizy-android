@@ -61,9 +61,9 @@ class YoutubeDownloadFragment : BaseFragment() {
         wv_cloud_video_pull.settings.javaScriptEnabled = true
         val webViewClient = VoizyWebViewClient()
         webViewClient.pageChangedListener = { url ->
-            if (isResumed) {
-                et_cloud_video_pull_url.setText(url)
-            }
+            // if (isResumed) {
+            //     et_cloud_video_pull_url.setText(url)
+            // }
         }
         wv_cloud_video_pull.webViewClient = webViewClient
         wv_cloud_video_pull.loadUrl("https://youtube.com")
@@ -85,11 +85,11 @@ class YoutubeDownloadFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe(videoDownloadConsumer())
 
-        RxView.clicks(btn_cloud_video_pull_next)
+        RxView.clicks(btn_download)
             .autoDisposable(getScopeProvider())
             .subscribe {
                 showLoadingLayout(true)
-                viewModel.download(et_cloud_video_pull_url.text.toString())
+                viewModel.download(wv_cloud_video_pull.url)
             }
     }
 
@@ -137,7 +137,8 @@ class YoutubeDownloadFragment : BaseFragment() {
     private fun setUiEnabled(enabled: Boolean) {
         wv_cloud_video_pull.isClickable = enabled
         wv_cloud_video_pull.isEnabled = enabled
-        et_cloud_video_pull_url.isEnabled = enabled
-        btn_cloud_video_pull_next.isClickable = enabled
+        btn_download.isEnabled = enabled
+        // et_cloud_video_pull_url.isEnabled = enabled
+        // btn_cloud_video_pull_next.isClickable = enabled
     }
 }
