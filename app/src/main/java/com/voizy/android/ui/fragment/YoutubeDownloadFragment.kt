@@ -18,13 +18,17 @@ import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class YoutubeDownloadFragment : BaseFragment() {
+class YoutubeDownloadFragment : TabFragment() {
 
     private val viewModel: YoutubeDownloadViewModel by inject()
     private var downloadingOverlay: View? = null
 
     companion object {
         val TAG = YoutubeDownloadFragment::class.java.simpleName
+    }
+
+    override fun getTabTitle(): String {
+        return getString(R.string.download)
     }
 
     override fun getFragmentTag(): String {

@@ -15,7 +15,6 @@ import com.voizy.android.utils.SupportedFileTypes
 import com.voizy.android.viewmodels.CreateOptionsViewModel
 import kotlinx.android.synthetic.main.create_options_layout.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class CreateOptionsFragment : BaseFragment() {
 
@@ -72,7 +71,6 @@ class CreateOptionsFragment : BaseFragment() {
 
             override fun onTabSelected(p0: TabLayout.Tab?) {
                 val selectedPosition = tabs_create_voizy.selectedTabPosition
-                Timber.d("options-pager onTabSelected $selectedPosition")
                 when (selectedPosition) {
                     CreateOptions.FILE.value -> {
                         viewModel.logFileSelected()
