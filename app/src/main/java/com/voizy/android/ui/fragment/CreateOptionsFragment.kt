@@ -112,14 +112,6 @@ class CreateOptionsFragment : BaseFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        initStopYoutubeDlOnPageChange()
-    }
-
-    private fun initStopYoutubeDlOnPageChange() {
-    }
-
     private fun getCurrentFragmentFromPager(): BaseFragment {
         return optionsAdapter.getItem(pager_create_voizy.currentItem) as BaseFragment
     }

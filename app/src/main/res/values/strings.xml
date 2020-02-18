@@ -38,4 +38,5 @@
     <string name="file">"File"</string>
     <string name="record">"Record"</string>
     <string name="download">"Download"</string>
+    <string name="youtube_hint">Search and choose a video</string>
 </resources>

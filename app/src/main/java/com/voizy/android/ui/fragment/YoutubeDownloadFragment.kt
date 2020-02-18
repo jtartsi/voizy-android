@@ -14,7 +14,7 @@ import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.YoutubeDownloadViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
+import kotlinx.android.synthetic.main.youtube_download_fragment.*
 import org.koin.android.ext.android.inject
 
 class YoutubeDownloadFragment : BaseFragment() {
@@ -50,7 +50,7 @@ class YoutubeDownloadFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.cloud_video_pull_fragment, container, false)
+        return inflater.inflate(R.layout.youtube_download_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
