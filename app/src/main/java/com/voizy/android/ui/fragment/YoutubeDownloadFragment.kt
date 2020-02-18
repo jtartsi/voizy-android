@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class YoutubeDownloadFragment : TabFragment() {
+class YoutubeDownloadFragment : BaseFragment() {
 
     private val viewModel: YoutubeDownloadViewModel by inject()
     private var downloadingOverlay: View? = null
@@ -26,11 +26,7 @@ class YoutubeDownloadFragment : TabFragment() {
     companion object {
         val TAG = YoutubeDownloadFragment::class.java.simpleName
     }
-
-    override fun getTabTitle(): String {
-        return getString(R.string.download)
-    }
-
+    
     override fun getFragmentTag(): String {
         return TAG
     }
@@ -40,10 +36,7 @@ class YoutubeDownloadFragment : TabFragment() {
     }
 
     override fun onBackPressed(): Boolean {
-        Timber.d("back-issue onBackPressed old overlay $downloadingOverlay")
-        Timber.d("back-issue onBackPressed view $view")
         return if (isLoadingOverlayVisible()) {
-            Timber.d("back-issue cancel download")
             viewModel.cancelDownload()
             showLoadingLayout(false)
             true
@@ -70,6 +63,10 @@ class YoutubeDownloadFragment : TabFragment() {
         super.onStart()
         initWebView()
         initVideoDownload()
+    }
+
+    fun cancelDownload() {
+        viewModel.cancelDownload()
     }
 
     private fun initWebView() {
@@ -163,7 +160,5 @@ class YoutubeDownloadFragment : TabFragment() {
         wv_cloud_video_pull.isClickable = enabled
         wv_cloud_video_pull.isEnabled = enabled
         btn_download.isEnabled = enabled
-        // et_cloud_video_pull_url.isEnabled = enabled
-        // btn_cloud_video_pull_next.isClickable = enabled
     }
 }

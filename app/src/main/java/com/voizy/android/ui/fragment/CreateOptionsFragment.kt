@@ -59,8 +59,13 @@ class CreateOptionsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         optionsAdapter = CreateOptionsAdapter(context!!, childFragmentManager)
         pager_create_voizy.adapter = optionsAdapter
+
+        val youtubeDlFragment =
+            optionsAdapter.fragments[2] as YoutubeDownloadFragment
+
         tabs_create_voizy.setupWithViewPager(pager_create_voizy)
         tabs_create_voizy.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {
@@ -70,8 +75,10 @@ class CreateOptionsFragment : BaseFragment() {
             }
 
             override fun onTabSelected(p0: TabLayout.Tab?) {
-                val selectedPosition = tabs_create_voizy.selectedTabPosition
-                when (selectedPosition) {
+
+                youtubeDlFragment.cancelDownload()
+
+                when (tabs_create_voizy.selectedTabPosition) {
                     CreateOptions.FILE.value -> {
                         viewModel.logFileSelected()
                         val pickFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -102,6 +109,14 @@ class CreateOptionsFragment : BaseFragment() {
                 CreateOptions.RECORD.value, false
             )
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initStopYoutubeDlOnPageChange()
+    }
+
+    private fun initStopYoutubeDlOnPageChange() {
     }
 
     private fun getCurrentFragmentFromPager(): BaseFragment {

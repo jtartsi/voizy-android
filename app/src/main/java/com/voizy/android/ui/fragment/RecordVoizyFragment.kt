@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.record_voizy_fragment.*
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
-class RecordVoizyFragment : TabFragment() {
+class RecordVoizyFragment : BaseFragment() {
 
     private val viewModel: RecordVoizyViewModel by inject()
 
@@ -35,10 +35,6 @@ class RecordVoizyFragment : TabFragment() {
 
     companion object {
         val TAG = RecordVoizyFragment::class.java.simpleName
-    }
-
-    override fun getTabTitle(): String {
-        return getString(R.string.record)
     }
 
     override fun getFragmentTag(): String {

@@ -1,12 +1,6 @@
 package com.voizy.android.ui.fragment
 
-import com.voizy.android.R
-
-class FileImportFragment : TabFragment() {
-    
-    override fun getTabTitle(): String {
-        return getString(R.string.file)
-    }
+class FileImportFragment : BaseFragment() {
 
     companion object {
         val TAG = FileImportFragment::class.java.simpleName
