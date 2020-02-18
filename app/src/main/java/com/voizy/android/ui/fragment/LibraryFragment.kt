@@ -38,9 +38,6 @@ class LibraryFragment : BaseFragment() {
         return TAG
     }
 
-    override fun onBackPressed() {
-    }
-
     private val viewModel: LibraryViewModel by inject()
     private lateinit var voizyRecyclerView: RecyclerView
     private lateinit var voizyListAdapter: VoizyListAdapter

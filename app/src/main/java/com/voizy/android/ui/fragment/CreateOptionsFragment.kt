@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.voizy.android.R
 import com.voizy.android.ui.MainActivity
@@ -27,6 +28,22 @@ class CreateOptionsFragment : BaseFragment() {
 
     override fun getFragmentTag(): String {
         return TAG
+    }
+
+    override fun useCustomBackPress(): Boolean {
+        return true
+    }
+
+    override fun onBackPressed(): Boolean {
+        if (pager_create_voizy.currentItem != 1) { // TODO create-pager change this to RecorVoizy.val or something
+            pager_create_voizy.setCurrentItem(1, true)
+        } else if (!getCurrentFragmentFromPager().onBackPressed()) {
+            fragmentManager!!.popBackStack(
+                TAG,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+        }
+        return true
     }
 
     override fun onCreateView(
@@ -81,5 +98,9 @@ class CreateOptionsFragment : BaseFragment() {
         pager_create_voizy.setCurrentItem(
             CreateOptions.RECORD.value, false
         )
+    }
+
+    private fun getCurrentFragmentFromPager(): BaseFragment {
+        return optionsAdapter.getItem(pager_create_voizy.currentItem) as BaseFragment
     }
 }

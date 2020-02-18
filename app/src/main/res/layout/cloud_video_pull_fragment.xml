@@ -29,43 +29,44 @@
             android:background="@color/voizy_orange"
             app:layout_constraintBottom_toTopOf="@+id/tv_download_hint" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/tv_download_hint"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Search and choose video, then press download"-->
-        <!--            android:textSize="20sp"-->
-        <!--            android:textColor="@color/voizy_purple"-->
-        <!--            android:gravity="center_horizontal"-->
-        <!--            android:layout_margin="8dp"-->
-        <!--            app:layout_constraintBottom_toTopOf="@+id/btn_download"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent" />-->
-
-        <!--        <Button-->
-        <!--            style="@style/VoizyTheme.BorderButton"-->
-        <!--            android:id="@+id/btn_download"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:background="@color/voizy_orange"-->
-        <!--            android:text="Download"-->
-        <!--            android:textColor="@color/white"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent" />-->
-
         <TextView
             android:id="@+id/tv_download_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="center_horizontal"
-            android:text="Search and choose video,\n then click arrow"
+            android:text="Search and choose video"
+            android:textSize="22sp"
             android:textColor="@color/voizy_purple"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_cloud_video_pull_next"
+            android:gravity="center_horizontal"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_download"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            style="@style/VoizyTheme.BorderButton"
+            android:id="@+id/btn_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/voizy_orange"
+            android:text="Download"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_download_hint"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="8dp"-->
+        <!--            android:gravity="center_horizontal"-->
+        <!--            android:text="Search and choose video,\n then click arrow"-->
+        <!--            android:textColor="@color/voizy_purple"-->
+        <!--            android:textSize="20sp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/btn_cloud_video_pull_next"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <!--        <EditText-->
         <!--            android:id="@+id/et_cloud_video_pull_url"-->
@@ -80,20 +81,20 @@
         <!--            app:layout_constraintEnd_toStartOf="@+id/btn_cloud_video_pull_next"-->
         <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
-        <ImageButton
-            android:id="@+id/btn_cloud_video_pull_next"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/voizy_orange"
-            android:src="@drawable/round_arrow_forward_black_48"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/btn_cloud_video_pull_next"-->
+        <!--            android:layout_width="60dp"-->
+        <!--            android:layout_height="60dp"-->
+        <!--            android:backgroundTint="@color/voizy_orange"-->
+        <!--            android:src="@drawable/round_arrow_forward_black_48"-->
+        <!--            android:tint="@color/white"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_cloud_video_pull_loading_overlay"
+        android:id="@+id/layout_downloading_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"

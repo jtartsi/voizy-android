@@ -180,7 +180,7 @@ class RecordVoizyFragment : BaseFragment() {
     }
 
     private fun navigateToSaveLayoutFragment() {
-        fragmentManager!!.beginTransaction()
+        activity!!.supportFragmentManager.beginTransaction()
             .replace(
                 R.id.fragment_container,
                 SaveVoizyFragment(),

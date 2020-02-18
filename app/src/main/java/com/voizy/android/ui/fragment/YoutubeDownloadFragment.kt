@@ -1,6 +1,5 @@
 package com.voizy.android.ui.fragment
 
-import android.app.FragmentManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +16,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class YoutubeDownloadFragment : BaseFragment() {
 
     private val viewModel: YoutubeDownloadViewModel by inject()
+    private var downloadingOverlay: View? = null
 
     companion object {
         val TAG = YoutubeDownloadFragment::class.java.simpleName
@@ -34,12 +35,16 @@ class YoutubeDownloadFragment : BaseFragment() {
         return true
     }
 
-    override fun onBackPressed() {
-        if (isLoadingOverlayVisible()) {
+    override fun onBackPressed(): Boolean {
+        Timber.d("back-issue onBackPressed old overlay $downloadingOverlay")
+        Timber.d("back-issue onBackPressed view $view")
+        return if (isLoadingOverlayVisible()) {
+            Timber.d("back-issue cancel download")
             viewModel.cancelDownload()
             showLoadingLayout(false)
+            true
         } else {
-            fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            false
         }
     }
 
@@ -49,6 +54,12 @@ class YoutubeDownloadFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.cloud_video_pull_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        downloadingOverlay = view.findViewById(R.id.layout_downloading_overlay)
+        Timber.d("back-issue on ViewCreated $downloadingOverlay")
     }
 
     override fun onStart() {
@@ -61,9 +72,15 @@ class YoutubeDownloadFragment : BaseFragment() {
         wv_cloud_video_pull.settings.javaScriptEnabled = true
         val webViewClient = VoizyWebViewClient()
         webViewClient.pageChangedListener = { url ->
-            // if (isResumed) {
-            //     et_cloud_video_pull_url.setText(url)
-            // }
+            if (isResumed) {
+                if (url.contains("watch")) {
+                    btn_download.visibility = View.VISIBLE
+                    tv_download_hint.visibility = View.GONE
+                } else {
+                    btn_download.visibility = View.GONE
+                    tv_download_hint.visibility = View.VISIBLE
+                }
+            }
         }
         wv_cloud_video_pull.webViewClient = webViewClient
         wv_cloud_video_pull.loadUrl("https://youtube.com")
@@ -85,7 +102,7 @@ class YoutubeDownloadFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe(videoDownloadConsumer())
 
-        RxView.clicks(btn_cloud_video_pull_next)
+        RxView.clicks(btn_download)
             .autoDisposable(getScopeProvider())
             .subscribe {
                 showLoadingLayout(true)
@@ -95,6 +112,8 @@ class YoutubeDownloadFragment : BaseFragment() {
 
     private fun videoDownloadConsumer(): Consumer<String> {
         return Consumer { filePath ->
+
+            Timber.d("back-issue videoDownloadConsumer view $view")
             wv_cloud_video_pull.loadUrl("")
 
             val bundle = Bundle()
@@ -102,7 +121,7 @@ class YoutubeDownloadFragment : BaseFragment() {
             val audioClipFragment = AudioClipFragment()
             audioClipFragment.arguments = bundle
 
-            fragmentManager!!.beginTransaction()
+            activity!!.supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.fragment_container,
                     audioClipFragment,
@@ -122,22 +141,24 @@ class YoutubeDownloadFragment : BaseFragment() {
 
     private fun showLoadingLayout(show: Boolean) {
         if (show) {
-            layout_cloud_video_pull_loading_overlay.visibility = View.VISIBLE
+            Timber.d("back-iss loading layout $downloadingOverlay")
+            Timber.d("back-iss view $view")
+            downloadingOverlay!!.visibility = View.VISIBLE
             setUiEnabled(false)
         } else {
-            layout_cloud_video_pull_loading_overlay.visibility = View.GONE
+            downloadingOverlay!!.visibility = View.INVISIBLE
             setUiEnabled(true)
         }
     }
 
     private fun isLoadingOverlayVisible(): Boolean {
-        return layout_cloud_video_pull_loading_overlay.visibility == View.VISIBLE
+        return downloadingOverlay!!.visibility == View.VISIBLE
     }
 
     private fun setUiEnabled(enabled: Boolean) {
         wv_cloud_video_pull.isClickable = enabled
         wv_cloud_video_pull.isEnabled = enabled
-        btn_cloud_video_pull_next.isEnabled = enabled
+        btn_download.isEnabled = enabled
         // et_cloud_video_pull_url.isEnabled = enabled
         // btn_cloud_video_pull_next.isClickable = enabled
     }

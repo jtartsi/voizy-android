@@ -14,13 +14,11 @@ class CreateOptionsAdapter(
     fragmentManger: FragmentManager
 ) : FragmentPagerAdapter(fragmentManger, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    private lateinit var recordFragment: RecordVoizyFragment
-    private lateinit var youtubeDownloadFragment: YoutubeDownloadFragment
-
-    init {
-        recordFragment = RecordVoizyFragment()
-        youtubeDownloadFragment = YoutubeDownloadFragment()
-    }
+    private val fragments: List<Fragment> = listOf(
+        BlankFragment(),
+        RecordVoizyFragment(),
+        YoutubeDownloadFragment()
+    )
 
     enum class CreateOptions(val value: Int) {
         FILE(0),
@@ -50,24 +48,7 @@ class CreateOptionsAdapter(
     }
 
     override fun getItem(position: Int): Fragment {
-        when (position) {
-            CreateOptions.FILE.value -> {
-                // Timber.d("options-pager getItem() $position return file")
-                return BlankFragment()
-            }
-            CreateOptions.RECORD.value -> {
-                // Timber.d("options-pager getItem() $position return record")
-                return RecordVoizyFragment()
-            }
-            CreateOptions.DOWNLOAD.value -> {
-                // Timber.d("options-pager getItem() $position return download")
-                return YoutubeDownloadFragment()
-            }
-            else -> {
-                // Timber.d("options-pager getItem() $position return other")
-                return RecordVoizyFragment()
-            }
-        }
+        return fragments[position]
     }
 
     override fun getCount(): Int {
