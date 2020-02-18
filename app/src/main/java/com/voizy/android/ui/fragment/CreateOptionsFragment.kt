@@ -35,10 +35,14 @@ class CreateOptionsFragment : BaseFragment() {
     }
 
     override fun onBackPressed(): Boolean {
-        if (pager_create_voizy.currentItem != 1) { // TODO create-pager change this to RecorVoizy.val or something
-            pager_create_voizy.setCurrentItem(1, true)
-        } else if (!getCurrentFragmentFromPager().onBackPressed()) {
-            fragmentManager!!.popBackStack(
+
+        when {
+            getCurrentFragmentFromPager().onBackPressed() -> {
+            }
+            pager_create_voizy.currentItem != CreateOptions.RECORD.value -> {
+                pager_create_voizy.setCurrentItem(CreateOptions.RECORD.value, true)
+            }
+            else -> fragmentManager!!.popBackStack(
                 TAG,
                 FragmentManager.POP_BACK_STACK_INCLUSIVE
             )
@@ -95,9 +99,11 @@ class CreateOptionsFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        pager_create_voizy.setCurrentItem(
-            CreateOptions.RECORD.value, false
-        )
+        if (pager_create_voizy.currentItem == CreateOptions.FILE.value) {
+            pager_create_voizy.setCurrentItem(
+                CreateOptions.RECORD.value, false
+            )
+        }
     }
 
     private fun getCurrentFragmentFromPager(): BaseFragment {
