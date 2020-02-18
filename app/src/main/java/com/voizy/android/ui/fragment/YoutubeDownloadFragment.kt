@@ -16,7 +16,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class YoutubeDownloadFragment : BaseFragment() {
 
@@ -25,8 +24,9 @@ class YoutubeDownloadFragment : BaseFragment() {
 
     companion object {
         val TAG = YoutubeDownloadFragment::class.java.simpleName
+        private val YOUTUBE_URL = "https://youtube.com"
     }
-    
+
     override fun getFragmentTag(): String {
         return TAG
     }
@@ -56,7 +56,6 @@ class YoutubeDownloadFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         downloadingOverlay = view.findViewById(R.id.layout_downloading_overlay)
-        Timber.d("back-issue on ViewCreated $downloadingOverlay")
     }
 
     override fun onStart() {
@@ -65,8 +64,12 @@ class YoutubeDownloadFragment : BaseFragment() {
         initVideoDownload()
     }
 
-    fun cancelDownload() {
-        viewModel.cancelDownload()
+    fun resetWebView() {
+        wv_cloud_video_pull?.loadUrl(YOUTUBE_URL)
+        if (isLoadingOverlayVisible()) {
+            viewModel.cancelDownload()
+            showLoadingLayout(false)
+        }
     }
 
     private fun initWebView() {
@@ -84,7 +87,7 @@ class YoutubeDownloadFragment : BaseFragment() {
             }
         }
         wv_cloud_video_pull.webViewClient = webViewClient
-        wv_cloud_video_pull.loadUrl("https://youtube.com")
+        wv_cloud_video_pull.loadUrl(YOUTUBE_URL)
     }
 
     private fun initVideoDownload() {
@@ -113,8 +116,6 @@ class YoutubeDownloadFragment : BaseFragment() {
 
     private fun videoDownloadConsumer(): Consumer<String> {
         return Consumer { filePath ->
-
-            Timber.d("back-issue videoDownloadConsumer view $view")
             wv_cloud_video_pull.loadUrl("")
 
             val bundle = Bundle()
@@ -142,8 +143,6 @@ class YoutubeDownloadFragment : BaseFragment() {
 
     private fun showLoadingLayout(show: Boolean) {
         if (show) {
-            Timber.d("back-iss loading layout $downloadingOverlay")
-            Timber.d("back-iss view $view")
             downloadingOverlay!!.visibility = View.VISIBLE
             setUiEnabled(false)
         } else {
@@ -153,7 +152,7 @@ class YoutubeDownloadFragment : BaseFragment() {
     }
 
     private fun isLoadingOverlayVisible(): Boolean {
-        return downloadingOverlay!!.visibility == View.VISIBLE
+        return downloadingOverlay?.visibility == View.VISIBLE
     }
 
     private fun setUiEnabled(enabled: Boolean) {

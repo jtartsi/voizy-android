@@ -75,8 +75,9 @@ class CreateOptionsFragment : BaseFragment() {
             }
 
             override fun onTabSelected(p0: TabLayout.Tab?) {
-
-                youtubeDlFragment.cancelDownload()
+                if (tabs_create_voizy.selectedTabPosition != CreateOptions.DOWNLOAD.value) {
+                    youtubeDlFragment.resetWebView()
+                }
 
                 when (tabs_create_voizy.selectedTabPosition) {
                     CreateOptions.FILE.value -> {
