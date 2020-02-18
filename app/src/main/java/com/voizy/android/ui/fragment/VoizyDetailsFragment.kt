@@ -32,8 +32,9 @@ class VoizyDetailsFragment : BaseFragment() {
         return true
     }
 
-    override fun onBackPressed() {
+    override fun onBackPressed(): Boolean {
         close()
+        return true
     }
 
     override fun onCreateView(
@@ -118,10 +119,7 @@ class VoizyDetailsFragment : BaseFragment() {
                     AudioClipFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
                 fragmentManager!!.popBackStack(
-                    YoutubeDownloadFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
-                fragmentManager!!.popBackStack(
-                    RecordVoizyFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    CreateOptionsFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
             }
     }

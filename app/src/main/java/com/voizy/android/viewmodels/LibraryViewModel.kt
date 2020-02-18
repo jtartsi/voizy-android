@@ -22,7 +22,7 @@ import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-class LibraryFragmentViewModel(
+class LibraryViewModel(
     private val voizyRepository: VoizyRepository,
     private val voizyPlayer: AudioPlayer,
     private val firebaseAnalytics: VoizyFirebaseAnalytics,
@@ -31,7 +31,7 @@ class LibraryFragmentViewModel(
 ) : DisposingViewModel() {
 
     companion object {
-        private val TAG = LibraryFragmentViewModel::class.java.simpleName
+        private val TAG = LibraryViewModel::class.java.simpleName
     }
 
     private val searchKeyword = PublishSubject.create<String>()

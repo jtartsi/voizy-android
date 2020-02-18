@@ -1,6 +1,5 @@
 package com.voizy.android.ui.fragment
 
-import android.app.FragmentManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,15 +14,17 @@ import com.voizy.android.utils.getScopeProvider
 import com.voizy.android.viewmodels.YoutubeDownloadViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
-import kotlinx.android.synthetic.main.cloud_video_pull_fragment.*
+import kotlinx.android.synthetic.main.youtube_download_fragment.*
 import org.koin.android.ext.android.inject
 
 class YoutubeDownloadFragment : BaseFragment() {
 
     private val viewModel: YoutubeDownloadViewModel by inject()
+    private var downloadingOverlay: View? = null
 
     companion object {
         val TAG = YoutubeDownloadFragment::class.java.simpleName
+        private val YOUTUBE_URL = "https://youtube.com"
     }
 
     override fun getFragmentTag(): String {
@@ -34,12 +35,13 @@ class YoutubeDownloadFragment : BaseFragment() {
         return true
     }
 
-    override fun onBackPressed() {
-        if (isLoadingOverlayVisible()) {
+    override fun onBackPressed(): Boolean {
+        return if (isLoadingOverlayVisible()) {
             viewModel.cancelDownload()
             showLoadingLayout(false)
+            true
         } else {
-            fragmentManager!!.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            false
         }
     }
 
@@ -48,7 +50,12 @@ class YoutubeDownloadFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.cloud_video_pull_fragment, container, false)
+        return inflater.inflate(R.layout.youtube_download_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        downloadingOverlay = view.findViewById(R.id.layout_downloading_overlay)
     }
 
     override fun onStart() {
@@ -57,16 +64,30 @@ class YoutubeDownloadFragment : BaseFragment() {
         initVideoDownload()
     }
 
+    fun resetWebView() {
+        wv_cloud_video_pull?.loadUrl(YOUTUBE_URL)
+        if (isLoadingOverlayVisible()) {
+            viewModel.cancelDownload()
+            showLoadingLayout(false)
+        }
+    }
+
     private fun initWebView() {
         wv_cloud_video_pull.settings.javaScriptEnabled = true
         val webViewClient = VoizyWebViewClient()
         webViewClient.pageChangedListener = { url ->
             if (isResumed) {
-                et_cloud_video_pull_url.setText(url)
+                if (url.contains("watch")) {
+                    btn_download.visibility = View.VISIBLE
+                    tv_download_hint.visibility = View.GONE
+                } else {
+                    btn_download.visibility = View.GONE
+                    tv_download_hint.visibility = View.VISIBLE
+                }
             }
         }
         wv_cloud_video_pull.webViewClient = webViewClient
-        wv_cloud_video_pull.loadUrl("https://youtube.com")
+        wv_cloud_video_pull.loadUrl(YOUTUBE_URL)
     }
 
     private fun initVideoDownload() {
@@ -85,11 +106,11 @@ class YoutubeDownloadFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe(videoDownloadConsumer())
 
-        RxView.clicks(btn_cloud_video_pull_next)
+        RxView.clicks(btn_download)
             .autoDisposable(getScopeProvider())
             .subscribe {
                 showLoadingLayout(true)
-                viewModel.download(et_cloud_video_pull_url.text.toString())
+                viewModel.download(wv_cloud_video_pull.url)
             }
     }
 
@@ -102,7 +123,7 @@ class YoutubeDownloadFragment : BaseFragment() {
             val audioClipFragment = AudioClipFragment()
             audioClipFragment.arguments = bundle
 
-            fragmentManager!!.beginTransaction()
+            activity!!.supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.fragment_container,
                     audioClipFragment,
@@ -122,22 +143,21 @@ class YoutubeDownloadFragment : BaseFragment() {
 
     private fun showLoadingLayout(show: Boolean) {
         if (show) {
-            layout_cloud_video_pull_loading_overlay.visibility = View.VISIBLE
+            downloadingOverlay!!.visibility = View.VISIBLE
             setUiEnabled(false)
         } else {
-            layout_cloud_video_pull_loading_overlay.visibility = View.GONE
+            downloadingOverlay!!.visibility = View.INVISIBLE
             setUiEnabled(true)
         }
     }
 
     private fun isLoadingOverlayVisible(): Boolean {
-        return layout_cloud_video_pull_loading_overlay.visibility == View.VISIBLE
+        return downloadingOverlay?.visibility == View.VISIBLE
     }
 
     private fun setUiEnabled(enabled: Boolean) {
         wv_cloud_video_pull.isClickable = enabled
         wv_cloud_video_pull.isEnabled = enabled
-        et_cloud_video_pull_url.isEnabled = enabled
-        btn_cloud_video_pull_next.isClickable = enabled
+        btn_download.isEnabled = enabled
     }
 }

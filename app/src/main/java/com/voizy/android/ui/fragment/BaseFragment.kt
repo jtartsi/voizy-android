@@ -10,6 +10,10 @@ abstract class BaseFragment : Fragment() {
 
     abstract fun getFragmentTag(): String
 
-    open fun onBackPressed() {
+    /**
+     * @Return Boolean wether or not the back press was consumed
+     */
+    open fun onBackPressed(): Boolean {
+        return false
     }
 }
