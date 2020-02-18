@@ -17,7 +17,8 @@ import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.PreferencesStore
 import com.voizy.android.utils.ShareManager
 import com.voizy.android.viewmodels.AudioClipViewModel
-import com.voizy.android.viewmodels.LibraryFragmentViewModel
+import com.voizy.android.viewmodels.CreateOptionsViewModel
+import com.voizy.android.viewmodels.LibraryViewModel
 import com.voizy.android.viewmodels.MainActivityViewModel
 import com.voizy.android.viewmodels.RecordVoizyViewModel
 import com.voizy.android.viewmodels.SaveVoizyViewModel
@@ -54,12 +55,13 @@ val repositoryModule = module {
 
 val viewModels = module {
     viewModel { MainActivityViewModel(get()) }
-    viewModel { LibraryFragmentViewModel(get(), get(), get(), get(), get()) }
+    viewModel { LibraryViewModel(get(), get(), get(), get(), get()) }
     viewModel { RecordVoizyViewModel(get(), get(), get()) }
     viewModel { YoutubeDownloadViewModel(get(), get(), get()) }
     viewModel { AudioClipViewModel(get(), get(), get(), get()) }
     viewModel { SaveVoizyViewModel(get(), get(), get(), get()) }
     viewModel { VoizyDetailsViewModel(get(), get(), get(), get()) }
+    viewModel { CreateOptionsViewModel(get()) }
 }
 
 val allModules = listOf(appLogicsModule, repositoryModule, viewModels)

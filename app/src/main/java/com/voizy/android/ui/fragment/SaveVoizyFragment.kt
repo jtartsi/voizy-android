@@ -48,8 +48,9 @@ class SaveVoizyFragment : BaseFragment() {
         return false
     }
 
-    override fun onBackPressed() {
+    override fun onBackPressed(): Boolean {
         backPressEvent.onNext(TAG)
+        return true
     }
 
     override fun onCreateView(
