@@ -33,7 +33,7 @@ val appLogicsModule = module {
     factory { CompositeDisposable() }
     factory { ShareManager(get()) }
     factory { YoutubeDL.getInstance() }
-    single { AudioPlayer() }
+    single { AudioPlayer(get()) }
     single { AudioRecorder() }
     single { LocalFileManager(get()) }
     single { FFmpegManager() }
