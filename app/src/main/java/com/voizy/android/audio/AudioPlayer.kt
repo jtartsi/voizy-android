@@ -1,7 +1,9 @@
 package com.voizy.android.audio
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -9,7 +11,7 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.atomic.AtomicBoolean
 
-class AudioPlayer {
+class AudioPlayer(private val context: Context) {
 
     private var playing: AtomicBoolean = AtomicBoolean(false)
 
@@ -19,6 +21,10 @@ class AudioPlayer {
     private var onStopTimer: Timer = Timer()
 
     val playbackEventStream = playbackEvents as Observable<PlaybackInfo>
+
+    companion object {
+        val HEADERS = mapOf("Cache-Control" to "public,max-age=3024000")
+    }
 
     fun togglePlay(
         path: String,
@@ -70,7 +76,7 @@ class AudioPlayer {
         mediaPlayer = MediaPlayer()
 
         mediaPlayer?.apply {
-            setDataSource(filePath)
+            setDataSource(context, Uri.parse(filePath), HEADERS)
             setAudioAttributes(audioAttributes)
 
             setOnPreparedListener {
