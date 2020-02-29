@@ -102,10 +102,11 @@ class TagEditText : EditText, TextWatcher {
             .split(" ")
             .filter { !it.isNullOrEmpty() }
             .distinctBy { it }
+            .map { it.toLowerCase() }
 
         Timber.d("getTags() size ${tags.size}")
         for (tag in tags) {
-            Timber.d("tag: $tag")
+            Timber.d("getTags() tag: $tag")
         }
 
         return tags

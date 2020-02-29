@@ -80,6 +80,7 @@
         android:textColor="@android:color/primary_text_light"
         android:textSize="22sp"
         android:letterSpacing="0.001"
+
         android:hint="@string/name_your_voizy" />
 
     <com.voizy.android.ui.widget.TagEditText
