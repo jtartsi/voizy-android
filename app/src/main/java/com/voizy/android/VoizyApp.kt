@@ -22,6 +22,12 @@ class VoizyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
+
+        startKoin {
+            androidContext(this@VoizyApp)
+            modules(allModules)
+        }
+
         val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
         firebaseAnalytics.setUserProperty("locale", Locale.getDefault().toString())
@@ -29,11 +35,6 @@ class VoizyApp : Application() {
         AppEventsLogger.newLogger(this).logEvent("APP_OPEN_TEST")
 
         initAndUpdateYoutubeDl()
-
-        startKoin {
-            androidContext(this@VoizyApp)
-            modules(allModules)
-        }
 
         // if (BuildConfig.DEBUG) {
         //     StrictMode.setThreadPolicy(
@@ -55,7 +56,7 @@ class VoizyApp : Application() {
         val youtubeDL = YoutubeDL.getInstance()
         youtubeDL.init(this)
 
-        Completable.defer {
+        val youtubeDLInit = Completable.defer {
             Completable.fromCallable {
                 Timber.d("YoutubeDL updating...")
                 val updateStatus = youtubeDL
@@ -65,6 +66,15 @@ class VoizyApp : Application() {
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
+
+        youtubeDLInit.apply {
+            subscribeOn(Schedulers.io())
+            observeOn(AndroidSchedulers.mainThread())
+            subscribe({
+                Timber.d("YoutubeDL update successful")
+            }, {
+                Timber.e("YoutubeDL update failed $it")
+            })
+        }
     }
 }
