@@ -14,6 +14,7 @@ import com.voizy.android.middleware.repositories.VoizyRepository
 import com.voizy.android.utils.NetworkState
 import com.voizy.android.utils.ShareManager
 import com.voizy.android.utils.withErrorHandling
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -30,11 +31,20 @@ class LibraryViewModel(
     private val shareManager: ShareManager
 ) : DisposingViewModel() {
 
+    enum class SortOrder {
+        TOP, NEW
+    }
+
     companion object {
         private val TAG = LibraryViewModel::class.java.simpleName
     }
 
     private val searchKeyword = PublishSubject.create<String>()
+
+    private val sortOrderSubject = PublishSubject.create<SortOrder>()
+    val sortOrder = sortOrderSubject
+        .toFlowable(BackpressureStrategy.LATEST)
+        .toObservable()
 
     private val voizyResults = searchKeyword
         .debounce(500, TimeUnit.MILLISECONDS)
@@ -64,6 +74,10 @@ class LibraryViewModel(
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    fun setSortOrder(sortOrder: SortOrder) {
+        sortOrderSubject.onNext(sortOrder)
     }
 
     fun loadVoizys(searchParam: String = "") {

@@ -30,6 +30,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.library_fragment.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class LibraryFragment : BaseFragment() {
@@ -73,7 +74,8 @@ class LibraryFragment : BaseFragment() {
         initLoader()
         initVoizyListing()
         initSearch()
-        initLibraryHeader()
+        initLibrarySort()
+        // initLibraryHeader()
         initShare()
         initCopyToClipBoard()
         initPrivacyPolicy()
@@ -159,6 +161,41 @@ class LibraryFragment : BaseFragment() {
             }
     }
 
+    private fun initLibrarySort() {
+        viewModel.sortOrder.observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { sort ->
+                Timber.d("SORT subscribe - $sort")
+                when (sort) {
+                    LibraryViewModel.SortOrder.TOP -> {
+                        tv_library_sort_top.isSelected = true
+                        tv_library_sort_new.isSelected = false
+                    }
+                    LibraryViewModel.SortOrder.NEW -> {
+                        tv_library_sort_top.isSelected = false
+                        tv_library_sort_new.isSelected = true
+                    }
+                    else -> {
+                    }
+                }
+            }
+        viewModel.setSortOrder(LibraryViewModel.SortOrder.TOP)
+
+        val topSortClicks = RxView.clicks(tv_library_sort_top)
+            .doOnNext { Timber.d("SORT - TOP ") }
+            .map { LibraryViewModel.SortOrder.TOP }
+
+        val newSortClicks = RxView.clicks(tv_library_sort_new)
+            .doOnNext { Timber.d("SORT - NEW ") }
+            .map { LibraryViewModel.SortOrder.NEW }
+
+        Observable.merge(topSortClicks, newSortClicks)
+            .autoDisposable(getScopeProvider())
+            .subscribe {
+                viewModel.setSortOrder(it)
+            }
+    }
+
     private fun initLibraryHeader() {
         Observable.combineLatest(
             searchTextChanges.delay(1, TimeUnit.SECONDS),
@@ -168,9 +205,9 @@ class LibraryFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 if (it.first.isNullOrEmpty() && it.second != NetworkState.LOADING) {
-                    tv_library_headline.visibility = View.VISIBLE
+                    tv_library_sort_top.visibility = View.VISIBLE
                 } else {
-                    tv_library_headline.visibility = View.GONE
+                    tv_library_sort_top.visibility = View.GONE
                 }
             }
     }
