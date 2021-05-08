@@ -74,8 +74,8 @@ class LibraryFragment : BaseFragment() {
         initLoader()
         initVoizyListing()
         initSearch()
-        initLibrarySort()
         // initLibraryHeader()
+        initLibraryHeaderOld()
         initShare()
         initCopyToClipBoard()
         initPrivacyPolicy()
@@ -161,7 +161,7 @@ class LibraryFragment : BaseFragment() {
             }
     }
 
-    private fun initLibrarySort() {
+    private fun initLibraryHeader() {
         viewModel.sortOrder.observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { sort ->
@@ -179,14 +179,11 @@ class LibraryFragment : BaseFragment() {
                     }
                 }
             }
-        viewModel.setSortOrder(LibraryViewModel.SortOrder.TOP)
 
         val topSortClicks = RxView.clicks(tv_library_sort_top)
-            .doOnNext { Timber.d("SORT - TOP ") }
             .map { LibraryViewModel.SortOrder.TOP }
 
         val newSortClicks = RxView.clicks(tv_library_sort_new)
-            .doOnNext { Timber.d("SORT - NEW ") }
             .map { LibraryViewModel.SortOrder.NEW }
 
         Observable.merge(topSortClicks, newSortClicks)
@@ -196,7 +193,7 @@ class LibraryFragment : BaseFragment() {
             }
     }
 
-    private fun initLibraryHeader() {
+    private fun initLibraryHeaderOld() {
         Observable.combineLatest(
             searchTextChanges.delay(1, TimeUnit.SECONDS),
             viewModel.initialLoading, toPair()
