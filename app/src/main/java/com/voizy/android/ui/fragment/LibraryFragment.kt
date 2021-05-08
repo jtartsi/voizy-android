@@ -74,8 +74,8 @@ class LibraryFragment : BaseFragment() {
         initLoader()
         initVoizyListing()
         initSearch()
-        // initLibraryHeader()
-        initLibraryHeaderOld()
+        initLibraryHeader()
+        // initLibraryHeaderOld()
         initShare()
         initCopyToClipBoard()
         initPrivacyPolicy()
@@ -162,6 +162,17 @@ class LibraryFragment : BaseFragment() {
     }
 
     private fun initLibraryHeader() {
+        searchTextChanges.delay(200, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(getScopeProvider())
+            .subscribe { searchKeyword ->
+                if (searchKeyword.isNullOrEmpty()) {
+                    tv_library_sort.visibility = View.VISIBLE
+                } else {
+                    tv_library_sort.visibility = View.GONE
+                }
+            }
+
         viewModel.sortOrder.observeOn(AndroidSchedulers.mainThread())
             .autoDisposable(getScopeProvider())
             .subscribe { sort ->
@@ -190,22 +201,6 @@ class LibraryFragment : BaseFragment() {
             .autoDisposable(getScopeProvider())
             .subscribe {
                 viewModel.setSortOrder(it)
-            }
-    }
-
-    private fun initLibraryHeaderOld() {
-        Observable.combineLatest(
-            searchTextChanges.delay(1, TimeUnit.SECONDS),
-            viewModel.initialLoading, toPair()
-        )
-            .observeOn(AndroidSchedulers.mainThread())
-            .autoDisposable(getScopeProvider())
-            .subscribe {
-                if (it.first.isNullOrEmpty() && it.second != NetworkState.LOADING) {
-                    tv_library_sort_top.visibility = View.VISIBLE
-                } else {
-                    tv_library_sort_top.visibility = View.GONE
-                }
             }
     }
 
