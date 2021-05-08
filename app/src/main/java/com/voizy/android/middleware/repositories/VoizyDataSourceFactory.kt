@@ -3,12 +3,14 @@ package com.voizy.android.middleware.repositories
 import androidx.paging.DataSource
 import androidx.paging.DataSource.Factory
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest.SortOrder
 import com.voizy.android.middleware.firebase.models.Voizy
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
 class VoizyDataSourceFactory(
     private val searchKeyword: String,
+    private val sortOrder: SortOrder,
     private val compositeDisposable: CompositeDisposable,
     private val searchCollection: VoizySearchRequestCollection
 ) : Factory<Int, Voizy>() {
@@ -19,6 +21,7 @@ class VoizyDataSourceFactory(
         val voizysDataSource =
             VoizyDataSource(
                 searchKeyword,
+                sortOrder,
                 compositeDisposable,
                 searchCollection
             )

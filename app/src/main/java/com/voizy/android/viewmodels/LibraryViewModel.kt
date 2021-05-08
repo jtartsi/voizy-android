@@ -8,6 +8,7 @@ import com.voizy.android.audio.AudioPlayer
 import com.voizy.android.audio.PlaybackEvent
 import com.voizy.android.audio.PlaybackInfo
 import com.voizy.android.middleware.firebase.VoizyFirebaseAnalytics
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest.SortOrder
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.middleware.repositories.VoizyRepository
@@ -30,10 +31,6 @@ class LibraryViewModel(
     private val compositeDisposable: CompositeDisposable,
     private val shareManager: ShareManager
 ) : DisposingViewModel() {
-
-    enum class SortOrder {
-        TOP, NEW
-    }
 
     companion object {
         private val TAG = LibraryViewModel::class.java.simpleName

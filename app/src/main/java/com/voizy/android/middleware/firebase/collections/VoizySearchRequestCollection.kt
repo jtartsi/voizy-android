@@ -3,6 +3,7 @@ package com.voizy.android.middleware.firebase.collections
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest.SortOrder
 import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchResult
 import com.voizy.android.utils.collectionChange
 import com.voizy.android.utils.toObservable
@@ -19,6 +20,7 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
 
     fun voizys(
         searchKeyword: String,
+        sortOrder: SortOrder,
         from: Int,
         pageSize: Int
     ): Observable<FirestoreVoizySearchResult> {
@@ -30,6 +32,7 @@ class VoizySearchRequestCollection(private val firestore: FirebaseFirestore) {
             .add(
                 FirestoreVoizySearchRequest(
                     searchKeyword = searchKeyword,
+                    sortOrder = sortOrder,
                     from = from,
                     size = pageSize,
                     locale = locale.toString(),

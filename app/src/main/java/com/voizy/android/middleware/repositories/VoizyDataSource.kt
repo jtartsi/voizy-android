@@ -2,6 +2,7 @@ package com.voizy.android.middleware.repositories
 
 import androidx.paging.PageKeyedDataSource
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest.SortOrder
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.utils.NetworkState
 import io.reactivex.disposables.CompositeDisposable
@@ -10,6 +11,7 @@ import timber.log.Timber
 
 class VoizyDataSource(
     private val searchKeyword: String,
+    private val sortOrder: SortOrder,
     private val compositeDisposable: CompositeDisposable,
     private val searchCollection: VoizySearchRequestCollection
 ) : PageKeyedDataSource<Int, Voizy>() {
@@ -31,6 +33,7 @@ class VoizyDataSource(
 
         val disposable = searchCollection.voizys(
             searchKeyword,
+            sortOrder,
             0,
             params.requestedLoadSize
         ).subscribe(
@@ -66,6 +69,7 @@ class VoizyDataSource(
 
         val disposable = searchCollection.voizys(
             searchKeyword,
+            sortOrder,
             params.key,
             params.requestedLoadSize
         ).subscribe(

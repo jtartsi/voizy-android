@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.uber.autodispose.autoDisposable
 import com.voizy.android.R
 import com.voizy.android.audio.PlaybackEvent
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest.SortOrder
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.ui.WebViewActivity
 import com.voizy.android.ui.adapter.VoizyListAdapter
@@ -75,7 +76,6 @@ class LibraryFragment : BaseFragment() {
         initVoizyListing()
         initSearch()
         initLibraryHeader()
-        // initLibraryHeaderOld()
         initShare()
         initCopyToClipBoard()
         initPrivacyPolicy()
@@ -178,11 +178,11 @@ class LibraryFragment : BaseFragment() {
             .subscribe { sort ->
                 Timber.d("SORT subscribe - $sort")
                 when (sort) {
-                    LibraryViewModel.SortOrder.TOP -> {
+                    SortOrder.TOP -> {
                         tv_library_sort_top.isSelected = true
                         tv_library_sort_new.isSelected = false
                     }
-                    LibraryViewModel.SortOrder.NEW -> {
+                    SortOrder.NEW -> {
                         tv_library_sort_top.isSelected = false
                         tv_library_sort_new.isSelected = true
                     }
@@ -192,10 +192,10 @@ class LibraryFragment : BaseFragment() {
             }
 
         val topSortClicks = RxView.clicks(tv_library_sort_top)
-            .map { LibraryViewModel.SortOrder.TOP }
+            .map { SortOrder.TOP }
 
         val newSortClicks = RxView.clicks(tv_library_sort_new)
-            .map { LibraryViewModel.SortOrder.NEW }
+            .map { SortOrder.NEW }
 
         Observable.merge(topSortClicks, newSortClicks)
             .autoDisposable(getScopeProvider())

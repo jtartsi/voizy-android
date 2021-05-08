@@ -5,10 +5,10 @@ import androidx.paging.RxPagedListBuilder
 import com.voizy.android.middleware.firebase.VoizyFirebaseStorage
 import com.voizy.android.middleware.firebase.collections.VoizySearchRequestCollection
 import com.voizy.android.middleware.firebase.collections.VoizysCollection
+import com.voizy.android.middleware.firebase.models.FirestoreVoizySearchRequest.SortOrder
 import com.voizy.android.middleware.firebase.models.Voizy
 import com.voizy.android.middleware.local.LocalFileManager
 import com.voizy.android.utils.withErrorHandling
-import com.voizy.android.viewmodels.LibraryViewModel.SortOrder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -71,7 +71,7 @@ class VoizyRepository(
 
     fun voizys(searchKeyword: String, sortOrder: SortOrder): Listing<Voizy> {
         val sourceFactory = VoizyDataSourceFactory(
-            searchKeyword, compositeDisposable, voizySearchRequestCollection
+            searchKeyword, sortOrder, compositeDisposable, voizySearchRequestCollection
         )
 
         val voizysPagedList = RxPagedListBuilder(
