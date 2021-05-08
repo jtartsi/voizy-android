@@ -40,6 +40,9 @@ class LibraryViewModel(
     }
 
     private val searchKeyword = PublishSubject.create<String>()
+    private val searchObservable = searchKeyword
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .map { it.toLowerCase() }
 
     private val sortOrderSubject = PublishSubject.create<SortOrder>()
     val sortOrder: Observable<SortOrder> =
@@ -47,15 +50,11 @@ class LibraryViewModel(
             .toFlowable(BackpressureStrategy.LATEST)
             .toObservable()
 
-    private val voizyResults = searchKeyword
-        .debounce(500, TimeUnit.MILLISECONDS)
-        .map { it.toLowerCase() }
-        .doOnNext { handleSearchAnalytics(it) }
-        .zipWith(sortOrder, com.voizy.android.utils.toPair())
-        .map { searchSortOrderPair ->
-            voizyRepository.voizys(searchSortOrderPair.first, searchSortOrderPair.second)
-        }
-        .share()
+    private val voizyResults = Observable.combineLatest(
+        searchObservable, sortOrder, com.voizy.android.utils.toPair()
+    ).map { searchSortOrderPair ->
+        voizyRepository.voizys(searchSortOrderPair.first, searchSortOrderPair.second)
+    }.share()
 
     val voizys: Observable<PagedList<Voizy>> = voizyResults
         .flatMap { it.pagedListObservable }
