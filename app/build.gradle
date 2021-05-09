@@ -9,11 +9,11 @@ apply from: '../versioning.gradle'
 def appVersionName = "v1.0.32"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.voizy.android"
         minSdkVersion 24
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionName appVersionName
         versionCode buildVersionCode(appVersionName)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
