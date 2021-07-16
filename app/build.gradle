@@ -6,14 +6,14 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 apply from: '../versioning.gradle'
 
-def appVersionName = "v1.0.31"
+def appVersionName = "v1.0.32"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.voizy.android"
         minSdkVersion 24
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionName appVersionName
         versionCode buildVersionCode(appVersionName)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -93,7 +93,7 @@ dependencies {
 
     implementation 'com.arthenica:mobile-ffmpeg-full:4.3'
 
-    implementation 'com.github.yausername.youtubedl-android:library:0.7.+'
+    implementation 'com.github.yausername.youtubedl-android:library:0.12.4'
 
     testImplementation "androidx.paging:paging-common:$paging_version"
     testImplementation 'junit:junit:4.12'
