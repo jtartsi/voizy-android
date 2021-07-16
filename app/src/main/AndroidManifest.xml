@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/VoizyTheme.Launcher"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"
+        android:extractNativeLibs="true">
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
