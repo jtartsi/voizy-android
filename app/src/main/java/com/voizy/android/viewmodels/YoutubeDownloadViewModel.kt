@@ -54,8 +54,8 @@ class YoutubeDownloadViewModel(
                     val downloadFile = File(fileManager.getImportFilePath())
 
                     val request = YoutubeDLRequest(url)
-                    request.setOption("-o", downloadFile.absolutePath)
-                    request.setOption("-f", "bestaudio")
+                    request.addOption("-o", downloadFile.absolutePath)
+                    request.addOption("-f", "bestaudio")
 
                     val videoInfo = youtubeDL.getInfo(url)
                     if (videoInfo.duration > DOWNLOAD_DURATION_LIMIT) {
